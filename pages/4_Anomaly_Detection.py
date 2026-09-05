@@ -141,53 +141,52 @@ with tabs[3]:
 with tabs[4]:
     st.subheader("Evaluation")
 
-    y = results["y"]
-    iso_scores = results["iso_scores"]
-    lof_scores = results["lof_scores"]
+    # Evaluation uses the held-out test set only (models never saw these records)
+    y_eval = results["y_test"]
+    iso_scores_eval = results["iso_scores_test"]
+    lof_scores_eval = results["lof_scores_test"]
 
-    # PR curves for both
-    prec_iso, rec_iso, thr_iso = precision_recall_curve(y, iso_scores)
-    prec_lof, rec_lof, thr_lof = precision_recall_curve(y, lof_scores)
+    prec_iso, rec_iso, _ = precision_recall_curve(y_eval, iso_scores_eval)
+    prec_lof, rec_lof, _ = precision_recall_curve(y_eval, lof_scores_eval)
     pr_auc_iso = auc(rec_iso, prec_iso)
     pr_auc_lof = auc(rec_lof, prec_lof)
 
-    fpr_iso, tpr_iso, _ = roc_curve(y, iso_scores)
-    fpr_lof, tpr_lof, _ = roc_curve(y, lof_scores)
+    fpr_iso, tpr_iso, _ = roc_curve(y_eval, iso_scores_eval)
+    fpr_lof, tpr_lof, _ = roc_curve(y_eval, lof_scores_eval)
     roc_auc_iso = auc(fpr_iso, tpr_iso)
     roc_auc_lof = auc(fpr_lof, tpr_lof)
 
     st.write(
-        f"IsolationForest achieves PR-AUC = {pr_auc_iso:.3f}. "
+        "Both models were fit on 80% of the data (features only — labels were "
+        "never seen during training) and scored on the remaining 20% held-out set. "
+        f"IsolationForest achieves held-out PR-AUC = {pr_auc_iso:.3f}. "
         "A majority-class baseline — predict 'normal' for every record — "
-        "gets 98.0% accuracy while catching zero incidents. PR-AUC of 1.0 "
+        "gets 98% accuracy while catching zero incidents. PR-AUC of 1.0 "
         "means trivially separable anomalies; 0.02 means random performance "
         "(the base rate). The gap between those bounds is where real systems operate."
     )
     st.write(
-        f"LOF PR-AUC = {pr_auc_lof:.3f} vs IsolationForest's {pr_auc_iso:.3f}. "
+        f"LOF held-out PR-AUC = {pr_auc_lof:.3f} vs IsolationForest's {pr_auc_iso:.3f}. "
         "This is a finding, not a defect in the implementation. LOF assumes that "
         "anomalies are isolated points in low-density neighbourhoods. That assumption "
         "breaks down here: anomalies are correlated across features (high latency "
-        "and high error_rate tend to rise together during failures), so they sit in "
+        "and high error_rate rise together during failures), so they sit in "
         "a low-density region that LOF's local neighbourhood computation doesn't "
         "distinguish well from the tails of the correlated normal distribution. "
-        "IsolationForest has no such assumption — it isolates based on path length "
-        "regardless of correlation structure, which is why it performs better on "
-        "this specific data geometry. Both models remain in the comparison to show "
-        "that algorithm choice matters and that the same data rewards different assumptions differently."
+        "IsolationForest isolates based on path length regardless of correlation "
+        "structure, which is why it performs better on this data geometry."
     )
     st.write(
         "At recall = 0.70 (catching 70% of incidents), IsolationForest maintains "
-        "precision above 0.90 — meaning fewer than 1 false alert in 10 pages. "
-        "That precision collapses at recall > 0.85 because the subtle anomalies "
-        "(30% of the total, flagged by only a single feature at 2.5σ) are buried "
-        "in the normal tail. There is no threshold that catches them without "
-        "swamping the SRE queue."
+        "precision above 0.90 — fewer than 1 false alert in 10 pages. "
+        "Precision collapses at recall > 0.85 because the subtle anomalies "
+        "(30% of the total, elevated by only a single feature at 2.5σ) are buried "
+        "in the normal tail. No threshold catches them without swamping the alert queue."
     )
 
     col1, col2 = st.columns(2)
-    col1.metric("PR-AUC — IsolationForest", f"{pr_auc_iso:.3f}")
-    col2.metric("PR-AUC — LOF", f"{pr_auc_lof:.3f}")
+    col1.metric("PR-AUC — IsolationForest (held-out)", f"{pr_auc_iso:.3f}")
+    col2.metric("PR-AUC — LOF (held-out)", f"{pr_auc_lof:.3f}")
     col1.metric("ROC-AUC — IsolationForest", f"{roc_auc_iso:.3f}")
     col2.metric("ROC-AUC — LOF", f"{roc_auc_lof:.3f}")
 

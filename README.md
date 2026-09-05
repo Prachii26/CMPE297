@@ -1,4 +1,4 @@
-# Data Science Portfolio — COMP 297
+# Data Science Portfolio — CMPE 297
 
 > YOUTUBE_VIDEO_LINK_HERE
 
@@ -63,7 +63,7 @@ All paths are relative to the repo root and render correctly on GitHub.
 *Evaluation tab: PCA 2D scatter of all 3,000 customers colored by cluster, showing four overlapping but distinct groups. Below it, the cluster profile table lists mean recency, frequency, monetary, size, and revenue share per cluster.*
 
 ![Customer Segmentation — Live Inference](docs/screenshots/03_segmentation_live.png)
-*Live Inference tab: R=30 days, F=10 purchases, M=$400 is assigned to Cluster 2 — Dormant. The profile table marks the matching row with a star and shows that cluster accounts for 29.1% of revenue despite 658 members.*
+*Live Inference tab: R=30 days, F=10 purchases, M=$400 is assigned to Cluster 2 — Loyal. The profile table marks the matching row with a star. Personas are derived from centroid values at runtime, not hardcoded by cluster ID.*
 
 ---
 
@@ -92,7 +92,7 @@ All paths are relative to the repo root and render correctly on GitHub.
 *Modeling tab: IsolationForest scores (left) show a right-skewed distribution with a long tail toward 0.8, where anomalies concentrate. LOF scores (right) are more extreme in shape, with most records near 1.0 and genuine outliers scattered past 1.5.*
 
 ![Anomaly Detection — Evaluation](docs/screenshots/05_anomaly_evaluation.png)
-*Evaluation tab: IsolationForest PR-AUC 0.757 vs LOF 0.050, with ROC-AUC 0.945 vs 0.514. The prose explains why LOF's local-density assumption fails on correlated multivariate data. The precision-recall curve shows IsolationForest holding precision above 0.90 until recall 0.70.*
+*Evaluation tab: both models fit on 80% training split (features only), scored on the 20% held-out set. IsolationForest PR-AUC 0.756 vs LOF 0.115, ROC-AUC 0.955 vs 0.515. The prose explains why LOF's local-density assumption fails on correlated multivariate data. The precision-recall curve shows IsolationForest holding precision above 0.90 until recall 0.70.*
 
 ![Anomaly Detection — Live Inference](docs/screenshots/05_anomaly_live.png)
 *Live Inference tab: threshold 0.52 yields precision 0.300, recall 0.750, F1 0.429, and 300 alerts fired. The confusion matrix shows 5,670 true negatives, 210 false positives, 30 false negatives, and 90 true positives.*
@@ -131,7 +131,7 @@ All paths are relative to the repo root and render correctly on GitHub.
 
 **What worked**: The agent handled the sklearn Pipeline leakage constraints correctly without prompting, wrote a functional from-scratch Apriori, and structured all pages consistently.
 
-**What I'd do differently**: Add screenshot automation in the verification step so the portfolio is fully documented immediately. Also add a proper hold-out set for the anomaly detection evaluation rather than reporting in-sample PR curves.
+**What I'd do differently**: Add screenshot automation in the verification step so the portfolio is fully documented immediately. The anomaly detection models are fit on an 80% training split (features only, no labels) and evaluated on a held-out 20% test set, so the reported PR-AUC is genuinely out-of-sample.
 
 ## Scope decisions
 

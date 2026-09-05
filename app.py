@@ -7,7 +7,7 @@ st.set_page_config(
 )
 
 st.title("Data Science Portfolio")
-st.caption("Five real projects, one Streamlit app — built for COMP 297")
+st.caption("Five real projects, one Streamlit app — built for CMPE 297")
 
 st.markdown(
     """

@@ -82,14 +82,14 @@ with tabs[1]:
             "StandardScaler fit on X_train only (Pipeline)",
             "StandardScaler fit on full X — justified: unsupervised, no target to leak",
             "No scaling needed (set operations only)",
-            "StandardScaler fit on full X — unsupervised, labels never used in fit",
+            "StandardScaler fit on X_train only (80% split, labels never seen)",
             "No scaling; rolling/lag features computed before any split",
         ],
         "Train-test split method": [
             "80/20 random split (trips are i.i.d.)",
             "No split — intrinsic evaluation (silhouette, inertia)",
             "No split — unsupervised; threshold is tunable by user",
-            "No split — anomaly scores evaluated against held-out labels post-hoc",
+            "Stratified 80/20 split (random_state=42); PR-AUC on held-out test set",
             "TimeSeriesSplit(n_splits=5), shuffle=False",
         ],
         "Target leakage check": [

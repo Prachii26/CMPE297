@@ -238,35 +238,58 @@ def recommend(rules_df: pd.DataFrame, cart_items: list, top_n: int = 3) -> pd.Da
 
 @st.cache_resource
 def train_anomaly_models(df: pd.DataFrame):
+    """
+    Proper unsupervised anomaly detection protocol:
+      - Both models are fit on the 80% training split using features only
+        (labels are never seen during training).
+      - PR-AUC and ROC-AUC are reported on the 20% held-out test set.
+      - All records are scored for the Live Inference threshold demo so the
+        confusion matrix has enough positive and negative examples to move.
+    """
     features = ["latency_ms", "error_rate_pct", "throughput_rps", "cpu_pct", "memory_pct"]
     X = df[features].values
     y = df["is_anomaly"].values
 
-    # IsolationForest inside pipeline
+    # Stratified 80/20 split — keeps the 2% anomaly rate in both halves
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42, stratify=y
+    )
+
+    # IsolationForest — fit on unlabeled training data only
     iso_pipe = Pipeline([
         ("scaler", StandardScaler()),
         ("model", IsolationForest(contamination=0.02, random_state=42, n_estimators=100)),
     ])
-    iso_pipe.fit(X)
-    iso_scores = -iso_pipe.named_steps["model"].score_samples(
-        iso_pipe.named_steps["scaler"].transform(X)
-    )
+    iso_pipe.fit(X_train)
 
-    # LOF (novelty=True so we can score on the same data)
+    def _score(pipe, X_arr):
+        return -pipe.named_steps["model"].score_samples(
+            pipe.named_steps["scaler"].transform(X_arr)
+        )
+
+    iso_scores_test = _score(iso_pipe, X_test)
+    iso_scores_all  = _score(iso_pipe, X)
+
+    # LOF (novelty=True for inductive scoring on unseen data)
     lof_pipe = Pipeline([
         ("scaler", StandardScaler()),
         ("model", LocalOutlierFactor(n_neighbors=20, contamination=0.02, novelty=True)),
     ])
-    lof_pipe.fit(X)
-    lof_scores = -lof_pipe.named_steps["model"].score_samples(
-        lof_pipe.named_steps["scaler"].transform(X)
-    )
+    lof_pipe.fit(X_train)
+
+    lof_scores_test = _score(lof_pipe, X_test)
+    lof_scores_all  = _score(lof_pipe, X)
 
     return {
         "iso_pipe": iso_pipe,
         "lof_pipe": lof_pipe,
-        "iso_scores": iso_scores,
-        "lof_scores": lof_scores,
+        # Held-out test set — used for PR-AUC / ROC-AUC
+        "iso_scores_test": iso_scores_test,
+        "lof_scores_test": lof_scores_test,
+        "y_test": y_test,
+        # Full-dataset scores — used for Live Inference threshold demo
+        "iso_scores": iso_scores_all,
+        "lof_scores": lof_scores_all,
         "y": y,
         "X": X,
         "features": features,

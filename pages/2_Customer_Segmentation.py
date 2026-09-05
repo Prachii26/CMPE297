@@ -14,12 +14,42 @@ st.caption("RFM clustering with KMeans — who are your customers?")
 
 df = make_rfm_data()
 
-PERSONA_LABELS = {
-    0: ("Champions", "Bought recently, buy often, spend the most. Reward them."),
-    1: ("At Risk", "Used to buy regularly but haven't lately. Send a win-back offer."),
-    2: ("Dormant", "Haven't bought in a long time, low frequency, low spend. Hard to reactivate."),
-    3: ("Loyal", "Buy regularly at decent spend. Nurture toward Champions."),
-}
+
+def derive_personas(profile: pd.DataFrame) -> dict:
+    """
+    Assign RFM persona labels from cluster centroids at runtime.
+
+    Ranks clusters by a composite score: inverted recency (lower = more recent =
+    better) + normalised frequency + normalised monetary.  The ranking determines
+    the label — no hardcoded cluster-ID→label mapping.
+
+    Returns {cluster_id: (name, description)}.
+    """
+    p = profile[["recency", "frequency", "monetary"]].copy().astype(float)
+
+    r_range = p["recency"].max() - p["recency"].min()
+    f_range = p["frequency"].max() - p["frequency"].min()
+    m_range = p["monetary"].max() - p["monetary"].min()
+
+    p["score"] = (
+        (p["recency"].max() - p["recency"]) / (r_range if r_range else 1)
+        + (p["frequency"] - p["frequency"].min()) / (f_range if f_range else 1)
+        + (p["monetary"] - p["monetary"].min()) / (m_range if m_range else 1)
+    )
+
+    # Highest composite score → Champions; lowest → Dormant
+    ordered = p["score"].sort_values(ascending=False).index.tolist()
+
+    _label_pool = [
+        ("Champions",     "Bought recently, buy often, and spend the most. Reward them."),
+        ("Loyal",         "Buy regularly with solid spend. Nurture toward Champions."),
+        ("At Risk",       "Higher spenders who haven't bought lately. Send a win-back offer."),
+        ("Dormant",       "Long lapsed, infrequent, low spend. Hard to reactivate."),
+        ("Occasional",    "Infrequent buyers with low spend."),
+        ("High Potential","Frequent but lower spend — could convert upward."),
+    ]
+
+    return {cid: _label_pool[i] for i, cid in enumerate(ordered)}
 
 tabs = st.tabs([
     "Business Understanding",
@@ -154,12 +184,17 @@ with tabs[4]:
     profile.index.name = "Cluster"
     st.dataframe(profile, use_container_width=True)
 
-    # Persona labels (only for k=4 which matches our planted groups)
-    if k_eval == 4:
-        st.markdown("**Plain-English Personas**")
-        for c_id, (name, desc) in PERSONA_LABELS.items():
-            if c_id < k_eval:
-                st.markdown(f"- **Cluster {c_id} — {name}**: {desc}")
+    # Persona labels derived from centroids — not hardcoded by cluster ID
+    personas = derive_personas(results["profile"])
+    st.markdown("**Plain-English Personas** (derived from centroid values)")
+    for c_id, (name, desc) in sorted(personas.items()):
+        r = results["profile"].loc[c_id, "recency"]
+        f = results["profile"].loc[c_id, "frequency"]
+        m = results["profile"].loc[c_id, "monetary"]
+        st.markdown(
+            f"- **Cluster {c_id} — {name}** "
+            f"(recency {r:.0f}d, freq {f:.1f}, monetary ${m:.0f}): {desc}"
+        )
 
 
 with tabs[5]:
@@ -179,7 +214,8 @@ with tabs[5]:
     X_user = np.array([[r_in, f_in, m_in]])
     cluster_id = results4["pipe"].predict(X_user)[0]
 
-    persona_name, persona_desc = PERSONA_LABELS.get(cluster_id, (f"Cluster {cluster_id}", ""))
+    personas4 = derive_personas(results4["profile"])
+    persona_name, persona_desc = personas4[cluster_id]
 
     st.success(f"You belong to **Cluster {cluster_id} — {persona_name}**")
     st.write(persona_desc)
