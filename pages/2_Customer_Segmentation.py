@@ -63,13 +63,15 @@ with tabs[1]:
 
     st.dataframe(df.drop(columns=["true_group"]).describe().round(1), use_container_width=True)
 
+    sample_3d = df.sample(800, random_state=42).copy()
+    sample_3d["group"] = sample_3d["true_group"].astype(str)
     fig = px.scatter_3d(
-        df.sample(800, random_state=42),
+        sample_3d,
         x="recency", y="frequency", z="monetary",
-        color="true_group", opacity=0.6,
+        color="group", opacity=0.6,
         title="3D RFM view (true latent groups, sample 800)",
-        labels={"true_group": "Latent group"},
-        color_continuous_scale="Set1",
+        labels={"group": "Latent group"},
+        category_orders={"group": ["0", "1", "2", "3"]},
     )
     fig.update_layout(**LAYOUT_BASE)
     st.plotly_chart(fig, use_container_width=True)

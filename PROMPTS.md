@@ -107,6 +107,3 @@
 
 ---
 
-## Follow-up Prompts
-
-<!-- Add subsequent prompts here as the project evolves -->
