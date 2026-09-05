@@ -9,5 +9,3 @@ build/
 env/
 venv/
 .streamlit/secrets.toml
-docs/screenshots/*.png
-!docs/screenshots/.gitkeep
