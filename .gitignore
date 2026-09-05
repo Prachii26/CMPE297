@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.env
+.venv
+env/
+venv/
+.streamlit/secrets.toml
+docs/screenshots/*.png
+!docs/screenshots/.gitkeep
