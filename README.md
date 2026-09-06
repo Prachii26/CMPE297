@@ -4,6 +4,15 @@
 
 Five data science projects in one Streamlit app. Each follows the full CRISP-DM lifecycle, from business framing through live interactive inference. All data is synthetic, generated in-process with fixed seeds. Runs offline with two commands.
 
+## Documentation
+
+| Document | What it covers |
+|---|---|
+| [AUDIT_REPORT.md](AUDIT_REPORT.md) | CRISP-DM phase walkthrough, per-project leakage audit table, reward hacking failure modes, reproducibility, honest limitations |
+| [IMPLEMENTATION_PLANS.md](IMPLEMENTATION_PLANS.md) | Per-project: data distributions, feature engineering, model choice, evaluation protocol, final metrics. Architecture rationale. |
+| [WALKTHROUGH.md](WALKTHROUGH.md) | Code tour: which file, which functions, what to read, key implementation details. Includes the Playwright screenshot approach. |
+| [SKILLS.md](SKILLS.md) | Catalog of every data science technique demonstrated, grouped by category, with file and function references. |
+
 ## Pages
 
 | Page | Description |
