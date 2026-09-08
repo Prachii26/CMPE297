@@ -1,6 +1,6 @@
 # Data Science Portfolio — CMPE 297
 
-> YOUTUBE_VIDEO_LINK_HERE
+[Youtube_Demo](https://youtu.be/FyNCL7AT-S4)
 
 Five data science projects in one Streamlit app. Each follows the full CRISP-DM lifecycle, from business framing through live interactive inference. All data is synthetic, generated in-process with fixed seeds. Runs offline with two commands.
 
