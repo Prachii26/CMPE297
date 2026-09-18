@@ -1,0 +1,6 @@
+# Loads the autoresearch plugin by absolute path -- same pattern as
+# Assignment2/partB/custom-plugins.patch.yml (the "Your first plugin"
+# tutorial's local-plugin insert).
+- insert:
+    - id: autoresearch
+      name: 'C:\Users\sarth\Desktop\297\CMPE297\assignment2\partC\plugins\autoresearch\src\index.js'

@@ -1,0 +1,10 @@
+{
+  "name": "autoresearch",
+  "version": "0.1.0",
+  "description": "Karpathy-style autoresearch loop for a DSH plugin: propose an edit to a target ML script, run it, measure it on a held-out split, keep or revert, log every iteration.",
+  "type": "module",
+  "main": "src/index.js",
+  "keywords": ["deepseek", "harness", "dsh", "dsh-plugin", "ml", "autoresearch"],
+  "license": "MIT",
+  "author": "CMPE 297 Assignment 2 Part C"
+}

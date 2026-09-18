@@ -1,0 +1,21 @@
+# Same OpenRouter routing pattern as Assignment2/partB/openrouter.patch.yml
+# -- apiKeyEnv is a credential REFERENCE (an env var name), resolved per
+# request through the harness credential seam. No secret enters this file.
+- id: llm-pi-ai
+  name: '@deepseek-ai/dsh-llm-pi-ai'
+  config:
+    providers:
+      openrouter:
+        displayName: OpenRouter
+        apiKeyEnv: OPENROUTER_API_KEY
+        api: openai-completions
+        baseURL: https://openrouter.ai/api/v1
+        models:
+          - id: deepseek/deepseek-v4-flash-0731:free
+            name: DeepSeek V4 Flash (free, via OpenRouter)
+            contextWindow: 131072
+- id: agent-default-model
+  name: '@deepseek-ai/dsh-agent-default-model'
+  config:
+    provider: openrouter
+    model: deepseek/deepseek-v4-flash-0731:free

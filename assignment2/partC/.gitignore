@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+*.log
+
+# Regenerated deterministically: data/ by harness/data.py's SEED=42,
+# artifacts/ by running target/train.py. Neither needs to be committed.
+data/
+artifacts/
