@@ -1,0 +1,10 @@
+{
+  "name": "leakage-guard",
+  "version": "0.1.0",
+  "description": "Flags common ML data-leakage patterns in Python code the agent is about to write or run, and warns without blocking.",
+  "type": "module",
+  "main": "src/index.js",
+  "keywords": ["deepseek", "harness", "dsh", "dsh-plugin", "security", "data-science"],
+  "license": "MIT",
+  "author": "CMPE 297 Assignment 2 Part B"
+}

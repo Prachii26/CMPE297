@@ -1,0 +1,10 @@
+{
+  "name": "session-cost-panel",
+  "version": "0.1.0",
+  "description": "Tracks estimated tokens/cost per model call across a session, with a per-tool-call breakdown surfaced via a /cost command, persisted to disk across reloads.",
+  "type": "module",
+  "main": "src/index.js",
+  "keywords": ["deepseek", "harness", "dsh", "dsh-plugin", "usage", "billing"],
+  "license": "MIT",
+  "author": "CMPE 297 Assignment 2 Part B"
+}

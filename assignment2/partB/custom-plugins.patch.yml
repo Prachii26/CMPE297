@@ -1,0 +1,8 @@
+# Loads the two custom plugins built for Step 4, by absolute path, exactly
+# the pattern the "Your first plugin" tutorial uses for a local plugin that
+# isn't (yet) published to npm: docs/user/develop/basic/index.md.
+- insert:
+    - id: leakage-guard
+      name: 'C:\Users\sarth\Desktop\297\CMPE297\assignment2\partB\plugins\leakage-guard\src\index.js'
+    - id: session-cost-panel
+      name: 'C:\Users\sarth\Desktop\297\CMPE297\assignment2\partB\plugins\session-cost-panel\src\index.js'

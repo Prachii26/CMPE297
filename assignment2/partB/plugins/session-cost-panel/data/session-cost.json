@@ -1,0 +1,17 @@
+{
+  "sessions": {
+    "session-8a885056-368e-4a22-81a1-91ba8d44e158": {
+      "totalCostEstimate": 0,
+      "totalTokens": 6799,
+      "calls": 2,
+      "byTool": {
+        "write": {
+          "calls": 1,
+          "costEstimate": 0,
+          "tokens": 4756
+        }
+      },
+      "updatedAt": "2026-09-18T19:27:45.703Z"
+    }
+  }
+}
