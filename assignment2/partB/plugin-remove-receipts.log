@@ -1,0 +1,10 @@
+﻿✓ Lockfile passes supply-chain policies (verified 1m ago)
+Lockfile is up to date, resolution step is skipped
+Packages: -4
+----
+Progress: resolved 9, reused 9, downloaded 0, added 0, done
+
+dependencies:
+- dsh-receipts ^0.1.1
+
+Done in 200ms using pnpm v12.4.2

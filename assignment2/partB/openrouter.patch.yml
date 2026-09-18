@@ -1,0 +1,37 @@
+# Overlay patch that routes DeepSeek Harness's model calls through
+# OpenRouter instead of DeepSeek's own API.
+#
+# `apiKeyEnv` is a credential REFERENCE (an env var name), resolved per
+# request through the harness credential seam -- the actual key never
+# enters this file. Set OPENROUTER_API_KEY in the environment before
+# booting: docs/AGENTS.md and packages/llm/llm-pi-ai/README.md both
+# describe this apiKeyEnv convention (the stock DEEPSEEK_API_KEY /
+# web-search-deepseek row uses the identical pattern).
+#
+# Model ids below were verified live against OpenRouter on 2026-09-18:
+# they actually support tool calling (see Assignment2/partA's stage 16,
+# where the original assignment-suggested free models had been retired).
+- id: llm-pi-ai
+  name: '@deepseek-ai/dsh-llm-pi-ai'
+  config:
+    providers:
+      openrouter:
+        displayName: OpenRouter
+        apiKeyEnv: OPENROUTER_API_KEY
+        api: openai-completions
+        baseURL: https://openrouter.ai/api/v1
+        models:
+          - id: deepseek/deepseek-v4-flash-0731:free
+            name: DeepSeek V4 Flash (free, via OpenRouter)
+            contextWindow: 131072
+          - id: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
+            name: Nemotron 3 Nano (free, via OpenRouter)
+            contextWindow: 131072
+          - id: liquid/lfm-2.5-2.6b:free
+            name: LFM 2.5 (free, via OpenRouter)
+            contextWindow: 32768
+- id: agent-default-model
+  name: '@deepseek-ai/dsh-agent-default-model'
+  config:
+    provider: openrouter
+    model: deepseek/deepseek-v4-flash-0731:free
