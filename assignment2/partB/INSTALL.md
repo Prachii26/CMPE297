@@ -174,8 +174,12 @@ README.
 Output:
 
 ```
-dsh web: http://127.0.0.1:3080/?token=w3rCgWk28WcyhvoK-U8vi98DDQvzBnc7Ycty1q7cQCc
+dsh web: http://127.0.0.1:3080/?token=<SESSION_TOKEN>
 ```
+
+dsh generates a fresh local auth token on every boot — the value above is
+redacted because it's a real (if now-dead, localhost-only) token from
+this machine's install session, not a placeholder dsh itself prints.
 
 Confirmed serving with `curl` (401 without the token, 200 with it — an
 intentional local browser-trust fence, not a failure):
