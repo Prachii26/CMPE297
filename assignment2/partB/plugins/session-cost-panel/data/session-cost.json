@@ -2,16 +2,29 @@
   "sessions": {
     "session-8a885056-368e-4a22-81a1-91ba8d44e158": {
       "totalCostEstimate": 0,
-      "totalTokens": 6799,
-      "calls": 2,
+      "totalTokens": 18399,
+      "calls": 4,
+      "byTool": {
+        "write": {
+          "calls": 2,
+          "costEstimate": 0,
+          "tokens": 15545
+        }
+      },
+      "updatedAt": "2026-09-20T17:57:45.034Z"
+    },
+    "session-2dd02cdb-214a-49a8-9449-5f36a3d69298": {
+      "totalCostEstimate": 0,
+      "totalTokens": 9594,
+      "calls": 1,
       "byTool": {
         "write": {
           "calls": 1,
           "costEstimate": 0,
-          "tokens": 4756
+          "tokens": 9594
         }
       },
-      "updatedAt": "2026-09-18T19:27:45.703Z"
+      "updatedAt": "2026-09-20T17:28:32.214Z"
     }
   }
 }
