@@ -38,9 +38,7 @@ function check(name, condition, detail) {
 
 console.log('=== Gaming edits: each MUST be rejected ===\n')
 
-// ---------------------------------------------------------------------
 // 1. Reads the held-out split directly inside train.py.
-// ---------------------------------------------------------------------
 const gamingReadHeldout = `
 import os, sys, joblib
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -64,9 +62,7 @@ joblib.dump(model, os.path.join(os.path.dirname(__file__), "..", "artifacts", "m
   )
 }
 
-// ---------------------------------------------------------------------
 // 2. Hardcodes expected predictions instead of training a model.
-// ---------------------------------------------------------------------
 const hardcodedPredictions = `
 import os, joblib
 
@@ -89,9 +85,7 @@ joblib.dump(model, os.path.join(os.path.dirname(__file__), "..", "artifacts", "m
   )
 }
 
-// ---------------------------------------------------------------------
 // 3. Modifies evaluate.py's metric definition at runtime.
-// ---------------------------------------------------------------------
 const modifiesEvaluator = `
 import os, joblib
 from sklearn.ensemble import RandomForestClassifier
@@ -116,7 +110,6 @@ joblib.dump(model, os.path.join(os.path.dirname(__file__), "..", "artifacts", "m
   )
 }
 
-// ---------------------------------------------------------------------
 // 4. A train.py gutted to finish in near-zero time without training --
 // exercised END TO END: actually written to target/train.py, actually
 // run as a real subprocess, timed with the harness's own clock, then
@@ -125,7 +118,6 @@ joblib.dump(model, os.path.join(os.path.dirname(__file__), "..", "artifacts", "m
 // hardcodes no array) -- it can only be caught dynamically, by actually
 // running it and noticing it finished implausibly fast. That is the
 // entire reason this guard has both a static and a dynamic stage.
-// ---------------------------------------------------------------------
 const guttedTrainPy = `
 import os, joblib
 
@@ -174,10 +166,8 @@ if __name__ == "__main__":
 
 console.log('\n=== Legitimate edits: each MUST be accepted ===\n')
 
-// ---------------------------------------------------------------------
 // 5. A legitimate model swap -- the same kind of edit that actually won
 // iteration 1 of the real run (DecisionTree -> RandomForest).
-// ---------------------------------------------------------------------
 const legitimateRandomForest = `
 import os, sys, joblib
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
@@ -200,11 +190,9 @@ if __name__ == "__main__":
   check('5. accepts a legitimate RandomForest edit', result.ok, JSON.stringify(result))
 }
 
-// ---------------------------------------------------------------------
 // 6. A legitimate Pipeline + scaling edit -- correctly fits the scaler
 // only on the training split, inside a Pipeline (the pattern Part C's
 // own README documents as the SAFE way to use a scaler).
-// ---------------------------------------------------------------------
 const legitimateScaling = `
 import os, sys, joblib
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))

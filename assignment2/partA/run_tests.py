@@ -19,10 +19,6 @@ from types import SimpleNamespace
 
 ROOT = Path(__file__).resolve().parent
 
-# ---------------------------------------------------------------------------
-# Fake model plumbing shared by every stage test.
-# ---------------------------------------------------------------------------
-
 
 def fake_usage(prompt=10, completion=5, cached=None, cost=None):
     details = SimpleNamespace(cached_tokens=cached) if cached is not None else None
@@ -108,11 +104,6 @@ def captured_stdout():
     buf = io.StringIO()
     with contextlib.redirect_stdout(buf):
         yield buf
-
-
-# ---------------------------------------------------------------------------
-# Per-stage tests. Each raises AssertionError on failure.
-# ---------------------------------------------------------------------------
 
 
 def test_stage_01():

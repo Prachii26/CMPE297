@@ -160,7 +160,7 @@ function runChecks(code) {
 function formatWarning(findings) {
   const lines = [
     '',
-    '⚠️ leakage-guard found ' + findings.length + ' possible data-leakage issue(s) in this code:',
+    'leakage-guard found ' + findings.length + ' possible data-leakage issue(s) in this code:',
     ...findings.map((f, i) => `  ${i + 1}. ${f}`),
     '',
     '(Heuristic pattern match, not a guarantee -- review each one and fix if it ' +
