@@ -14,15 +14,15 @@ prints; nothing here estimates cost from a price table.
 """
 import os
 
-DEFAULT_MODEL = os.environ.get("MODEL", "deepseek/deepseek-v4-flash-0731:free")
+DEFAULT_MODEL = os.environ.get("MODEL", "liquid/lfm-2.5-2.6b:free")
 
 # The fallback route, in try-this-first order. /route changes this list
 # at runtime; main.py always reads MODELS fresh, so a change takes effect
 # on the very next call.
 MODELS = [
     DEFAULT_MODEL,
-    "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
-    "liquid/lfm-2.5-2.6b:free",
+    "google/gemma-4-26b-a4b-it:free",
+    "nvidia/nemotron-3.5-lightning:free",
 ]
 
 # Illustrative USD price per MILLION tokens, as (prompt, completion).
@@ -31,9 +31,9 @@ MODELS = [
 # print, not a billing source of truth. The actual charge for any real
 # call comes back from the API itself, in usage.cost, handled below.
 PRICES = {
-    "deepseek/deepseek-v4-flash-0731:free": (0.0, 0.0),
-    "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": (0.0, 0.0),
     "liquid/lfm-2.5-2.6b:free": (0.0, 0.0),
+    "google/gemma-4-26b-a4b-it:free": (0.0, 0.0),
+    "nvidia/nemotron-3.5-lightning:free": (0.0, 0.0),
 }
 
 
@@ -64,9 +64,10 @@ def set_route(model_names):
 
 def call_with_fallback(client, models, **kwargs):
     """Tries each model in `models`, in order. Returns (response,
-    model_used) for the first one that doesn't raise. If every model
-    fails, re-raises the LAST error -- there is nothing left to fall
-    back to, and swallowing it would hide a real outage."""
+    model_used) for the first one that doesn't raise AND returns a usable
+    response. If every model fails, re-raises the LAST error -- there is
+    nothing left to fall back to, and swallowing it would hide a real
+    outage."""
     last_exc = None
     for model in models:
         try:
@@ -75,6 +76,17 @@ def call_with_fallback(client, models, **kwargs):
                 extra_body={"usage": {"include": True}},
                 **kwargs,
             )
+            # OpenRouter doesn't always raise on a provider-side failure:
+            # an overloaded upstream can come back as HTTP 200 with
+            # choices=None and the real problem buried in an `error`
+            # field instead -- observed live against an overloaded
+            # provider. Treat that the same as an exception, not a
+            # success, or the caller crashes on response.choices[0].
+            if not response.choices:
+                last_exc = RuntimeError(
+                    f"{model} returned no choices: {getattr(response, 'error', response)}"
+                )
+                continue
             return response, model
         except Exception as exc:  # noqa: BLE001 -- deliberately broad: a
             # rate limit, an outage, and "this model doesn't support tool

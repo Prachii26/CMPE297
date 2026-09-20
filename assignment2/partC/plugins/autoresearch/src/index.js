@@ -22,7 +22,10 @@ export const inject = ['commands', 'llm']
 
 const ROOT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..')
 const PROVIDER = 'openrouter'
-const MODEL = 'deepseek/deepseek-v4-flash-0731:free'
+// deepseek/deepseek-v4-flash-0731:free (used for the real 10-iteration run
+// in runs/ledger.jsonl) had its free tier retired by 2026-09-20 -- see
+// Assignment2/README.md for the dated note. Re-verified replacement below.
+const MODEL = 'liquid/lfm-2.5-2.6b:free'
 
 function formatStatus(state, ledger) {
   if (!state) {

@@ -16,7 +16,7 @@ from openai import OpenAI
 load_dotenv(find_dotenv())
 
 BASE_URL = "https://openrouter.ai/api/v1"
-MODEL = os.environ.get("MODEL", "deepseek/deepseek-v4-flash-0731:free")
+MODEL = os.environ.get("MODEL", "liquid/lfm-2.5-2.6b:free")
 
 # The schema is how the model learns the tool exists and how to call it.
 # Nothing here executes anything -- it is pure description.

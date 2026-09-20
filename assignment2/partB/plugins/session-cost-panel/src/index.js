@@ -33,9 +33,9 @@ const DATA_FILE = path.join(DATA_DIR, 'session-cost.json')
 // live from OpenRouter -- a display estimate, never a billing source of
 // truth. Keys match Assignment2/partB/openrouter.patch.yml's models.
 const PRICE_TABLE = {
-  'deepseek/deepseek-v4-flash-0731:free': [0, 0],
-  'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free': [0, 0],
   'liquid/lfm-2.5-2.6b:free': [0, 0],
+  'google/gemma-4-26b-a4b-it:free': [0, 0],
+  'nvidia/nemotron-3.5-lightning:free': [0, 0],
 }
 // Fallback guess for a model this table doesn't know, so the estimate
 // degrades gracefully instead of silently reading zero.

@@ -18,8 +18,11 @@ OpenAI directly — a hard requirement for this assignment, and also a
 convenient one: OpenRouter exposes an OpenAI-compatible chat completions
 API in front of many providers, so the same `openai` Python client works
 unmodified, with only `base_url` and the API key changed. The default
-model is `deepseek/deepseek-v4-flash-0731:free`, read from the `MODEL`
+model is `liquid/lfm-2.5-2.6b:free`, read from the `MODEL`
 environment variable so it can be swapped without touching any code.
+(This has already changed twice as OpenRouter's free tier rotated out
+from under it — see the top-level `Assignment2/README.md`'s
+model-deprecation notes.)
 
 ## The 16 stages
 

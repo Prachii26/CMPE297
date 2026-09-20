@@ -740,6 +740,19 @@ def test_stage_16():
     except RuntimeError as exc:
         assert "second down too" in str(exc)
 
+    # call_with_fallback: a response that comes back WITHOUT raising but
+    # with choices=None (an overloaded provider returning HTTP 200 with
+    # the real error buried in the body -- observed live against
+    # OpenRouter) must be treated as a failure, not a success, so the
+    # next model in the route still gets a chance.
+    malformed = SimpleNamespace(choices=None, error={"message": "provider overloaded"})
+    client_malformed = FakeClient([malformed, fake_response(content="ok")])
+    response, model_used = routing_mod.call_with_fallback(
+        client_malformed, ["flaky-model", "live-model"], messages=[]
+    )
+    assert model_used == "live-model"
+    assert response.choices[0].message.content == "ok"
+
     # Integration: a normal turn accumulates SESSION_COST from usage.cost.
     main_mod = load_module("stage_16_openrouter_routing", "main.py")
     client3 = FakeClient([fake_response(content="hi", usage=fake_usage(cost=0.0012345))])

@@ -8,9 +8,14 @@
 # describe this apiKeyEnv convention (the stock DEEPSEEK_API_KEY /
 # web-search-deepseek row uses the identical pattern).
 #
-# Model ids below were verified live against OpenRouter on 2026-09-18:
-# they actually support tool calling (see Assignment2/partA's stage 16,
-# where the original assignment-suggested free models had been retired).
+# Model ids below were verified live against OpenRouter on 2026-09-18,
+# originally leading with deepseek/deepseek-v4-flash-0731:free -- see
+# Assignment2/partA's stage 16, where the original assignment-suggested
+# free models had been retired. That replacement was retired too, by
+# 2026-09-20 (two days later): re-verified live against OpenRouter's
+# current catalog with a real tool call and swapped in below. This is
+# the same rotation stage 16's fallback route exists to handle -- see
+# Assignment2/README.md for the dated note on this second occurrence.
 - id: llm-pi-ai
   name: '@deepseek-ai/dsh-llm-pi-ai'
   config:
@@ -21,17 +26,17 @@
         api: openai-completions
         baseURL: https://openrouter.ai/api/v1
         models:
-          - id: deepseek/deepseek-v4-flash-0731:free
-            name: DeepSeek V4 Flash (free, via OpenRouter)
-            contextWindow: 131072
-          - id: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
-            name: Nemotron 3 Nano (free, via OpenRouter)
-            contextWindow: 131072
           - id: liquid/lfm-2.5-2.6b:free
             name: LFM 2.5 (free, via OpenRouter)
             contextWindow: 32768
+          - id: google/gemma-4-26b-a4b-it:free
+            name: Gemma 4 26B (free, via OpenRouter)
+            contextWindow: 262144
+          - id: nvidia/nemotron-3.5-lightning:free
+            name: Nemotron 3.5 Lightning (free, via OpenRouter)
+            contextWindow: 1000000
 - id: agent-default-model
   name: '@deepseek-ai/dsh-agent-default-model'
   config:
     provider: openrouter
-    model: deepseek/deepseek-v4-flash-0731:free
+    model: liquid/lfm-2.5-2.6b:free

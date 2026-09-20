@@ -56,7 +56,7 @@ provider still hit the cache on the unchanged prefix.
 ## Model choice
 
 The model comes from the `MODEL` env var, defaulting to
-`deepseek/deepseek-v4-flash-0731:free`. If a later stage's tool-calling
+`liquid/lfm-2.5-2.6b:free`. If a later stage's tool-calling
 request fails because a model doesn't support tools (or OpenRouter has
 retired that model id — free-tier models get swapped out over time), the
 fix is to change `MODEL`, not the code — the architecture doesn't change

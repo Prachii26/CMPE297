@@ -87,6 +87,32 @@ final answer, at `$0.000000` (free-tier). Stage 16's `README.md` now
 calls out that this rotation is expected and is exactly the scenario its
 fallback routing exists to handle.
 
+#### It happened again two days later
+
+By 2026-09-20, `deepseek/deepseek-v4-flash-0731:free` — the replacement
+above — had itself been retired from OpenRouter's free tier (404, "use
+this slug instead: deepseek/deepseek-v4-flash-0731", the paid version).
+Live-verified a fresh set of free, tool-calling-capable models and
+swapped in `liquid/lfm-2.5-2.6b:free` as the new primary, with
+`google/gemma-4-26b-a4b-it:free` and `nvidia/nemotron-3.5-lightning:free`
+as fallbacks — updated everywhere the old default appeared, across all
+three parts (Part A's 16 stages, Part B and Part C's `openrouter.patch.yml`
+and `session-cost-panel`'s price table, Part C's plugin default).
+
+This run also surfaced a real bug, not just a stale model id: `stage_16`'s
+`call_with_fallback` only caught *exceptions* as failures. An overloaded
+provider (observed live against `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`)
+can come back as HTTP 200 with `choices: None` and the actual error
+buried in the response body instead of raising — which `call_with_fallback`
+was accepting as success, so the next line (`response.choices[0].message`)
+crashed instead of falling through to the next model. Fixed by treating
+an empty `choices` the same as a raised exception, with a new regression
+test (`run_tests.py`) covering exactly that shape of response.
+
+Part A's own README documents this as expected: "the `MODELS` fallback
+list will likely need occasional updates as OpenRouter's free-tier
+lineup rotates." It rotated again inside a week.
+
 ---
 
 ## Part B — Installing and extending DeepSeek Harness (dsh)

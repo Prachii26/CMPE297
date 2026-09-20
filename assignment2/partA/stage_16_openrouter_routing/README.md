@@ -20,7 +20,7 @@ session total prints on exit.
 `routing.py`'s `MODELS` is the fallback route, tried in order:
 
 ```python
-MODELS = [DEFAULT_MODEL, "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", "liquid/lfm-2.5-2.6b:free"]
+MODELS = [DEFAULT_MODEL, "google/gemma-4-26b-a4b-it:free", "nvidia/nemotron-3.5-lightning:free"]
 
 def call_with_fallback(client, models, **kwargs):
     last_exc = None
@@ -31,6 +31,9 @@ def call_with_fallback(client, models, **kwargs):
                 extra_body={"usage": {"include": True}},
                 **kwargs,
             )
+            if not response.choices:
+                last_exc = RuntimeError(f"{model} returned no choices: {getattr(response, 'error', response)}")
+                continue
             return response, model
         except Exception as exc:
             last_exc = exc
@@ -42,6 +45,14 @@ Any failure — a rate limit, an outage, a model that rejects `tools=` —
 falls through to the next model in the list. If every model fails, the
 *last* error is re-raised; there's nothing left to fall back to, and
 swallowing it would hide a real outage from the user.
+
+The `if not response.choices` check exists because a live run caught a
+real gap: an overloaded provider can come back as HTTP 200 with
+`choices: None` and the real error buried in the body, instead of
+raising. Without this check, `call_with_fallback` treated that as
+success and the crash happened one line later, in the caller, on
+`response.choices[0].message` — see the top-level `Assignment2/README.md`
+for the full story.
 
 ### `usage.include: true` is what makes cost real
 

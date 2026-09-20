@@ -22,7 +22,7 @@ from tools import FUNCTIONS, TOOLS
 load_dotenv(find_dotenv())
 
 BASE_URL = "https://openrouter.ai/api/v1"
-MODEL = os.environ.get("MODEL", "deepseek/deepseek-v4-flash-0731:free")
+MODEL = os.environ.get("MODEL", "liquid/lfm-2.5-2.6b:free")
 MAX_TURNS = 10
 
 
