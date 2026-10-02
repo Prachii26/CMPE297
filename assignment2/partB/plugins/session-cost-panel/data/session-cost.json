@@ -2,16 +2,21 @@
   "sessions": {
     "session-8a885056-368e-4a22-81a1-91ba8d44e158": {
       "totalCostEstimate": 0,
-      "totalTokens": 18399,
-      "calls": 4,
+      "totalTokens": 30379,
+      "calls": 6,
       "byTool": {
         "write": {
           "calls": 2,
           "costEstimate": 0,
           "tokens": 15545
+        },
+        "read": {
+          "calls": 1,
+          "costEstimate": 0,
+          "tokens": 11367
         }
       },
-      "updatedAt": "2026-09-20T17:57:45.034Z"
+      "updatedAt": "2026-10-02T22:12:40.699Z"
     },
     "session-2dd02cdb-214a-49a8-9449-5f36a3d69298": {
       "totalCostEstimate": 0,
@@ -25,6 +30,116 @@
         }
       },
       "updatedAt": "2026-09-20T17:28:32.214Z"
+    },
+    "session-e447c50c-0c73-488b-b052-d46949e1e5ec": {
+      "totalCostEstimate": 0,
+      "totalTokens": 23322,
+      "calls": 8,
+      "byTool": {
+        "write": {
+          "calls": 5,
+          "costEstimate": 0,
+          "tokens": 17807
+        },
+        "read": {
+          "calls": 2,
+          "costEstimate": 0,
+          "tokens": 4908
+        }
+      },
+      "updatedAt": "2026-10-02T22:13:18.838Z"
+    },
+    "session-700c1247-a318-4479-a3ff-70fd743820a0": {
+      "totalCostEstimate": 0,
+      "totalTokens": 32849,
+      "calls": 14,
+      "byTool": {
+        "write": {
+          "calls": 5,
+          "costEstimate": 0,
+          "tokens": 17861
+        },
+        "read": {
+          "calls": 3,
+          "costEstimate": 0,
+          "tokens": 3601
+        },
+        "subagent": {
+          "calls": 1,
+          "costEstimate": 0,
+          "tokens": 5011
+        },
+        "subagent_fork": {
+          "calls": 1,
+          "costEstimate": 0,
+          "tokens": 3328
+        }
+      },
+      "updatedAt": "2026-10-02T22:23:45.296Z"
+    },
+    "28b9c13f-1cfd-4a5a-b9ac-4e04acd8efd1": {
+      "totalCostEstimate": 0,
+      "totalTokens": 24214,
+      "calls": 7,
+      "byTool": {
+        "write": {
+          "calls": 3,
+          "costEstimate": 0,
+          "tokens": 13234
+        },
+        "glob": {
+          "calls": 1,
+          "costEstimate": 0,
+          "tokens": 5055
+        },
+        "read": {
+          "calls": 1,
+          "costEstimate": 0,
+          "tokens": 4633
+        },
+        "send_message": {
+          "calls": 1,
+          "costEstimate": 0,
+          "tokens": 699
+        }
+      },
+      "updatedAt": "2026-10-02T22:22:12.333Z"
+    },
+    "dbe3e5be-bf78-4ca1-8021-049cddbd720f": {
+      "totalCostEstimate": 0,
+      "totalTokens": 3707,
+      "calls": 4,
+      "byTool": {
+        "write": {
+          "calls": 2,
+          "costEstimate": 0,
+          "tokens": 1964
+        },
+        "read": {
+          "calls": 1,
+          "costEstimate": 0,
+          "tokens": 1243
+        }
+      },
+      "updatedAt": "2026-10-02T22:21:50.995Z"
+    },
+    "session-c1ebbf60-27cd-4723-8c03-a9a294bedccd": {
+      "totalCostEstimate": 0,
+      "totalTokens": 13819,
+      "calls": 3,
+      "byTool": {
+        "write": {
+          "calls": 1,
+          "costEstimate": 0,
+          "tokens": 10120
+        },
+        "present": {
+          "calls": 1,
+          "costEstimate": 0,
+          "tokens": 1791
+        }
+      },
+      "updatedAt": "2026-10-02T22:30:04.099Z"
     }
   }
 }

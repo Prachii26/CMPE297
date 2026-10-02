@@ -7,11 +7,9 @@ using that harness to run a self-improving ML loop with guards against
 gaming its own scoreboard (Part C). All three talk to real, live model
 APIs — no mocked calls, no fabricated results.
 
-## Demo videos
+## Demo video
 
-- Part A: YOUTUBE_LINK_PART_A
-- Part B: YOUTUBE_LINK_PART_B
-- Part C: YOUTUBE_LINK_PART_C
+Full walkthrough of all three parts: https://youtu.be/MEByvMW7TYo
 
 ---
 
