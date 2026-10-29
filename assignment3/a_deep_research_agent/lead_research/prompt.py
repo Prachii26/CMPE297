@@ -45,8 +45,15 @@ The plan is:
 
 Your assignment is the {angle} brief. {focus}
 
-Run the searches from your brief using Google Search. Then report what you
-actually found, as plain text:
+Run the searches from your brief using the `web_search` tool.
+
+**You have a budget of 6 searches.** Spend them on the queries in your brief,
+then stop and write up what you found. Do not search once per candidate
+company: the point of your angle is breadth across a few good queries, not an
+exhaustive crawl. If a search returns nothing useful, try one different phrasing
+at most, then move on.
+
+Then report what you actually found, as plain text:
 
 - Name every company you found that plausibly fits the ICP. Real companies only.
 - For each one, give what your angle is responsible for establishing.

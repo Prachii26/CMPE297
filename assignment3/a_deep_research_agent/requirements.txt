@@ -1,6 +1,11 @@
 # Agent A - B2B lead research pipeline
 # Python 3.11
 google-adk==2.13.0
+
+# Search backend for the researchers. DuckDuckGo needs no API key, which
+# matters because Gemini's Search grounding is metered on a separate quota
+# from the model and is exhausted on this key. See README.
+ddgs==9.16.1
 python-dotenv==1.2.4
 
 # tests

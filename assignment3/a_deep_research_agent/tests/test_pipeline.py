@@ -60,33 +60,53 @@ def test_state_flows_planner_to_researchers_to_scorer_to_writer():
     assert "{critique?}" in writer.instruction
 
 
-def test_no_agent_mixes_builtin_google_search_with_another_tool():
-    """ADK 2.13.0 sends the default google_search singleton as a raw built-in
-    tool. Gemini rejects a request that carries a built-in tool alongside
-    function declarations, so a search agent must hold search and nothing else.
+def _walk(agent):
+    yield agent
+    for sub in getattr(agent, "sub_agents", []) or []:
+        yield from _walk(sub)
+    for t in getattr(agent, "tools", []) or []:
+        if isinstance(t, AgentTool):
+            yield from _walk(t.agent)
+
+
+def test_no_agent_uses_the_builtin_google_search_tool():
+    """Search grounding is metered on its own quota, separate from the model's,
+    and it is exhausted on this key: a plain request succeeds while the same
+    request carrying google_search returns 429. The researchers use a
+    FunctionTool-backed web_search instead.
+
+    The invariant still matters: ADK 2.13.0 sends the default google_search
+    singleton as a raw built-in, which Gemini rejects alongside function
+    declarations. If anyone reintroduces it, this fails.
     """
     from lead_research.agent import root_agent
 
-    def walk(agent):
-        yield agent
-        for sub in getattr(agent, "sub_agents", []) or []:
-            yield from walk(sub)
-        for t in getattr(agent, "tools", []) or []:
-            if isinstance(t, AgentTool):
-                yield from walk(t.agent)
-
-    checked = 0
-    for agent in walk(root_agent):
+    for agent in _walk(root_agent):
         tools = getattr(agent, "tools", []) or []
-        has_search = any(isinstance(t, GoogleSearchTool) for t in tools)
-        if has_search:
-            checked += 1
-            assert len(tools) == 1, (
-                f"{agent.name} mixes google_search with {len(tools) - 1} other "
-                "tool(s); wrap the search agent in AgentTool instead"
-            )
-    # The three researchers plus the critic's wrapped search agent.
-    assert checked == 4
+        offenders = [t for t in tools if isinstance(t, GoogleSearchTool)]
+        assert not offenders, (
+            f"{agent.name} uses the built-in google_search; use the "
+            "web_search FunctionTool, or hold it as the agent's only tool"
+        )
+
+
+def test_every_researcher_can_search_the_web():
+    from lead_research.agent import root_agent
+
+    _, parallel, _, _ = root_agent.sub_agents
+    for a in parallel.sub_agents:
+        names = [t.name for t in a.tools]
+        assert names == ["web_search"], f"{a.name} tools: {names}"
+
+
+def test_the_critics_search_agent_also_uses_web_search():
+    from lead_research.agent import root_agent
+
+    _, _, loop, _ = root_agent.sub_agents
+    _, critic = loop.sub_agents
+    inner = [t.agent for t in critic.tools if isinstance(t, AgentTool)]
+    assert inner, "critic lost its wrapped search agent"
+    assert [t.name for t in inner[0].tools] == ["web_search"]
 
 
 def test_critic_has_exit_loop_and_a_wrapped_search_tool():

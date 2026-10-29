@@ -9,6 +9,8 @@ Each agent is written from scratch against a named reference implementation —
 read, not copied — with the domain changed and at least two behaviours changed.
 Those changes are listed in each agent's README under "Our changes".
 
+**Demo video:** YOUTUBE_VIDEO_LINK
+
 ## Status
 
 | | Agent | What it does | Status | Tests |
@@ -113,6 +115,85 @@ correctness is demonstrable regardless of quota.
 Where an agent could not complete a live run within budget, it is marked
 **PARTIAL** with the exact error, here and in its own README. Nothing is marked
 WORKING on the strength of a stubbed run.
+
+## Findings
+
+Three things from building this that a reader should know.
+
+### 1. A code reviewer that invents what it cannot see
+
+Agent D's first live run passed every check and **destroyed the module it was
+fixing**. `get_discount(user, cart_total, coupon, is_member, region)` came back
+as `get_discount(total, is_member, items, is_holiday, is_birthday)`, with the
+region rules, the coupon rules and the clearance loop deleted and flat currency
+discounts turned into percentages. `checks_pass` was `true`, because PEP 8 and
+cyclomatic complexity cannot see semantics.
+
+The cause was upstream of the fixer. `check_style` returned line numbers and
+violation codes but **not the text of those lines**, so the reviewer filled in
+the gap from imagination: it reported variables named `is_holiday` and
+`is_birthday` at lines 22 and 24, which actually contain `is_member` — neither
+name appears anywhere in the file. The fixer then read that review and built a
+feature around the invented names.
+
+Two fixes, both in code rather than in the prompt:
+
+- `check_style` now attaches the real source line to every violation, so there
+  is nothing left to guess.
+- `propose_patch` compares the module's public API before and after and fails
+  with `api_preserved: false`, naming every change. Extracting **private**
+  helpers stays allowed, since that is how a complexity-16 function is
+  legitimately brought down.
+
+Re-run against the exact patch from that session: `style_ok` and
+`complexity_ok` stay `true`, `api_preserved` goes `false`, `checks_pass` goes
+`false`. Five tests cover it. Full write-up in
+[agent D's demo](d_code_review_agent/docs/demo.md).
+
+### 2. Search grounding is a separate quota from the model
+
+Agent A stalled on `429 RESOURCE_EXHAUSTED` across three runs. The obvious
+reading — the model's daily cap — was wrong, and chasing it cost real time.
+
+Quota on this key is tracked **per model**
+(`GenerateRequestsPerDayPerProjectPerModel`, 20/day each), so the first fix was
+to give each of the three parallel researchers its own model. All three still
+429'd, which ruled the model quota out.
+
+The controlled test that settled it: one model, one minute, two requests.
+
+```
+plain (no tools)       200 OK
+grounded (search)      429  You exceeded your current quota...
+```
+
+**Google Search grounding is metered on its own dimension**, and it was
+exhausted. The error shape is the tell — per-model 429s carry a `QuotaFailure`
+detail naming the quota and its value, while the grounding 429 carries only a
+help link.
+
+The fix was to stop fighting it: the researchers now use a `web_search`
+`FunctionTool` backed by DuckDuckGo, which needs no key and no quota. The
+pipeline's actual subject — Sequential/Parallel/Loop composition, `output_key`
+state passing, and a critic that rejects unsourced leads — does not depend on
+which engine sits behind the tool. A side benefit: a `FunctionTool` has none of
+the built-in-tool restrictions that make `google_search` awkward to compose.
+
+### 3. Two process mistakes worth not repeating
+
+Both are in [DECISIONS.md](DECISIONS.md), and both cost time rather than
+correctness.
+
+- **Running agents concurrently produced self-inflicted 429s.** Agent A's three
+  parallel researchers alone exceed the 5-requests-per-minute cap; running
+  agent D and agent B's CLI alongside them made every run slower, not faster.
+  Serialising the demo runs was strictly quicker.
+- **Watching the DOM to decide a run had finished cancelled two live runs.**
+  During a 429 or 503 backoff the dev UI is completely static, so "the page
+  stopped changing" reads identically to "the run is done". Closing the browser
+  at that point cancels the run server-side (`Root node ... was cancelled`).
+  Completion is now detected by polling the ADK sessions API for a text event
+  from the expected final agent.
 
 ## Layout
 

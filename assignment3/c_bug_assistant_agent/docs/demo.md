@@ -1,9 +1,16 @@
 # Demo transcript — VoltLoop bug triage assistant
 
-Real run against `gemini-2.5-flash` through AI Studio on 2026-10-28.
-Server: `adk web --port 8731`, app `bug_assistant`. Tool calls were captured
-from the `/run` endpoint response, which is the same event stream the dev UI
-renders in its Events tab.
+Real run on **2026-10-28**, model **`gemini-2.5-flash`** via AI Studio.
+Server: `adk web --port 8731`, app `bug_assistant`.
+
+> **Model note.** This transcript was produced on `gemini-2.5-flash`, which was
+> the default at the time. That model's free-tier allowance (20 requests/day)
+> was later exhausted, and since quota is tracked per model the agent's default
+> is now **`gemini-3-flash-preview`**, overridable with `BUG_ASSISTANT_MODEL`.
+> The behaviour shown here is unchanged by that switch.
+
+Tool calls were captured from the `/run` endpoint response, which is the same
+event stream the dev UI renders in its Events tab.
 
 ![ADK dev UI showing the triage table and two search_bugs tool calls](adk-web-triage.png)
 

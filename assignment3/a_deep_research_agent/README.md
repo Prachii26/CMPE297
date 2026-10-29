@@ -20,9 +20,9 @@ flowchart TD
         P["IcpPlanner<br/>(LlmAgent)"]
 
         subgraph PAR["ParallelAgent: ParallelResearchers"]
-            R1["MarketResearcher<br/>google_search"]
-            R2["FirmographicResearcher<br/>google_search"]
-            R3["SignalResearcher<br/>google_search"]
+            R1["MarketResearcher<br/>web_search (DDG)"]
+            R2["FirmographicResearcher<br/>web_search (DDG)"]
+            R3["SignalResearcher<br/>web_search (DDG)"]
         end
 
         subgraph LOOP["LoopAgent: EvidenceCriticLoop (max 2)"]
@@ -97,10 +97,10 @@ per candidate.
 4. Non-interactive. The reference stops to ask the user how many companies to
    analyse; ours runs start to finish, which makes it reproducible.
 
-## The `google_search` tool conflict, verified
+## Search backend: why not `google_search`
 
-The brief asked us to check this against the installed ADK. Here is what
-**ADK 2.13.0** actually does, from
+The brief asked us to verify the `google_search` tool-conflict question against
+the installed ADK. Here is what **ADK 2.13.0** actually does, from
 `google/adk/agents/llm_agent.py::_convert_tool_union_to_tools`:
 
 - Putting `google_search` on an agent alongside other tools **does not raise at
@@ -111,15 +111,46 @@ The brief asked us to check this against the installed ADK. Here is what
   has more than one tool. The exported `google_search` singleton has
   `bypass_multi_tools_limit=False`, so it gets no such protection.
 
-So in this pipeline:
+That answers the question, but it is not what stopped this pipeline. **Gemini's
+Search grounding is metered on a quota dimension separate from, and far tighter
+than, the model's own, and it is exhausted on this key.** Three live runs died
+at the parallel stage on `429 RESOURCE_EXHAUSTED`. The first fix — one model per
+researcher, since quota is per model — did not help, which ruled the model
+quota out. The controlled test that settled it, one model and one minute:
 
-- The three researchers hold `google_search` **and nothing else**.
-- The critic needs both search and `exit_loop`, so its search capability is a
-  separate agent wrapped in `AgentTool`.
+```
+plain (no tools)       200 OK
+grounded (search)      429  You exceeded your current quota...
+```
 
-`tests/test_pipeline.py::test_no_agent_mixes_builtin_google_search_with_another_tool`
-walks the whole agent tree, including inside `AgentTool`s, and fails if anyone
-ever breaks this rule.
+The tell is the error shape: a per-model 429 carries a `QuotaFailure` detail
+naming `GenerateRequestsPerDayPerProjectPerModel` and its `quotaValue`; the
+grounding 429 carries only a help link.
+
+So the researchers use **`web_search`, a `FunctionTool` backed by DuckDuckGo**
+(`ddgs`), which needs no API key and no quota. What this pipeline exists to
+demonstrate — `SequentialAgent`/`ParallelAgent`/`LoopAgent` composition,
+`output_key` state passing, and a critic that rejects unsourced leads — does
+not depend on which engine sits behind the tool. The researcher prompts and the
+critic are unchanged: every lead still needs a real source URL, and the tool
+tells the model in its own result not to invent one.
+
+Two consequences worth knowing:
+
+- **A `FunctionTool` has none of the built-in-tool restrictions**, so the
+  `AgentTool` wrapper around the critic's search agent is no longer *required*.
+  It is kept because it is the composition the assignment asks to show, and
+  because it keeps the critic's verification on its own budget.
+- **DDG throttles bursts.** It answers a three-way burst with HTTP 202 and an
+  empty body rather than an error. Measured on the first run: 4 usable
+  responses against 15 throttled. `web_search` therefore serialises calls
+  behind a 6-second gap (`LEAD_RESEARCH_SEARCH_GAP`), treats an empty result
+  set as retryable rather than as "nothing found", and retries 4 times with
+  jittered backoff.
+
+`tests/test_pipeline.py::test_no_agent_uses_the_builtin_google_search_tool`
+walks the whole agent tree, including inside `AgentTool`s, and fails if the
+built-in is ever reintroduced.
 
 ## Setup
 
@@ -163,10 +194,13 @@ Tests:
 | `GOOGLE_GENAI_USE_VERTEXAI` | yes | `FALSE` for the AI Studio path. Defaulted in code. |
 | `LEAD_RESEARCH_MODEL` | no | Default `gemini-flash-latest`. |
 | `LEAD_RESEARCH_MAX_LOOPS` | no | Critic iterations, default 2. Each costs 2 model calls. |
+| `LEAD_RESEARCH_RESEARCHER_MODELS` | no | Comma-separated, one model per researcher. They run simultaneously and quota is per model, so sharing one model is an instant 429. |
+| `LEAD_RESEARCH_SEARCH_GAP` | no | Seconds between DDG calls, default 6. Lower it and DDG starts returning 202 with no results. |
 
 ## Versions
 
-- Python 3.11.0, `google-adk==2.13.0`, `python-dotenv==1.2.4`, `pytest==9.2.0`
+- Python 3.11.0, `google-adk==2.13.0`, `ddgs==9.16.1`,
+  `python-dotenv==1.2.4`, `pytest==9.2.0`, `pytest-asyncio==1.4.1`
 
 ## Known limits
 
@@ -175,9 +209,14 @@ Tests:
   (**20 requests/day**, 5/minute) that is a third of a day's budget per run.
   Every model is built with `HttpRetryOptions` retrying 429 with long backoff,
   which is what makes the parallel stage survive the per-minute cap at all.
-- **Grounding quality is whatever Google Search returns.** The critic checks
-  that a URL is present and plausible; it does not fetch the page. A lead can
-  be well-sourced and still wrong.
+- **Result quality is whatever DuckDuckGo returns**, and the critic checks that
+  a URL is present and plausible rather than fetching the page. A lead can be
+  well-sourced and still wrong. Directory and aggregator pages
+  (`f6s.com`, `ensun.io`) rank highly for these queries, so sources skew
+  towards listings rather than primary company pages.
+- **Researchers have a 6-search budget.** Without one, the market researcher
+  ran 33 searches in a single live run, searching per candidate company and
+  burning its model's daily quota before the pipeline could finish.
 - **`ParallelAgent`, `SequentialAgent` and `LoopAgent` are deprecated** in ADK
   2.13.0 in favour of `Workflow`. We kept them because the brief names them,
   they still work, and the deprecation notice itself says `Workflow` cannot yet

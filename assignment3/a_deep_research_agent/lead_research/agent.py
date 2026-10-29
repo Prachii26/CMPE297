@@ -13,9 +13,18 @@ Shape:
 State moves between stages only through `output_key`; each downstream prompt
 pulls prior stages in by name with {braces}.
 
-Tool-conflict note (ADK 2.13.0): the three researchers hold `google_search` as
-their ONLY tool. The critic needs both a search capability and function tools,
-so its search arrives wrapped in `AgentTool`. See README for why.
+Search backend: the researchers use a `web_search` FunctionTool backed by
+DuckDuckGo, not the built-in `google_search`. Gemini's Search grounding is
+metered on a quota dimension separate from the model's own and is exhausted on
+this key, which stopped the parallel stage dead whichever models were used. See
+`search_tool.py` and the README.
+
+A side effect worth noting: `google_search` is a built-in tool that Gemini
+refuses to accept alongside function declarations, which is why the critic's
+search capability is wrapped in `AgentTool`. A FunctionTool has no such
+restriction, so that wrapper is no longer strictly required — it is kept
+because it is the composition the assignment asks to demonstrate, and because
+it keeps the critic's verification on its own budget.
 """
 
 from __future__ import annotations
@@ -26,7 +35,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from google.adk.agents import LlmAgent, LoopAgent, ParallelAgent, SequentialAgent
 from google.adk.models.google_llm import Gemini
-from google.adk.tools import FunctionTool, exit_loop, google_search
+from google.adk.tools import FunctionTool, exit_loop
 from google.adk.tools.agent_tool import AgentTool
 from google.genai import types
 
@@ -41,6 +50,7 @@ from .prompt import (
     researcher_instruction,
 )
 from .scoring import score_lead_fit
+from .search_tool import web_search
 
 AGENT_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = AGENT_DIR.parent
@@ -81,7 +91,7 @@ RESEARCHER_MODELS = [
     m.strip()
     for m in os.environ.get(
         "LEAD_RESEARCH_RESEARCHER_MODELS",
-        "gemini-3-flash-preview,gemini-3.1-flash-lite,gemini-flash-lite-latest",
+        "gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-flash-lite-latest",
     ).split(",")
     if m.strip()
 ]
@@ -122,7 +132,7 @@ def _researcher(
         model=make_model(model_name),
         description=f"Researches the {angle} angle with Google Search.",
         instruction=researcher_instruction(angle, focus),
-        tools=[google_search],
+        tools=[FunctionTool(web_search)],
         output_key=key,
     )
 
@@ -170,10 +180,11 @@ critic_search_agent = LlmAgent(
     model=make_model(),
     description="Checks whether a specific claim or URL can be found on the web.",
     instruction=(
-        "You verify one specific claim or URL with Google Search. Report only "
-        "what you actually found, and say plainly if you found nothing."
+        "You verify one specific claim or URL with the web_search tool. "
+        "Report only what you actually found, and say plainly if you found "
+        "nothing."
     ),
-    tools=[google_search],
+    tools=[FunctionTool(web_search)],
 )
 
 critic_agent = LlmAgent(
