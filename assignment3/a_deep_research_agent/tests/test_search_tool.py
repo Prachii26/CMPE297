@@ -23,13 +23,17 @@ class FakeDDGS:
     raises: Exception | None = None
     calls: list[tuple[str, int]] = []
 
+    def __init__(self, *a, **kw):
+        # web_search passes timeout=...; accept whatever it sends.
+        self.init_kwargs = kw
+
     def __enter__(self):
         return self
 
     def __exit__(self, *a):
         return False
 
-    def text(self, query, max_results=5):
+    def text(self, query, max_results=5, **kw):
         FakeDDGS.calls.append((query, max_results))
         if FakeDDGS.raises is not None:
             raise FakeDDGS.raises
@@ -127,7 +131,7 @@ def test_a_later_attempt_can_succeed():
     rows = [{"title": "t", "href": "https://e.com/x", "body": "b"}]
 
     class Flaky(FakeDDGS):
-        def text(self, query, max_results=5):
+        def text(self, query, max_results=5, **kw):
             calls["n"] += 1
             if calls["n"] == 1:
                 raise RuntimeError("transient")

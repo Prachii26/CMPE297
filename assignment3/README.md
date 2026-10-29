@@ -16,17 +16,21 @@ Those changes are listed in each agent's README under "Our changes".
 | | Agent | What it does | Status | Tests |
 |---|---|---|---|---|
 | **C** | [c_bug_assistant_agent](c_bug_assistant_agent/README.md) | Triages VoltLoop e-scooter bugs over MCP; `search_bugs` returns a severity- and component-ranked queue, and `set_status` refuses to act without an audited reason. | **WORKING** | 22 |
-| **A** | [a_deep_research_agent](a_deep_research_agent/README.md) | Turns an ideal customer profile into a sourced lead table; planner → 3 parallel researchers → critic loop → writer, each lead scored 1–5 by a deterministic tool. | **PARTIAL** | 22 |
+| **A** | [a_deep_research_agent](a_deep_research_agent/README.md) | Turns an ideal customer profile into a sourced lead table; planner → 3 parallel researchers → critic loop → writer, each lead scored 1–5 by a deterministic tool. | **PARTIAL** | 34 |
 | **D** | [d_code_review_agent](d_code_review_agent/README.md) | Reviews a Python file by path with AST, pycodestyle and complexity tools, then fixes it in a capped loop that emits a unified diff. | **WORKING** | 38 |
 | **B** | [b_gemini_cli_agent](b_gemini_cli_agent/README.md) | Answers questions about a sandboxed code folder by driving the Gemini CLI as a function tool, returning a structured summary. | **WORKING** | 28 |
 | **E** | [e_ecommerce_agent](e_ecommerce_agent/README.md) | Meeple Market board game shop over MCP + SQLite; every tool is scoped to a `user_id`, and out-of-stock items always return alternatives. | **WORKING** | 33 |
 
-Four of five are verified live. Agent A is **PARTIAL**: its pipeline loads and
-its planner stage completes against a real model, but the three parallel
-researchers fail on the **Google Search grounding quota**, which is rate
-limited separately from the model quota and is exhausted on this key. The exact
-error, the three attempts made, and the test that isolates grounding from the
-model are in [its demo](a_deep_research_agent/docs/demo.md).
+Four of five are verified live. Agent A is **PARTIAL**, but much further along
+than that label suggests: after replacing Gemini's Search grounding (metered on
+its own exhausted quota) with a DuckDuckGo-backed `FunctionTool`, **five of its
+seven stages run live** — planner, all three parallel researchers, and the lead
+scorer, producing five real Nordic companies with real source URLs and fit
+scores of 5/4/4/4/3. The critic loop starts and calls its wrapped search agent;
+the critic and report writer did not finish before the day's per-model quota
+ran out, so there is no final lead table. Full account, including the three
+attempts and two bugs found on the way, in
+[its demo](a_deep_research_agent/docs/demo.md).
 
 ## Run commands
 
@@ -178,6 +182,14 @@ pipeline's actual subject — Sequential/Parallel/Loop composition, `output_key`
 state passing, and a critic that rejects unsourced leads — does not depend on
 which engine sits behind the tool. A side benefit: a `FunctionTool` has none of
 the built-in-tool restrictions that make `google_search` awkward to compose.
+
+That unblocked the parallel stage: the researchers now complete and the scorer
+produces real, sourced leads. Swapping the backend also surfaced two bugs of my
+own — a rate-limit lock held across the network call, which made one slow
+search block every other researcher (a run sat 1500 s with **zero** API
+errors), and researchers with no search budget, one of which ran **33** searches
+and burned its model's daily quota. Both are fixed; both are the kind of fault
+that only appears under real concurrency.
 
 ### 3. Two process mistakes worth not repeating
 

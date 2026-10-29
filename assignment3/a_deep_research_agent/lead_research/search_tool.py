@@ -28,16 +28,25 @@ from typing import Any
 MAX_RESULTS_CAP = 8
 SNIPPET_CHARS = 400
 
-# DDG throttles bursts. Three researchers fire at once, so serialise calls
-# through one lock with a small gap rather than letting them collide.
+# DDG throttles bursts. Three researchers fire at once, so calls are spaced
+# out by reserving a time slot under a lock.
+#
+# The lock is held only long enough to claim a slot — never across the network
+# call. An earlier version wrapped the whole request, and a single slow search
+# then blocked every other researcher: a live run sat for 1500 seconds with
+# zero API errors and never left the parallel stage.
 _LOCK = threading.Lock()
 # DDG answers a burst with HTTP 202 and no results rather than an error, so the
 # gap has to be generous. Measured: three researchers at 1.5s produced 4 usable
 # responses against 15 rate-limited ones.
 _MIN_GAP_SECONDS = float(os.environ.get("LEAD_RESEARCH_SEARCH_GAP", "6.0"))
-_last_call = [0.0]
+_next_slot = [0.0]
 
 RETRY_ATTEMPTS = 4
+
+# Hard ceiling on one DDG request, so a hung connection cannot stall a
+# researcher indefinitely.
+SEARCH_TIMEOUT = float(os.environ.get("LEAD_RESEARCH_SEARCH_TIMEOUT", "20"))
 
 
 def web_search(query: str, max_results: int = 5) -> dict[str, Any]:
@@ -78,13 +87,18 @@ def web_search(query: str, max_results: int = 5) -> dict[str, Any]:
     last_error = ""
     for attempt in range(RETRY_ATTEMPTS):
         try:
+            # Claim a slot (fast, under the lock), then wait and search
+            # outside it so no caller can block the others.
             with _LOCK:
-                gap = time.time() - _last_call[0]
-                if gap < _MIN_GAP_SECONDS:
-                    time.sleep(_MIN_GAP_SECONDS - gap)
-                with DDGS() as ddgs:
-                    rows = list(ddgs.text(query, max_results=n))
-                _last_call[0] = time.time()
+                now = time.time()
+                slot = max(now, _next_slot[0])
+                _next_slot[0] = slot + _MIN_GAP_SECONDS
+            delay = slot - time.time()
+            if delay > 0:
+                time.sleep(delay)
+
+            with DDGS(timeout=SEARCH_TIMEOUT) as ddgs:
+                rows = list(ddgs.text(query, max_results=n))
 
             # An empty result set from DDG usually means throttling (it
             # answers a burst with 202 and an empty body, not an error), so

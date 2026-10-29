@@ -175,9 +175,16 @@ scorer_agent = LlmAgent(
 
 # The critic's search capability is wrapped rather than built in, because the
 # critic also carries exit_loop. See the module docstring.
+# Its own model: it runs inside the critic's turn, and sharing a model with the
+# planner/scorer/writer put it behind their rate limiting at exactly the point
+# the loop needed to close.
+CRITIC_SEARCH_MODEL = os.environ.get(
+    "LEAD_RESEARCH_CRITIC_SEARCH_MODEL", "gemini-3.1-flash-lite"
+)
+
 critic_search_agent = LlmAgent(
     name="CriticSearchAgent",
-    model=make_model(),
+    model=make_model(CRITIC_SEARCH_MODEL),
     description="Checks whether a specific claim or URL can be found on the web.",
     instruction=(
         "You verify one specific claim or URL with the web_search tool. "

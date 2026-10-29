@@ -1,6 +1,6 @@
 # Agent A — B2B lead research pipeline
 
-**Status: PARTIAL** — see [docs/demo.md](docs/demo.md). The pipeline loads and the planner stage completes against a real model; the three parallel researchers fail on the Google Search grounding quota, which is rate limited separately from the model and is exhausted on this key. Exact error and diagnosis in the demo.
+**Status: PARTIAL** — see [docs/demo.md](docs/demo.md). Five of seven stages run live with real web evidence: the planner, all three parallel researchers, and the lead scorer (five `score_lead_fit` calls, real companies, real URLs, scores 5/4/4/4/3). The critic loop starts and calls its wrapped search agent; the critic and report writer did not finish before the day's model quota was exhausted, so there is no final lead table.
 
 You give it an ideal customer profile — industry, region, company size — and it
 returns a markdown lead table where every company carries a **1–5 fit score**, a
