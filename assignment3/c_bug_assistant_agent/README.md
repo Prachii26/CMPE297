@@ -134,7 +134,7 @@ cd Assignment3\c_bug_assistant_agent
 .\.venv\Scripts\python.exe -m pytest tests\ -q
 ```
 
-**19 passed.** No test touches the network: the model is never constructed, the
+**22 passed.** No test touches the network: the model is never constructed, the
 MCP tool functions are called directly, and each test gets a throwaway SQLite
 file via `BUG_DB_PATH`.
 

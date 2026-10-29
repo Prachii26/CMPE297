@@ -5,6 +5,7 @@ python-dotenv==1.2.4
 
 # tests
 pytest==9.2.0
+pytest-asyncio==1.4.1
 
 # Not a pip dependency: the Gemini CLI itself is installed with npm.
 #   npm install -g @google/gemini-cli

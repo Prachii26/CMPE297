@@ -7,3 +7,4 @@ python-dotenv==1.2.4
 
 # tests
 pytest==9.2.0
+pytest-asyncio==1.4.1
