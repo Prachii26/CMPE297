@@ -134,9 +134,13 @@ cd Assignment3\c_bug_assistant_agent
 .\.venv\Scripts\python.exe -m pytest tests\ -q
 ```
 
-**22 passed.** No test touches the network: the model is never constructed, the
-MCP tool functions are called directly, and each test gets a throwaway SQLite
-file via `BUG_DB_PATH`.
+**22 passed.** No test touches the network. Most call the MCP tool functions
+directly; `tests/test_mcp_roundtrip.py` additionally drives the real path
+end to end — `McpToolset` -> stdio subprocess -> FastMCP -> SQLite and back —
+with only the model replaced by a scripted stand-in that emits fixed tool
+calls. Each test gets a throwaway SQLite file via `BUG_DB_PATH`, and the
+suite strips `GOOGLE_API_KEY`/`GEMINI_API_KEY` so an accidental live call
+fails loudly rather than spending quota.
 
 ## Environment variables
 
@@ -152,7 +156,7 @@ file via `BUG_DB_PATH`.
 - Python 3.11.0
 - `google-adk==2.13.0`
 - `fastmcp==4.1.4`, `mcp==2.3.0`
-- `pytest==9.2.0`, `python-dotenv==1.2.4`
+- `pytest==9.2.0`, `pytest-asyncio==1.4.1`, `python-dotenv==1.2.4`
 
 ## Known limits
 
