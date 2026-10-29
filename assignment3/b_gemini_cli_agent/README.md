@@ -13,7 +13,7 @@ flowchart LR
     U["Question about the code"] --> A
 
     subgraph ADK["ADK process"]
-        A["LlmAgent<br/>codebase_qa_agent<br/>gemini-2.5-flash"]
+        A["LlmAgent<br/>codebase_qa_agent<br/>gemini-flash-latest"]
         T1["FunctionTool<br/>list_sandbox"]
         T2["FunctionTool<br/>gemini_cli(prompt, cwd)"]
         A --> T1
@@ -152,7 +152,7 @@ different folder to analyse your own code.
 |---|---|---|
 | `GOOGLE_API_KEY` | yes | AI Studio key for the ADK agent. Mirrored into `GEMINI_API_KEY` for the CLI. |
 | `GOOGLE_GENAI_USE_VERTEXAI` | yes | `FALSE`. Defaulted in code. |
-| `GEMINI_CLI_AGENT_MODEL` | no | Default `gemini-2.5-flash`. |
+| `GEMINI_CLI_AGENT_MODEL` | no | Default `gemini-flash-latest`. |
 | `GEMINI_CLI_SANDBOX` | no | Folder the CLI may run in. Default `./sandbox`. |
 | `GEMINI_CLI_TIMEOUT` | no | Seconds, default 120. |
 | `GEMINI_CLI_MAX_OUTPUT` | no | Characters, default 16000. |

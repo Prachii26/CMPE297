@@ -18,7 +18,7 @@ flowchart LR
     U["Engineer"] -->|"adk web"| A
 
     subgraph ADK["ADK process"]
-        A["LlmAgent<br/>voltloop_bug_assistant<br/>gemini-2.5-flash"]
+        A["LlmAgent<br/>voltloop_bug_assistant<br/>gemini-flash-latest"]
         T["McpToolset<br/>tool_filter: 4 tools"]
         A --> T
     end
@@ -148,7 +148,7 @@ fails loudly rather than spending quota.
 |---|---|---|
 | `GOOGLE_API_KEY` | yes | AI Studio key. `agent.py` falls back to `GEMINI_API_KEY` if this is unset. |
 | `GOOGLE_GENAI_USE_VERTEXAI` | yes | Must be `FALSE` for the local AI Studio path. Defaulted in code. |
-| `BUG_ASSISTANT_MODEL` | no | Model override. Default `gemini-2.5-flash`. |
+| `BUG_ASSISTANT_MODEL` | no | Model override. Default `gemini-flash-latest`. |
 | `BUG_DB_PATH` | no | SQLite location. Default `voltloop_bugs.db` in this folder. Tests set it per-test. |
 
 ## Versions

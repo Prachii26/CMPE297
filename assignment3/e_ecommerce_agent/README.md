@@ -17,7 +17,7 @@ flowchart LR
     U["Shopper (user_id)"] --> A
 
     subgraph ADK["ADK process"]
-        A["LlmAgent<br/>meeple_market_assistant<br/>gemini-2.5-flash"]
+        A["LlmAgent<br/>meeple_market_assistant<br/>gemini-flash-latest"]
         T["McpToolset<br/>tool_filter: 5 tools"]
         A --> T
     end
@@ -161,7 +161,7 @@ Tests:
 |---|---|---|
 | `GOOGLE_API_KEY` | yes | AI Studio key. Falls back to `GEMINI_API_KEY`. |
 | `GOOGLE_GENAI_USE_VERTEXAI` | yes | `FALSE`. Defaulted in code. |
-| `SHOP_AGENT_MODEL` | no | Default `gemini-2.5-flash`. |
+| `SHOP_AGENT_MODEL` | no | Default `gemini-flash-latest`. |
 | `SHOP_DB_PATH` | no | SQLite location. Default `meeple_market.db` here. Tests set it per-test. |
 
 ## Versions

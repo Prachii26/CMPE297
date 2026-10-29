@@ -82,24 +82,30 @@ fails loudly instead of quietly spending quota.
 ## Verification and the quota ceiling
 
 "Verified" for this assignment means: `adk web` starts, a real
-`gemini-2.5-flash` call succeeds, the tool calls appear in the trace, and the
+`gemini-flash-latest` call succeeds, the tool calls appear in the trace, and the
 tests pass.
 
-The hard constraint on the live half of that is the AI Studio free tier on this
-key: **20 `generateContent` requests per day** for `gemini-2.5-flash`, plus a
-**5 per minute** cap. `gemini-2.0-flash` and `gemini-2.5-flash-lite` both
-return 404 "no longer available", so there is no second quota bucket to spread
-load across.
+The live half ran into a hard ceiling. This AI Studio key's free tier allows
+only **20 `generateContent` requests per day** for `gemini-2.5-flash` (plus 5
+per minute), and that was exhausted early.
 
-That budget is small next to what these agents cost. One run of agent A is 7–11
-model calls on its own. Two things follow, and both are visible in the code:
+Quota is tracked **per model** — the quota ID is
+`GenerateRequestsPerDayPerProjectPerModel` — so switching models gives a fresh
+bucket. Probing the key found six usable alternatives (`gemini-flash-latest`,
+`gemini-flash-lite-latest`, `gemini-3-flash-preview`, `gemini-3.5-flash`,
+`gemini-3.5-flash-lite`, `gemini-3.1-flash-lite`), while `gemini-2.5-pro` and
+`gemini-2.5-flash-lite` return 404 for this key.
 
-- Every agent builds its model with
-  `HttpRetryOptions(http_status_codes=[429, 503, 504])` and long jittered
-  backoff. Without it, agent A's parallel stage trips the per-minute cap
-  immediately and the pipeline dies halfway.
-- Every test suite runs without the API, so correctness is demonstrable
-  regardless of quota.
+All five agents therefore default to **`gemini-flash-latest`**, overridable per
+agent with an env var. Each `docs/demo.md` records the model that produced its
+transcript.
+
+Rate limiting still shapes the runs. Every agent builds its model with
+`HttpRetryOptions(http_status_codes=[429, 503, 504])` and long jittered
+backoff. Agent E's demo run took 467 seconds, nearly all of it absorbing a 503
+"this model is currently experiencing high demand" retry — without that config
+the run would simply have failed. Every test suite runs without the API, so
+correctness is demonstrable regardless of quota.
 
 Where an agent could not complete a live run within budget, it is marked
 **PARTIAL** with the exact error, here and in its own README. Nothing is marked

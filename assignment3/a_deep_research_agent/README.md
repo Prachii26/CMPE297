@@ -161,7 +161,7 @@ Tests:
 |---|---|---|
 | `GOOGLE_API_KEY` | yes | AI Studio key. Falls back to `GEMINI_API_KEY`. |
 | `GOOGLE_GENAI_USE_VERTEXAI` | yes | `FALSE` for the AI Studio path. Defaulted in code. |
-| `LEAD_RESEARCH_MODEL` | no | Default `gemini-2.5-flash`. |
+| `LEAD_RESEARCH_MODEL` | no | Default `gemini-flash-latest`. |
 | `LEAD_RESEARCH_MAX_LOOPS` | no | Critic iterations, default 2. Each costs 2 model calls. |
 
 ## Versions

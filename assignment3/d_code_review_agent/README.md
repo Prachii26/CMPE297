@@ -140,7 +140,7 @@ Remove-Item samples\*.fixed.py -ErrorAction SilentlyContinue
 |---|---|---|
 | `GOOGLE_API_KEY` | yes | AI Studio key. Falls back to `GEMINI_API_KEY`. |
 | `GOOGLE_GENAI_USE_VERTEXAI` | yes | `FALSE`. Defaulted in code. |
-| `CODE_REVIEW_MODEL` | no | Default `gemini-2.5-flash`. |
+| `CODE_REVIEW_MODEL` | no | Default `gemini-flash-latest`. |
 | `CODE_REVIEW_MAX_FIX_ATTEMPTS` | no | Loop cap, default 3. |
 | `CODE_REVIEW_SANDBOX` | no | Root the agent may read and write. Default: this project folder. |
 
