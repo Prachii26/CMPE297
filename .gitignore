@@ -19,3 +19,6 @@ _reference/
 
 # Generated SQLite fixtures (seeded on first run)
 *.db
+
+# Agent D writes patch candidates beside the original; generated, not source
+*.fixed.py
