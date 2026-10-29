@@ -2,6 +2,9 @@
 
 **Status: WORKING**
 
+**Demo video:** one video covers all five agents — see the link at the top of [the assignment README](../README.md).
+
+
 An `LlmAgent` that answers questions about a code folder by shelling out to the
 **Gemini CLI** and turning its answer into a structured summary. The agent
 never reads the files itself; the CLI does, inside a pinned sandbox.

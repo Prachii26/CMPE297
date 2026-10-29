@@ -2,6 +2,9 @@
 
 **Status: WORKING**
 
+**Demo video:** one video covers all five agents — see the link at the top of [the assignment README](../README.md).
+
+
 Give it a path to a Python file. It parses the file, runs PEP 8 checks and
 cyclomatic complexity over it, writes findings with explicit severities, then
 tries up to three times to patch the file — **emitting a unified diff** and

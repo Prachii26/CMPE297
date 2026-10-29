@@ -2,6 +2,9 @@
 
 **Status: WORKING**
 
+**Demo video:** one video covers all five agents — see the link at the top of [the assignment README](../README.md).
+
+
 A bug triage assistant for VoltLoop, a synthetic electric-scooter sharing
 platform. The agent itself owns no tools. Every capability arrives over the
 Model Context Protocol from a FastMCP server that we start as a stdio

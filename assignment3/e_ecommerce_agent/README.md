@@ -2,6 +2,9 @@
 
 **Status: WORKING**
 
+**Demo video:** one video covers all five agents — see the link at the top of [the assignment README](../README.md).
+
+
 A board game shop assistant. Five tools — `search_products`, `get_product`,
 `add_to_cart`, `place_order`, `order_status` — all served over MCP from a local
 FastMCP server backed by SQLite.

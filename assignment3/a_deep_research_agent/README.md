@@ -2,6 +2,9 @@
 
 **Status: WORKING** — all seven stages complete live, ending in a sourced lead table with 1-5 fit scores. See [docs/demo.md](docs/demo.md).
 
+**Demo video:** one video covers all five agents — see the link at the top of [the assignment README](../README.md).
+
+
 You give it an ideal customer profile — industry, region, company size — and it
 returns a markdown lead table where every company carries a **1–5 fit score**, a
 one-line reason, the buying signals found, and source URLs.
