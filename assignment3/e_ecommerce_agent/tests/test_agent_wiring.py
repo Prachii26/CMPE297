@@ -43,7 +43,7 @@ def test_stdio_server_is_our_module_with_a_pinned_cwd():
 def test_model_is_flash_with_rate_limit_retry():
     from shop_agent.agent import root_agent
 
-    assert root_agent.model.model == "gemini-2.5-flash"
+    assert root_agent.model.model == "gemini-flash-latest"
     assert 429 in root_agent.model.retry_options.http_status_codes
 
 

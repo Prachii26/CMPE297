@@ -14,7 +14,9 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from google.adk.agents import LlmAgent
+from google.adk.models.google_llm import Gemini
 from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
+from google.genai import types
 from mcp.client.stdio import StdioServerParameters
 
 from .prompt import AGENT_INSTRUCTION
@@ -27,7 +29,18 @@ PROJECT_DIR = AGENT_DIR.parent
 load_dotenv(AGENT_DIR / ".env")
 load_dotenv(PROJECT_DIR / ".env")
 
-MODEL = os.environ.get("BUG_ASSISTANT_MODEL", "gemini-2.5-flash")
+MODEL = os.environ.get("BUG_ASSISTANT_MODEL", "gemini-flash-latest")
+
+# The AI Studio free tier rate-limits per minute and per day. Retrying 429 with
+# long jittered backoff is what keeps a multi-tool turn from dying mid-way.
+RETRY_OPTIONS = types.HttpRetryOptions(
+    attempts=8,
+    initial_delay=20.0,
+    max_delay=75.0,
+    exp_base=1.5,
+    jitter=0.3,
+    http_status_codes=[429, 503, 504],
+)
 
 
 def _map_api_key() -> None:
@@ -72,7 +85,7 @@ def build_toolset() -> McpToolset:
 
 
 root_agent = LlmAgent(
-    model=MODEL,
+    model=Gemini(model=MODEL, retry_options=RETRY_OPTIONS),
     name="voltloop_bug_assistant",
     description=(
         "Triages VoltLoop scooter-platform bugs by severity and component, "

@@ -1,6 +1,6 @@
 # Agent E — Meeple Market shopping assistant
 
-**Status: see the status line in [../README.md](../README.md)**
+**Status: WORKING**
 
 A board game shop assistant. Five tools — `search_products`, `get_product`,
 `add_to_cart`, `place_order`, `order_status` — all served over MCP from a local

@@ -27,7 +27,7 @@ if not os.environ.get("GEMINI_API_KEY") and os.environ.get("GOOGLE_API_KEY"):
     os.environ["GEMINI_API_KEY"] = os.environ["GOOGLE_API_KEY"]
 os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "FALSE")
 
-MODEL_NAME = os.environ.get("GEMINI_CLI_AGENT_MODEL", "gemini-2.5-flash")
+MODEL_NAME = os.environ.get("GEMINI_CLI_AGENT_MODEL", "gemini-flash-latest")
 
 RETRY_OPTIONS = types.HttpRetryOptions(
     attempts=8,

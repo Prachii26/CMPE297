@@ -51,7 +51,7 @@ if not os.environ.get("GOOGLE_API_KEY") and os.environ.get("GEMINI_API_KEY"):
     os.environ["GOOGLE_API_KEY"] = os.environ["GEMINI_API_KEY"]
 os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "FALSE")
 
-MODEL_NAME = os.environ.get("LEAD_RESEARCH_MODEL", "gemini-2.5-flash")
+MODEL_NAME = os.environ.get("LEAD_RESEARCH_MODEL", "gemini-flash-latest")
 
 # This pipeline fires 7-11 model calls per run. The AI Studio free tier allows
 # 5 per minute, so without backoff the parallel stage alone would 429. Retry on

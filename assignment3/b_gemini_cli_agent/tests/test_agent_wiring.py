@@ -26,7 +26,7 @@ def test_root_agent_exposes_both_tools():
 def test_model_is_flash_with_rate_limit_retry():
     from gemini_cli_agent.agent import root_agent
 
-    assert root_agent.model.model == "gemini-2.5-flash"
+    assert root_agent.model.model == "gemini-flash-latest"
     assert 429 in root_agent.model.retry_options.http_status_codes
 
 

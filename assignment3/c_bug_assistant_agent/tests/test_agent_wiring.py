@@ -14,7 +14,8 @@ def test_root_agent_is_an_llmagent_on_flash_with_one_mcp_toolset():
     from bug_assistant.agent import root_agent
 
     assert isinstance(root_agent, LlmAgent)
-    assert root_agent.model == "gemini-2.5-flash"
+    assert root_agent.model.model == "gemini-flash-latest"
+    assert 429 in root_agent.model.retry_options.http_status_codes
     assert root_agent.name == "voltloop_bug_assistant"
 
     # All capability arrives over MCP; the agent declares no local tools.

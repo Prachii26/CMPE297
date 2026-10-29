@@ -1,7 +1,7 @@
 # Assignment 3 — Five Google ADK agents
 
 Five agents built on the Google Agent Development Kit (**`google-adk==2.13.0`**,
-Python 3.11, `gemini-2.5-flash` via AI Studio). Each has its own virtualenv,
+Python 3.11, `gemini-flash-latest` via AI Studio). Each has its own virtualenv,
 its own README with a mermaid architecture diagram, pinned requirements, an
 offline test suite, and a demo transcript from a real run.
 
@@ -13,11 +13,11 @@ Those changes are listed in each agent's README under "Our changes".
 
 | | Agent | What it does | Status | Tests |
 |---|---|---|---|---|
-| **C** | [c_bug_assistant_agent](c_bug_assistant_agent/README.md) | Triages VoltLoop e-scooter bugs over MCP; `search_bugs` returns a severity- and component-ranked queue, and `set_status` refuses to act without an audited reason. | *see below* | 22 |
+| **C** | [c_bug_assistant_agent](c_bug_assistant_agent/README.md) | Triages VoltLoop e-scooter bugs over MCP; `search_bugs` returns a severity- and component-ranked queue, and `set_status` refuses to act without an audited reason. | **WORKING** | 22 |
 | **A** | [a_deep_research_agent](a_deep_research_agent/README.md) | Turns an ideal customer profile into a sourced lead table; planner → 3 parallel researchers → critic loop → writer, each lead scored 1–5 by a deterministic tool. | *see below* | 22 |
 | **D** | [d_code_review_agent](d_code_review_agent/README.md) | Reviews a Python file by path with AST, pycodestyle and complexity tools, then fixes it in a capped loop that emits a unified diff. | *see below* | 33 |
 | **B** | [b_gemini_cli_agent](b_gemini_cli_agent/README.md) | Answers questions about a sandboxed code folder by driving the Gemini CLI as a function tool, returning a structured summary. | *see below* | 28 |
-| **E** | [e_ecommerce_agent](e_ecommerce_agent/README.md) | Meeple Market board game shop over MCP + SQLite; every tool is scoped to a `user_id`, and out-of-stock items always return alternatives. | *see below* | 33 |
+| **E** | [e_ecommerce_agent](e_ecommerce_agent/README.md) | Meeple Market board game shop over MCP + SQLite; every tool is scoped to a `user_id`, and out-of-stock items always return alternatives. | **WORKING** | 33 |
 
 > **Status column is filled in by the final verification pass.** See
 > [the verification note](#verification-and-the-quota-ceiling) below for what
