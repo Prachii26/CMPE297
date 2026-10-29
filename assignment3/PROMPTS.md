@@ -2,10 +2,10 @@
 
 Every prompt sent for Assignment 3, verbatim, in order.
 
-At the time of writing there has been exactly one prompt: the full assignment
-brief below, reproduced word for word with no edits, reordering, or
-summarising. (It arrived duplicated in the session — the same text twice in one
-message — and is recorded once here, as the single prompt that was sent.)
+Four prompts were sent, in the order below, reproduced word for word with no
+edits, reordering, or summarising. (Prompt 1 arrived duplicated in the session
+— the same text twice in one message — and is recorded once here, as the
+single prompt that was sent.)
 
 ---
 
@@ -80,4 +80,36 @@ Tools: search_products, get_product, add_to_cart, place_order, order_status. All
 - Confirm _reference/ and .venv/ are gitignored.
 
 End with: each agent's status, the one real demo query and a one-line summary of its output, and any partial agent with the reason.
+````
+
+---
+
+## Prompt 2
+
+````text
+what is the status
+````
+
+---
+
+## Prompt 3
+
+````text
+is there any free available model/tool/key that we can use
+````
+
+---
+
+## Prompt 4
+
+````text
+Three decisions.
+
+1. Drop the gemini-2.5-flash fidelity constraint. That model was my pick in the prompt, not a requirement of the assignment — the assignment names no model. Use gemini-flash-latest as the default for all agents right now. Don't wait for the 2.5-flash reset and don't ration requests to preserve it. Note the model used in each demo.md.
+
+2. Gemini CLI OAuth for agent B: yes. Tell me the exact command to run and I'll do the browser login.
+
+3. Vertex AI trial: no. Don't create any GCP resources.
+
+Keep the 45-minute-per-agent cutoff. Carry on.
 ````

@@ -1,6 +1,6 @@
 # Agent B — codebase Q&A through the Gemini CLI
 
-**Status: see the status line in [../README.md](../README.md)**
+**Status: WORKING**
 
 An `LlmAgent` that answers questions about a code folder by shelling out to the
 **Gemini CLI** and turning its answer into a structured summary. The agent

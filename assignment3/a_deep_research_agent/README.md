@@ -1,6 +1,6 @@
 # Agent A — B2B lead research pipeline
 
-**Status: see the status line in [../README.md](../README.md)**
+**Status: PARTIAL** — see [docs/demo.md](docs/demo.md). The pipeline loads and the planner stage completes against a real model; the three parallel researchers fail on the Google Search grounding quota, which is rate limited separately from the model and is exhausted on this key. Exact error and diagnosis in the demo.
 
 You give it an ideal customer profile — industry, region, company size — and it
 returns a markdown lead table where every company carries a **1–5 fit score**, a

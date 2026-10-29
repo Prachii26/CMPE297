@@ -1,6 +1,6 @@
 # Agent D — Python code review and fix agent
 
-**Status: see the status line in [../README.md](../README.md)**
+**Status: WORKING**
 
 Give it a path to a Python file. It parses the file, runs PEP 8 checks and
 cyclomatic complexity over it, writes findings with explicit severities, then

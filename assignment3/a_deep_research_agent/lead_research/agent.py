@@ -66,9 +66,25 @@ RETRY_OPTIONS = types.HttpRetryOptions(
 )
 
 
-def make_model() -> Gemini:
+def make_model(model_name: str | None = None) -> Gemini:
     """A fresh model object per agent, each with rate-limit retry."""
-    return Gemini(model=MODEL_NAME, retry_options=RETRY_OPTIONS)
+    return Gemini(model=model_name or MODEL_NAME, retry_options=RETRY_OPTIONS)
+
+
+# The three researchers fire simultaneously, and the AI Studio free tier counts
+# requests per minute PER MODEL. Three grounded searches against one model is an
+# instant 429 that the whole pipeline then sits behind: two earlier live runs
+# died exactly there, never getting past the parallel stage. Giving each
+# researcher its own model means they draw on separate buckets and the fan-out
+# costs nothing. Override with LEAD_RESEARCH_RESEARCHER_MODELS (comma separated).
+RESEARCHER_MODELS = [
+    m.strip()
+    for m in os.environ.get(
+        "LEAD_RESEARCH_RESEARCHER_MODELS",
+        "gemini-3-flash-preview,gemini-3.1-flash-lite,gemini-flash-lite-latest",
+    ).split(",")
+    if m.strip()
+]
 
 
 # How many times the scorer/critic pair may iterate. Each iteration costs two
@@ -98,10 +114,12 @@ planner_agent = LlmAgent(
 # --------------------------------------------------------------------------
 
 
-def _researcher(name: str, angle: str, focus: str, key: str) -> LlmAgent:
+def _researcher(
+    name: str, angle: str, focus: str, key: str, model_name: str | None = None
+) -> LlmAgent:
     return LlmAgent(
         name=name,
-        model=make_model(),
+        model=make_model(model_name),
         description=f"Researches the {angle} angle with Google Search.",
         instruction=researcher_instruction(angle, focus),
         tools=[google_search],
@@ -109,14 +127,20 @@ def _researcher(name: str, angle: str, focus: str, key: str) -> LlmAgent:
     )
 
 
+def _researcher_model(i: int) -> str:
+    return RESEARCHER_MODELS[i % len(RESEARCHER_MODELS)] if RESEARCHER_MODELS else MODEL_NAME
+
+
 market_researcher = _researcher(
-    "MarketResearcher", "MARKET", MARKET_FOCUS, "research_market"
+    "MarketResearcher", "MARKET", MARKET_FOCUS, "research_market", _researcher_model(0)
 )
 firmographic_researcher = _researcher(
-    "FirmographicResearcher", "FIRMOGRAPHIC", FIRMOGRAPHIC_FOCUS, "research_firmographic"
+    "FirmographicResearcher", "FIRMOGRAPHIC", FIRMOGRAPHIC_FOCUS,
+    "research_firmographic", _researcher_model(1)
 )
 signal_researcher = _researcher(
-    "SignalResearcher", "SIGNALS", SIGNALS_FOCUS, "research_signals"
+    "SignalResearcher", "SIGNALS", SIGNALS_FOCUS, "research_signals",
+    _researcher_model(2)
 )
 
 parallel_researchers = ParallelAgent(
