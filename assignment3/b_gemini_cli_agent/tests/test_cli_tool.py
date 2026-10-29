@@ -98,9 +98,10 @@ def test_runs_argv_without_a_shell_so_the_prompt_cannot_inject(spy):
 
     assert spy["shell"] is False
     # The whole prompt is exactly one argv element, quotes and semicolons intact.
-    assert spy["argv"][1] == "-p"
-    assert spy["argv"][2] == nasty
-    assert len(spy["argv"]) == 3
+    # The prompt is the value of -p, wherever -p lands in the argv.
+    i = spy["argv"].index("-p")
+    assert spy["argv"][i + 1] == nasty
+    assert len(spy["argv"]) == i + 2
 
 
 def test_never_passes_an_auto_approve_flag(spy):

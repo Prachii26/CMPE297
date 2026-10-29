@@ -14,6 +14,12 @@ ask for a path; your tools only take paths.
 2. Call `check_style` and `measure_complexity`.
 3. Write your findings from what the tools returned. Never report a line number,
    a violation code, or a complexity number that did not come from a tool.
+4. **Quote the real code.** Every style violation comes back with a `source`
+   field holding the actual text of that line. When you describe a finding,
+   use the identifiers that appear in `source`. Never guess what a line
+   contains, and never name a variable that does not appear in the tool output
+   — the fixer builds its patch from your description, so an invented name
+   there becomes invented code downstream.
 
 ## Findings
 
@@ -25,7 +31,11 @@ Write every finding with an explicit severity:
 - **MAJOR** - will cause trouble soon. A function over the complexity warn
   threshold, a public function with no docstring, a shadowed builtin, an
   ambiguous name like `l` or `O`.
-- **MINOR** - cosmetic PEP 8: spacing, blank lines, import style.
+- **MINOR** - cosmetic PEP 8: spacing, blank lines, import style. Naming of
+  public functions and classes belongs here too, and must be reported as
+  **advisory only**: renaming a public symbol breaks every caller, so the fixer
+  is not allowed to do it. Say what the name should have been, and that
+  changing it is a separate, breaking change.
 
 Group the findings by severity, worst first. For each one give the line number,
 what is wrong, and the concrete fix in one sentence. Do not pad the list with
@@ -59,8 +69,10 @@ the file. It will give you back:
 Read `checks_pass`:
 
 - **True** - call `exit_loop` immediately. Do not propose further patches.
-- **False** - read `style_after.remaining` and `complexity_after.over_warn`,
-  fix exactly those, and call `propose_patch` again with the full source.
+- **False** - read `style_after.remaining`, `complexity_after.over_warn` and
+  `api_changes`, fix exactly those, and call `propose_patch` again with the
+  full source. If `api_changes` is non-empty, restore the original names and
+  arguments first: no amount of style cleanliness makes a rewrite acceptable.
 
 You get at most 3 attempts. Spend them well: fix everything you can see in the
 first patch rather than one violation at a time.
@@ -81,9 +93,17 @@ first patch rather than one violation at a time.
 ## Rules
 
 - `propose_patch` needs the WHOLE file, every time. A fragment will not parse.
-- Preserve behaviour. The discount rules, the return values, and the public
-  function names must stay the same. You are cleaning the code, not redesigning
-  the feature.
+- **Preserve the public API exactly.** Every public function and class must
+  keep its name, and every public function must keep its argument names in the
+  same order. `propose_patch` compares the public API before and after and will
+  fail the patch with `api_preserved: false` if you change it, however clean
+  the result looks. Extracting new private helpers (`_leading_underscore`) is
+  encouraged and is not an API change -- that is how you get complexity down.
+- **Preserve behaviour.** The discount rules and the return values must stay
+  the same. You are cleaning the code, not redesigning the feature. Do not
+  invent new parameters or drop existing ones.
+- Do not rename a public class even if the review called its name unidiomatic.
+  That is a breaking change and is explicitly out of scope here.
 - Never claim a check passed. Only `propose_patch` decides that.
 - Always show the unified diff the tool returned in your message, inside a
   ```diff code block, so the user can see exactly what changed.

@@ -203,6 +203,19 @@ def check_style(file_path: str, max_line_length: int = 100) -> dict[str, Any]:
         return {"error": f"style check failed: {type(e).__name__}: {e}"}
 
     violations = getattr(style.options.report, "collected", [])
+
+    # Attach the actual source line to every violation.
+    #
+    # Without this the model only sees "line 22, E712, comparison to True" and
+    # has to guess what is on line 22. In a live run it guessed wrong: it
+    # reported variables named `is_holiday` and `is_birthday` that do not exist
+    # anywhere in the file, and the fixer then rewrote the module around those
+    # invented names. Showing the line removes the need to imagine it.
+    src_lines = path.read_text(encoding="utf-8").splitlines()
+    for v in violations:
+        idx = v["line"] - 1
+        v["source"] = src_lines[idx].rstrip() if 0 <= idx < len(src_lines) else ""
+
     serious = [v for v in violations if v["code"] in SERIOUS_STYLE_CODES]
     by_code: dict[str, int] = {}
     for v in violations:
@@ -308,6 +321,46 @@ def measure_complexity(file_path: str) -> dict[str, Any]:
 # --------------------------------------------------------------------------
 
 
+def _public_api(tree: ast.AST) -> dict[str, list[str]]:
+    """Map every public top-level function/class to its argument names.
+
+    Used to detect a "fix" that silently redesigns the thing it was cleaning.
+    Private helpers (leading underscore) are ignored, because extracting them
+    is exactly how a complex function is legitimately decomposed.
+    """
+    api: dict[str, list[str]] = {}
+    for node in getattr(tree, "body", []):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            if node.name.startswith("_"):
+                continue
+            a = node.args
+            api[node.name] = [p.arg for p in (*a.posonlyargs, *a.args, *a.kwonlyargs)]
+        elif isinstance(node, ast.ClassDef):
+            api[f"class {node.name}"] = sorted(
+                b.name
+                for b in node.body
+                if isinstance(b, (ast.FunctionDef, ast.AsyncFunctionDef))
+                and not b.name.startswith("_")
+            )
+    return api
+
+
+def _api_changes(before: dict[str, list[str]], after: dict[str, list[str]]) -> list[str]:
+    """Human-readable list of public API differences."""
+    out = []
+    for name in sorted(set(before) - set(after)):
+        out.append(f"removed {name}({', '.join(before[name])})")
+    for name in sorted(set(after) - set(before)):
+        out.append(f"added {name}({', '.join(after[name])})")
+    for name in sorted(set(before) & set(after)):
+        if before[name] != after[name]:
+            out.append(
+                f"{name} signature changed: "
+                f"({', '.join(before[name])}) -> ({', '.join(after[name])})"
+            )
+    return out
+
+
 def propose_patch(file_path: str, fixed_source: str) -> dict[str, Any]:
     """Submit rewritten source for a file, and get back a diff plus fresh checks.
 
@@ -362,7 +415,7 @@ def propose_patch(file_path: str, fixed_source: str) -> dict[str, Any]:
 
     # Must parse before we bother writing it.
     try:
-        ast.parse(fixed_source, filename=str(path))
+        new_tree = ast.parse(fixed_source, filename=str(path))
     except SyntaxError as e:
         return {
             "unified_diff": diff,
@@ -370,6 +423,14 @@ def propose_patch(file_path: str, fixed_source: str) -> dict[str, Any]:
             "checks_pass": False,
             "error": f"proposed patch has a syntax error at line {e.lineno}: {e.msg}",
         }
+
+    # A cleanup must not redesign the module. Style and complexity can both
+    # look perfect on code that no longer does the same thing, so compare the
+    # public API explicitly rather than trusting the instruction to preserve it.
+    api_changes = _api_changes(
+        _public_api(ast.parse(original_norm, filename=str(path))),
+        _public_api(new_tree),
+    )
 
     candidate = path.with_suffix(".fixed.py")
     candidate.write_text(fixed_source, encoding="utf-8")
@@ -379,7 +440,8 @@ def propose_patch(file_path: str, fixed_source: str) -> dict[str, Any]:
 
     style_ok = bool(style.get("clean"))
     complexity_ok = bool(complexity.get("clean"))
-    checks_pass = style_ok and complexity_ok
+    api_preserved = not api_changes
+    checks_pass = style_ok and complexity_ok and api_preserved
 
     return {
         "unified_diff": diff,
@@ -397,11 +459,20 @@ def propose_patch(file_path: str, fixed_source: str) -> dict[str, Any]:
         },
         "style_ok": style_ok,
         "complexity_ok": complexity_ok,
+        "api_preserved": api_preserved,
+        "api_changes": api_changes,
         "checks_pass": checks_pass,
         "next_step": (
             "All checks pass. Call exit_loop now."
             if checks_pass
-            else "Checks still failing. Fix the remaining items and call "
-                 "propose_patch again with the full corrected source."
+            else (
+                "The public API changed, which means this is a rewrite rather "
+                "than a fix. Restore the original function and class names, "
+                "their argument names and their behaviour, then re-run: "
+                + "; ".join(api_changes)
+                if not api_preserved
+                else "Checks still failing. Fix the remaining items and call "
+                     "propose_patch again with the full corrected source."
+            )
         ),
     }

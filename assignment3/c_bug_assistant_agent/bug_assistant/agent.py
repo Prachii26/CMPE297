@@ -29,7 +29,7 @@ PROJECT_DIR = AGENT_DIR.parent
 load_dotenv(AGENT_DIR / ".env")
 load_dotenv(PROJECT_DIR / ".env")
 
-MODEL = os.environ.get("BUG_ASSISTANT_MODEL", "gemini-flash-latest")
+MODEL = os.environ.get("BUG_ASSISTANT_MODEL", "gemini-3-flash-preview")
 
 # The AI Studio free tier rate-limits per minute and per day. Retrying 429 with
 # long jittered backoff is what keeps a multi-tool turn from dying mid-way.

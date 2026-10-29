@@ -43,6 +43,11 @@ USE_OAUTH = os.environ.get("GEMINI_CLI_USE_OAUTH", "").strip().lower() in (
 MAX_OUTPUT_CHARS = int(os.environ.get("GEMINI_CLI_MAX_OUTPUT", "16000"))
 MAX_PROMPT_CHARS = 4000
 
+# Which model the CLI itself should use. Every model on this key has its own
+# 20/day free-tier bucket, so pinning the CLI to a named model keeps it from
+# competing with the ADK agent's bucket. Empty means the CLI's own default.
+CLI_MODEL = os.environ.get("GEMINI_CLI_MODEL", "gemini-3-flash-preview").strip()
+
 # Anything that would let the CLI act without a human in the loop. We refuse to
 # run if one of these ever shows up in the argv we are about to execute.
 FORBIDDEN_FLAGS = {
@@ -184,7 +189,10 @@ def gemini_cli(prompt: str, cwd: str = "") -> dict[str, Any]:
             ),
         }
 
-    argv = [exe, "-p", prompt]
+    argv = [exe]
+    if CLI_MODEL:
+        argv += ["-m", CLI_MODEL]
+    argv += ["-p", prompt]
 
     # Belt and braces: never execute an argv containing an auto-approve flag.
     for arg in argv:

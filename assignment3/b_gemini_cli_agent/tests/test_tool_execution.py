@@ -137,7 +137,8 @@ async def test_agent_invokes_the_cli_tool_and_gets_a_structured_result(monkeypat
 
     # And the invocation itself was safe.
     assert captured["shell"] is False
-    assert captured["argv"][1] == "-p"
+    i = captured["argv"].index("-p")
+    assert captured["argv"][i + 1].startswith("List every module")
     assert Path(captured["cwd"]).name == "taskqueue"
 
 

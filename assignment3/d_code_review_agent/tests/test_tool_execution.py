@@ -162,7 +162,7 @@ async def test_a_failing_patch_tells_the_fixer_to_try_again(scratch_file):
     model = make_tool_calling_model([
         {"call": ("propose_patch", {
             "file_path": "samples/_tmp_agent_patch.py",
-            "fixed_source": "import os,sys\nx=1\n",
+            "fixed_source": ("import os,sys\ndef add( a,b ):\n    x=1\n    return a+b\n"),
         })},
         {"text": "Still failing."},
     ])
@@ -173,6 +173,7 @@ async def test_a_failing_patch_tells_the_fixer_to_try_again(scratch_file):
     r = dict(_results(events))["propose_patch"]
 
     assert r["patch_parses"] is True
+    assert r["api_preserved"] is True
     assert r["checks_pass"] is False
     assert r["style_after"]["violation_count"] > 0
     assert "propose_patch again" in r["next_step"]

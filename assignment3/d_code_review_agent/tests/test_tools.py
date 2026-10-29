@@ -244,7 +244,8 @@ def test_propose_patch_reports_still_failing_checks_rather_than_passing():
     target = _tmp_target()
     try:
         # Parses, but still has style problems.
-        r = propose_patch("samples/_tmp_patch_me.py", "import os,sys\nx=1\n")
+        still_dirty = ("import os,sys\ndef add( a,b ):\n    x=1\n    return a+b\n")
+        r = propose_patch("samples/_tmp_patch_me.py", still_dirty)
         assert r["patch_parses"] is True
         assert r["checks_pass"] is False
         assert r["style_after"]["violation_count"] > 0
@@ -272,3 +273,128 @@ def test_propose_patch_refuses_empty_source_and_bad_paths():
         assert "error" in propose_patch("../../outside.py", CLEAN_SOURCE)
     finally:
         _cleanup(target)
+
+
+# --------------------------------------------------------------------------
+# Public-API preservation
+#
+# A live run produced a patch that was style-clean and under the complexity
+# threshold, and had quietly replaced the module's whole discount feature:
+# get_discount(user, cart_total, coupon, is_member, region) came back as
+# get_discount(total, is_member, items, is_holiday, is_birthday). Style and
+# complexity cannot see that, so propose_patch compares the API explicitly.
+# --------------------------------------------------------------------------
+
+RENAMED_ARGS = '''"""Tidy."""
+
+
+def add(x, y):
+    """Add."""
+    return x + y
+'''
+
+EXTRACTED_HELPER = '''"""Tidy."""
+
+
+def _combine(a, b):
+    """Private helper."""
+    return a + b
+
+
+def add(a, b):
+    """Add."""
+    return _combine(a, b)
+'''
+
+DROPPED_FUNCTION = '''"""Tidy."""
+
+
+def something_else(a, b):
+    """Not the original."""
+    return a + b
+'''
+
+
+def _api_target() -> Path:
+    p = SANDBOX_ROOT / "samples" / "_tmp_api.py"
+    p.write_text(
+        '"""Doc."""\n\n\ndef add(a, b):\n    """Add."""\n    return a+b\n',
+        encoding="utf-8",
+    )
+    return p
+
+
+def test_renaming_a_public_argument_fails_the_patch():
+    target = _api_target()
+    try:
+        r = propose_patch("samples/_tmp_api.py", RENAMED_ARGS)
+        assert r["style_ok"] is True          # it really is clean...
+        assert r["complexity_ok"] is True     # ...and simple...
+        assert r["api_preserved"] is False    # ...but it changed the contract.
+        assert r["checks_pass"] is False
+        assert any("add signature changed" in c for c in r["api_changes"])
+        assert "rewrite rather than a fix" in r["next_step"]
+    finally:
+        _cleanup(target)
+
+
+def test_extracting_a_private_helper_is_allowed():
+    """Decomposition is how complexity gets fixed, so it must not be blocked."""
+    target = _api_target()
+    try:
+        r = propose_patch("samples/_tmp_api.py", EXTRACTED_HELPER)
+        assert r["api_preserved"] is True
+        assert r["api_changes"] == []
+        assert r["checks_pass"] is True
+    finally:
+        _cleanup(target)
+
+
+def test_dropping_a_public_function_fails_the_patch():
+    target = _api_target()
+    try:
+        r = propose_patch("samples/_tmp_api.py", DROPPED_FUNCTION)
+        assert r["api_preserved"] is False
+        assert r["checks_pass"] is False
+        assert any(c.startswith("removed add") for c in r["api_changes"])
+        assert any(c.startswith("added something_else") for c in r["api_changes"])
+    finally:
+        _cleanup(target)
+
+
+def test_renaming_a_public_class_fails_the_patch():
+    p = SANDBOX_ROOT / "samples" / "_tmp_cls.py"
+    p.write_text(
+        '"""Doc."""\n\n\nclass orderProcessor:\n    """C."""\n\n'
+        '    def process(self):\n        """P."""\n        return 1\n',
+        encoding="utf-8",
+    )
+    try:
+        renamed = p.read_text(encoding="utf-8").replace(
+            "orderProcessor", "OrderProcessor"
+        )
+        r = propose_patch("samples/_tmp_cls.py", renamed)
+        assert r["api_preserved"] is False
+        assert any("orderProcessor" in c for c in r["api_changes"])
+    finally:
+        p.unlink(missing_ok=True)
+        p.with_suffix(".fixed.py").unlink(missing_ok=True)
+
+
+def test_style_violations_carry_the_real_source_line():
+    """A live run showed the reviewer inventing variable names for lines it
+    could not see (it reported `is_holiday`/`is_birthday`, which appear nowhere
+    in the sample). Returning the source removes the need to guess."""
+    r = check_style(SAMPLE)
+
+    by_line = {v["line"]: v["source"] for v in r["serious"]}
+    assert "is_member == True" in by_line[14]
+    assert "coupon != None" in by_line[21]
+    assert by_line[40].strip() == "except:"
+    assert "l = cart_total - d" in by_line[45]
+
+    # Every violation has one, and none mentions the hallucinated names.
+    assert all("source" in v for v in r["violations"])
+    joined = " ".join(v["source"] for v in r["violations"])
+    assert "is_holiday" not in joined
+    assert "is_birthday" not in joined
