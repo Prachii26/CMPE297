@@ -34,6 +34,12 @@ SANDBOX_ROOT = Path(
 ).resolve()
 
 TIMEOUT_SECONDS = int(os.environ.get("GEMINI_CLI_TIMEOUT", "120"))
+
+# When true, run the CLI under its own "Login with Google" OAuth session
+# instead of the AI Studio API key. See the env handling in gemini_cli().
+USE_OAUTH = os.environ.get("GEMINI_CLI_USE_OAUTH", "").strip().lower() in (
+    "1", "true", "yes",
+)
 MAX_OUTPUT_CHARS = int(os.environ.get("GEMINI_CLI_MAX_OUTPUT", "16000"))
 MAX_PROMPT_CHARS = 4000
 
@@ -190,9 +196,25 @@ def gemini_cli(prompt: str, cwd: str = "") -> dict[str, Any]:
             }
 
     env = os.environ.copy()
-    # The CLI uses AI Studio with this key, matching the rest of the project.
-    if not env.get("GEMINI_API_KEY") and env.get("GOOGLE_API_KEY"):
-        env["GEMINI_API_KEY"] = env["GOOGLE_API_KEY"]
+
+    if USE_OAUTH:
+        # The CLI prefers an API key whenever one is in the environment, and
+        # only falls back to cached OAuth credentials (~/.gemini/oauth_creds.json)
+        # when there is none. Stripping the keys from the CHILD env is therefore
+        # what actually selects "Login with Google". OAuth draws on a personal
+        # account allowance that is separate from, and far larger than, the AI
+        # Studio key's free tier.
+        env.pop("GEMINI_API_KEY", None)
+        env.pop("GOOGLE_API_KEY", None)
+        # With no key present the CLI still needs to be told which auth method
+        # to use, or it exits 41 asking for one. GCA is "Login with Google"
+        # (Gemini Code Assist), which is what consumes the cached OAuth creds.
+        env["GOOGLE_GENAI_USE_GCA"] = "true"
+        env.pop("GOOGLE_GENAI_USE_VERTEXAI", None)
+    else:
+        # The CLI uses AI Studio with this key, matching the rest of the project.
+        if not env.get("GEMINI_API_KEY") and env.get("GOOGLE_API_KEY"):
+            env["GEMINI_API_KEY"] = env["GOOGLE_API_KEY"]
 
     # Since 0.6x the CLI refuses to run in an "untrusted" directory and exits
     # 55. The documented headless escape is this env var. We set it only for

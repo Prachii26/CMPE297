@@ -72,6 +72,48 @@ seconds on a 120-second timeout. The fix is `Popen` with
 drain. Verified: it now returns in 15.3s on a 15s timeout and leaves zero
 orphaned node processes.
 
+### Auth: API key, or "Login with Google"
+
+`GEMINI_CLI_USE_OAUTH=true` switches the CLI from the AI Studio API key to its
+own OAuth session, whose personal-account allowance is far larger than the
+key's free tier. Getting that to work takes two steps, not one:
+
+1. **Remove the keys from the child env.** With `GEMINI_API_KEY` or
+   `GOOGLE_API_KEY` present the CLI always prefers the key and never looks at
+   cached OAuth credentials.
+2. **Name the auth method.** With no key and nothing else set, the CLI exits
+   **41**: `Please set an Auth method in your settings.json or specify one of
+   the following environment variables ... GEMINI_API_KEY,
+   GOOGLE_GENAI_USE_VERTEXAI, GOOGLE_GENAI_USE_GCA`. The OAuth path is
+   `GOOGLE_GENAI_USE_GCA=true` (Gemini Code Assist).
+
+To log in, from a shell with the keys cleared:
+
+```powershell
+cd Assignment3_gemini_cli_agent\sandbox
+$env:GEMINI_API_KEY = ""
+$env:GOOGLE_API_KEY = ""
+$env:GEMINI_CLI_TRUST_WORKSPACE = "true"
+gemini
+```
+
+Then choose **Login with Google**. Credentials cache to
+`~/.gemini/oauth_creds.json`.
+
+**This did not work on the account cached here**, and the failure is worth
+recording because it is not a configuration mistake:
+
+```
+Gemini CLI exited 1: Error authenticating: IneligibleTierError:
+Your current account is not eligible for Gemini Code Assist for individuals,
+the free version of Gemini Code Assist.
+```
+
+That is what Google returns for managed Google Workspace accounts, which are
+excluded from the free individual tier. A personal `@gmail.com` account would
+work. The flag is therefore **off by default** and this agent runs on the API
+key; set `GEMINI_CLI_USE_OAUTH=true` only once an eligible account is logged in.
+
 ## Our changes from the reference
 
 The reference ([derrickchwong/gemini-cli-on-adk](https://github.com/derrickchwong/gemini-cli-on-adk))
@@ -156,6 +198,7 @@ different folder to analyse your own code.
 | `GEMINI_CLI_SANDBOX` | no | Folder the CLI may run in. Default `./sandbox`. |
 | `GEMINI_CLI_TIMEOUT` | no | Seconds, default 120. |
 | `GEMINI_CLI_MAX_OUTPUT` | no | Characters, default 16000. |
+| `GEMINI_CLI_USE_OAUTH` | no | `true` runs the CLI under OAuth instead of the API key. Off by default; see Auth above. |
 
 ## Versions
 
