@@ -1,0 +1,7 @@
+# Agent A - B2B lead research pipeline
+# Python 3.11
+google-adk==2.13.0
+python-dotenv==1.2.4
+
+# tests
+pytest==9.2.0
