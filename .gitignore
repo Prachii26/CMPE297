@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Virtualenvs
+.venv/
+venv/
+
+# Secrets
+.env
+
+# Assignment 3: upstream reference clones, read-only, not submitted
+_reference/
+
+# Local databases / scratch
+*.db-journal
+
+# Generated SQLite fixtures (seeded on first run)
+*.db
