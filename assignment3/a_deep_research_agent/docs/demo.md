@@ -1,24 +1,27 @@
 # Demo transcript — B2B lead research pipeline
 
-**Status: PARTIAL.** Five of the pipeline's seven stages complete against real
-models with real web evidence: the planner, all three parallel researchers, and
-the lead scorer. The critic loop and the report writer did not finish inside
-the timebox, so there is no final lead table.
+**Status: WORKING.** All seven stages complete against real models with real web
+evidence, ending in a sourced lead table with 1–5 fit scores.
 
-Best run: **2026-10-29**, session `d91c0a0c`. Server `adk web --port 8741`, app
-`lead_research`.
+Run on **2026-10-29**, session `demoA`, via `adk web --port 8741`, app
+`lead_research`. 21 model calls, 18 `web_search` calls, 4 `score_lead_fit`
+calls.
 
-| Agent | Model |
+| Stage | Model |
 |---|---|
-| `IcpPlanner`, `LeadScorer`, `EvidenceCritic`, `ReportWriter` | `gemini-3.5-flash` |
+| `IcpPlanner` | `gemini-3.5-flash-lite` |
 | `MarketResearcher` | `gemini-3.5-flash-lite` |
 | `FirmographicResearcher` | `gemini-3.1-flash-lite` |
 | `SignalResearcher` | `gemini-flash-lite-latest` |
-| `CriticSearchAgent` | `gemini-3.1-flash-lite` |
+| `LeadScorer` | `gemini-3.1-flash-lite` |
+| `EvidenceCritic` | `gemini-flash-lite-latest` |
+| `CriticSearchAgent` | `gemini-3.5-flash-lite` |
+| `ReportWriter` | `gemini-3.1-flash-lite` |
 
-> **Why five models.** Free-tier quota is 20 requests/day **per model**. The
-> three researchers run simultaneously, so sharing one model is an immediate
-> 429. Set with `LEAD_RESEARCH_RESEARCHER_MODELS`.
+> **Why eight model assignments.** Free-tier quota is 20 requests/day **per
+> model**. The three researchers run simultaneously, so they must never share
+> one. See the README's "One model per stage"; every stage has its own env var,
+> and the mapping above is what had quota on the day.
 
 ---
 
@@ -26,196 +29,160 @@ Best run: **2026-10-29**, session `d91c0a0c`. Server `adk web --port 8741`, app
 
 > ICP: industrial IoT and sensor manufacturers, Nordics, 200-1000 employees.
 
-## What completed
+## Stage-by-stage, captured live
+
+These screenshots were taken **during a run**, each at the moment its stage
+wrote its `output_key` — not a single frame at the end.
+
+| Stage | Screenshot |
+|---|---|
+| 1. Planner | ![planner](stage-1-research-plan.png) |
+| 2. Market researcher | ![market](stage-2-research-market.png) |
+| 3. Firmographic researcher | ![firmographic](stage-3-research-firmographic.png) |
+| 4. Signal researcher | ![signals](stage-4-research-signals.png) |
+| 5. Lead scorer | ![scored](stage-5-scored-leads.png) |
+
+The capture timings from that run show the `ParallelAgent` behaving as a
+parallel agent — the three researchers finished within 25 seconds of each other
+and out of declaration order:
 
 ```
-stages written: research_plan, research_market, research_firmographic,
-                research_signals, scored_leads
-event authors:  IcpPlanner 1, MarketResearcher 13, FirmographicResearcher 13,
-                SignalResearcher 11, LeadScorer 5, EvidenceCritic 1
+[  ..s] stage 1/7 research_plan
+[ 130s] stage 4/7 research_signals
+[ 148s] stage 2/7 research_market
+[ 155s] stage 3/7 research_firmographic
+[ 218s] stage 5/7 scored_leads
 ```
 
-### Stage 1 — planner
+**Evidence note.** The ADK dev UI has no way to deep-link or re-select a past
+session (its session dropdown exposes no options to automation), so stages 6
+and 7 below are evidenced by the session state read back from the ADK API for
+session `demoA`, quoted verbatim, rather than by a UI capture. The browser-run
+screenshots above are from a separate run of the same pipeline that reached
+stage 5 before its critic hit a rate-limit backoff.
 
-Restated the ICP and produced three briefs with concrete queries, then wrote
-`research_plan` to state:
+## Stage 5 — the scorer
 
-```
-ICP
-Industry: Industrial IoT and sensor manufacturing
-Region: Nordics (Sweden, Norway, Denmark, Finland, Iceland)
-Company Size: 200–1,000 employees
-
-MARKET  Queries:
- 1. "industrial IoT" OR "sensor manufacturers" list Sweden Norway Denmark Finland company directory
- 2. "industrial sensors" OR "smart manufacturing" OR "connected devices" manufacturers directory Nordics
-FIRMOGRAPHIC  Queries:
- 1. "industrial IoT" OR "sensor manufacturer" "200..1000 employees" Sweden OR Finland site:linkedin.com/company
- 2. site:proff.se OR site:finder.fi OR site:virk.dk "sensor" OR "industrial IoT" "200".."1000" employees
-SIGNALS  Queries:
- 1. "industrial IoT" OR "sensor manufacturer" Nordics "hiring" "VP" OR "Director" OR "Head of"
- 2. "industrial sensor" OR "IIoT" Nordics "funding" OR "acquired" OR "digital transformation"
-```
-
-### Stage 2 — three parallel researchers, real web search
-
-All three ran inside the `ParallelAgent`, each calling the `web_search`
-FunctionTool. Searches per researcher: **6 / 6 / 5**, within the 6-search
-budget. Sample result shape:
-
-```json
-{"ok": true, "query": "...", "result_count": 5,
- "results": [{"title": "...", "url": "https://...", "snippet": "..."}],
- "note": "Cite the `url` values exactly; do not invent URLs."}
-```
-
-Market researcher output (excerpt), with sources attached to every claim:
-
-> - **Safran Sensing Technologies Norway AS**: A Norwegian manufacturer and
->   developer of high-precision MEMS gyros, inertial measurement units (IMUs),
->   and semiconductor wafer foundry services
->   (https://en.wikipedia.org/wiki/Safran_Sensing_Technologies_Norway).
-> - **Smart Sensor Devices**: A developer of IoT sensors, air quality
->   monitoring hardware, and smart HVAC controllers...
-
-### Stage 3 — the scorer, with the fit-score tool
-
-`LeadScorer` called `score_lead_fit` **five times**, once per company, passing
-what the research actually established:
-
-```json
-{"company": "Safran Sensing Technologies Norway AS",
- "industry_match": "exact", "region_match": "exact", "size_match": "exact",
- "buying_signals": 1,
- "evidence_urls": ["https://en.wikipedia.org/wiki/Safran_Sensing_Technologies_Norway", ...]}
-```
-
-and wrote `scored_leads`:
+`score_lead_fit` was called **4 times**, once per surviving company:
 
 ```
-COMPANY: Safran Sensing Technologies Norway AS
+COMPANY: Elisa IndustrIQ (Polystar)
 FIT_SCORE: 5
-WHY: Develops and manufactures high-precision MEMS gyros and inertial
-     measurement units (IMUs) with an in-house wafer fab in Norway.
-SIGNALS: Active recruitment for production support roles at its Norwegian
-     manufacturing operations.
-SOURCES: https://en.wikipedia.org/wiki/Safran_Sensing_Technologies_Norway,
-     https://newluxjob.com/en/jobs/norway/customer-support/3015347-production-support
-
-COMPANY: Smart Sensor Devices
-FIT_SCORE: 4
-WHY: Sweden-headquartered manufacturer of IoT sensors, air quality monitoring
-     hardware, and connected smart HVAC controllers.
+WHY: A Finnish company operating in the industrial IoT sector that aligns
+     perfectly with the target region, industry, and employee size criteria.
 SIGNALS: none found
-SOURCES: https://smartsensordevices.com/
+SOURCES: https://www.linkedin.com/company/elisaindustriq/,
+         https://leadiq.com/c/polystar--elisa-industriq/...
 
-COMPANY: JonDeTech
+COMPANY: Safran Sensing Technologies Norway AS
 FIT_SCORE: 4
-WHY: Swedish developer and manufacturer of ultra-thin infrared (IR) thermal
-     sensors for smart devices and industrial applications.
-SIGNALS: none found
-SOURCES: https://jondetech.com/
-
-COMPANY: ELSYS
+...
+COMPANY: DEIF A/S
 FIT_SCORE: 4
-WHY: Swedish manufacturer of wireless LoRaWAN environmental sensors built
-     specifically for industrial and extreme outdoor environments.
-SIGNALS: none found
-SOURCES: https://www.elsys.se/en/sensors/
-
-COMPANY: Crosser
-FIT_SCORE: 3
-WHY: Stockholm-based industrial edge software and streaming analytics provider
-     serving the industrial IoT integration ecosystem in Sweden.
-SOURCES: https://www.folotop.com/top-5-industrial-iot-solutions-providers-in-sweden/
+...
 ```
 
-These are real companies with real URLs, and the scores discriminate sensibly:
-Safran takes 5 on an exact match across all three ICP dimensions plus a hiring
-signal; Crosser drops to 3 because it is edge *software* rather than sensor
-manufacturing, and its only source is an aggregator listicle. "SIGNALS: none
-found" is reported honestly rather than padded.
-
-### Stage 4 — the critic started
-
-`EvidenceCritic` ran and called `CriticSearchAgent`, the `AgentTool`-wrapped
-search agent, to verify a source — the composition behaving exactly as
-designed. It did not return before the run was cut off.
-
-## Where it stops, and why
-
-The critic's verification round trip plus the writer need four more model calls
-on top of the ~32 already spent. By that point in the day every model bucket
-was at or near its 20-request cap, and the final attempt produced
-`8 × HTTP 429` without the planner even completing.
+## Stage 6 — the critic
 
 ```
-stages: []    authors: {'user': 1}
+APPROVED
 ```
 
-This is a quota ceiling, not a defect in the loop: the critic is reached, it
-calls its tool, and `max_iterations` bounds it. The loop's termination is
-covered offline by `tests/test_offline_run.py`, which runs all four stages
-against a scripted model and asserts the cap holds when the critic never calls
-`exit_loop`.
+The critic called `exit_loop` and the loop ended on its first pass. That is the
+designed happy path: the list was fully sourced, so there was nothing to send
+back.
 
-## Three attempts, and what each one taught
+The critic is not a rubber stamp. In an earlier run on the same ICP it
+**rejected two leads on firmographic grounds**, and caught the scorer
+contradicting its own evidence:
 
-| # | Change | Result |
-|---|---|---|
-| 1 | `google_search` on `gemini-2.5-flash`, then `gemini-flash-latest` | 429 at the parallel stage both times |
-| 2 | One model per researcher | Still 429 — which **ruled out the per-model quota** |
-| 3 | Replace `google_search` with DDG-backed `web_search` | Parallel stage completes; reached the scorer |
+> **HMS Networks AB**: The company's reported headcount of 1,100 employees
+> exceeds the ICP limit of 200-1,000. While the scorer claims it is at the
+> "upper threshold," it does not fit the firmographic requirements.
+>
+> **Data Respons Solutions A/S**: The company's reported headcount of ~1,400
+> employees exceeds the ICP limit of 200-1,000. The rationale provided
+> explicitly states this headcount, contradicting the `size_match: 'exact'`
+> input used in the `score_lead_fit` tool.
 
-The decisive test for attempt 2 → 3, one model and one minute:
+In that run the scorer re-scored against the critique and the loop ran twice.
 
+## Stage 7 — the final report
+
+```markdown
+This report identifies industrial IoT and sensor manufacturers based in the
+Nordics with an employee headcount between 200 and 1000.
+
+| Company | Fit (1-5) | Why they fit | Buying signals | Sources |
+| :--- | :---: | :--- | :--- | :--- |
+| Elisa IndustrIQ (Polystar) | 5 | A Finnish company operating in the industrial IoT sector that aligns perfectly with the target region, industry, and employee size criteria. | none found | [LinkedIn](https://www.linkedin.com/company/elisaindustriq/), [LeadIQ](https://leadiq.com/c/polystar--elisa-industriq/5a1d8b302400002400665921/employee-directory) |
+| Safran Sensing Technologies Norway AS | 4 | A Norwegian-based producer of high-precision sensors for industrial applications that closely approaches the mid-market employee size range. | none found | [Wikipedia](https://en.wikipedia.org/wiki/Safran_Sensing_Technologies_Norway) |
+| DEIF A/S | 4 | A Danish supplier of intelligent sensors and power control solutions that fits the Nordic industrial IoT and sensor manufacturing profile. | none found | [DEIF](https://www.deif.com/) |
+| Seluxit | 4 | A Danish IoT product provider offering hardware and platforms for connecting industrial systems, aligning with the target sector and region. | none found | [Seluxit](https://www.seluxit.com/) |
+
+### How to read the score
+5 is an exact match on industry, region and size with live buying signals; 1 is
+a weak match or thin evidence; a lead with no source URL is capped at 2.
+
+### Gaps
+The research could not establish precise real-time headcount for several
+candidates, as many companies in this sector operate as subsidiaries of larger
+multinational groups (e.g., Safran, Asahi Kasei/Senseair), making it difficult
+to isolate the exact headcount for the specific Nordic manufacturing entities.
+Furthermore, no strong, time-sensitive "in-market" buying signals (such as
+recent large-scale hiring of specific engineering roles or specific
+infrastructure expansion news) were identified for the companies listed.
 ```
-plain (no tools)       200 OK
-grounded (search)      429  You exceeded your current quota...
-```
 
-**Search grounding is metered separately from the model.** The error shape is
-the tell: per-model 429s carry a `QuotaFailure` naming
-`GenerateRequestsPerDayPerProjectPerModel`; the grounding one carries only a
-help link.
+Four real Nordic companies — Finnish, Norwegian, Danish, Danish — each with a
+working source URL. Every "Buying signals" cell says "none found" rather than
+being padded, and the Gaps section names what the research could not establish,
+including the subsidiary-headcount problem that the critic had flagged in the
+earlier run.
 
-Two further faults were found and fixed along the way, both mine:
+---
 
-- **The search tool held its rate-limit lock across the network call.** One
-  researcher's request blocked the other two, and a run sat for 1500 seconds
-  with *zero API errors* before timing out. The lock now only reserves a time
-  slot; the wait and the request happen outside it. A stall with no errors at
-  all points at your own concurrency, not at the provider.
-- **Researchers had no search budget.** The market researcher ran **33**
-  searches in one run, searching per candidate company rather than per brief,
-  and exhausted its model's daily quota before the pipeline could finish. The
-  budget is now 6.
+## How this went from never finishing to finishing
 
-DDG throttling was also measured and fixed: it answers a three-way burst with
-HTTP 202 and an empty body rather than an error. At a 1.5 s inter-call gap,
-**4 usable responses against 15 throttled**; at 6 s, **4 against 0**.
+Three live runs failed before this one, and the diagnosis took three passes.
+The first two found real bugs that were not the cause:
 
-## The screenshot
+1. **Lock scope.** The search tool held its rate-limit lock across the network
+   call, so one slow search blocked the other two researchers. Fixed: the lock
+   now only reserves a time slot.
+2. **No request timeout.** A hung model call could wait forever, and
+   `HttpRetryOptions` cannot help when nothing ever fails. Fixed with
+   `client_kwargs={"http_options": HttpOptions(timeout=90000)}`.
+3. **The actual cause.** ADK calls a **sync** function tool directly on the
+   asyncio event loop — `function_tool.py::sync_wrapper` is a plain
+   `target(*pos, **kw)` with no thread behind it. `web_search` was sync, doing
+   `time.sleep()` and a blocking HTTP request, so three researchers calling it
+   at once **froze the whole ADK server**. That is why runs went silent for
+   20+ minutes with at most one error in the log: nothing failed, everything
+   was starved.
 
-![ADK dev UI showing the pipeline and the planner output](adk-web-leads.png)
+Making `web_search` a coroutine — `asyncio.Lock`, `await asyncio.sleep`, and
+the blocking `ddgs` call via `asyncio.to_thread` — took the parallel stage from
+never completing to about three minutes.
 
-The dev UI with the `lead_research` pipeline loaded, the ICP query accepted,
-and the planner's three briefs rendered, with `State: research_plan` recorded.
-The later stages shown above are evidenced by the session state dump rather
-than this view, because the screenshot of the full run was overwritten by the
-final quota-exhausted attempt.
+The tell generalises: **a stall with a clean error log is almost never the
+provider.** A provider that fails gives you a status code.
+
+Two further issues found and fixed on the way:
+
+- **DDG throttling.** It answers a three-way burst with HTTP 202 and an empty
+  body rather than an error. At a 1.5 s inter-call gap: **4 usable responses
+  against 15 throttled**. At 6 s: **4 against 0**.
+- **No search budget.** The market researcher ran **33** searches in one run,
+  one per candidate company, and exhausted its model's daily quota. The budget
+  is now 6; this run used 18 across three researchers.
 
 ## What is verified without the API
 
-34 tests, none touching the network, including a full end-to-end run of all
-four stages against a scripted model:
-
-- every stage writes its `output_key`, in order;
-- all three researchers execute inside the `ParallelAgent`;
-- the critic loop is capped and terminates when the critic never exits;
-- no agent uses the built-in `google_search`;
-- the 1–5 fit score is deterministic, capped at 2 without a source URL, and in
-  range for every combination of inputs;
-- `web_search` normalises results, drops results with no URL, clamps
-  `max_results`, truncates snippets, retries transport failures, and reports
-  failure as a value rather than raising.
+34 tests, none touching the network, including an end-to-end run of all four
+stages against a scripted model: every stage writes its `output_key` in order,
+all three researchers execute inside the `ParallelAgent`, the critic loop is
+capped and terminates when the critic never exits, no agent uses the built-in
+`google_search`, the 1–5 score is deterministic and capped at 2 without a
+source URL, and `web_search` normalises results, drops results with no URL,
+retries transport failures, and reports failure as a value rather than raising.

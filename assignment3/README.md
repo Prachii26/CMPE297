@@ -16,21 +16,18 @@ Those changes are listed in each agent's README under "Our changes".
 | | Agent | What it does | Status | Tests |
 |---|---|---|---|---|
 | **C** | [c_bug_assistant_agent](c_bug_assistant_agent/README.md) | Triages VoltLoop e-scooter bugs over MCP; `search_bugs` returns a severity- and component-ranked queue, and `set_status` refuses to act without an audited reason. | **WORKING** | 22 |
-| **A** | [a_deep_research_agent](a_deep_research_agent/README.md) | Turns an ideal customer profile into a sourced lead table; planner → 3 parallel researchers → critic loop → writer, each lead scored 1–5 by a deterministic tool. | **PARTIAL** | 34 |
+| **A** | [a_deep_research_agent](a_deep_research_agent/README.md) | Turns an ideal customer profile into a sourced lead table; planner → 3 parallel researchers → critic loop → writer, each lead scored 1–5 by a deterministic tool. | **WORKING** | 34 |
 | **D** | [d_code_review_agent](d_code_review_agent/README.md) | Reviews a Python file by path with AST, pycodestyle and complexity tools, then fixes it in a capped loop that emits a unified diff. | **WORKING** | 38 |
 | **B** | [b_gemini_cli_agent](b_gemini_cli_agent/README.md) | Answers questions about a sandboxed code folder by driving the Gemini CLI as a function tool, returning a structured summary. | **WORKING** | 28 |
 | **E** | [e_ecommerce_agent](e_ecommerce_agent/README.md) | Meeple Market board game shop over MCP + SQLite; every tool is scoped to a `user_id`, and out-of-stock items always return alternatives. | **WORKING** | 33 |
 
-Four of five are verified live. Agent A is **PARTIAL**, but much further along
-than that label suggests: after replacing Gemini's Search grounding (metered on
-its own exhausted quota) with a DuckDuckGo-backed `FunctionTool`, **five of its
-seven stages run live** — planner, all three parallel researchers, and the lead
-scorer, producing five real Nordic companies with real source URLs and fit
-scores of 5/4/4/4/3. The critic loop starts and calls its wrapped search agent;
-the critic and report writer did not finish before the day's per-model quota
-ran out, so there is no final lead table. Full account, including the three
-attempts and two bugs found on the way, in
-[its demo](a_deep_research_agent/docs/demo.md).
+All five are verified live. Agent A took the longest: Gemini's Search
+grounding is metered on its own exhausted quota, so its researchers were moved
+to a DuckDuckGo-backed `FunctionTool`, and the pipeline then turned out to be
+freezing the ADK event loop (see Findings #3). With both fixed it completes all
+seven stages — planner, three parallel researchers, scorer, critic, writer —
+and returns four real Nordic companies with working source URLs and fit scores
+of 5/4/4/4.
 
 ## Run commands
 
@@ -191,7 +188,40 @@ errors), and researchers with no search budget, one of which ran **33** searches
 and burned its model's daily quota. Both are fixed; both are the kind of fault
 that only appears under real concurrency.
 
-### 3. Two process mistakes worth not repeating
+### 3. A stall with no errors means you blocked the event loop
+
+Agent A kept dying in a way that looked like rate limiting but was not. Runs
+went **silent for 20+ minutes** — no stage advanced, no screenshot changed —
+with at most one `429` in the entire log. The diagnosis took three passes, and
+the first two were treating symptoms:
+
+1. **Lock scope.** The search tool held its rate-limit lock across the network
+   call, so one slow search blocked the other two researchers. Real bug, fixed:
+   the lock now only reserves a time slot. Runs still stalled.
+2. **Request timeout.** Model calls had no ceiling, so a hung request could
+   wait forever and `HttpRetryOptions` could not help — nothing ever *failed*
+   for it to retry. Real bug, fixed with
+   `client_kwargs={"http_options": HttpOptions(timeout=90000)}`, verified
+   present on the built client alongside the retry config. Runs still stalled.
+3. **The actual cause: ADK runs a sync function tool directly on the asyncio
+   event loop.** `function_tool.py::sync_wrapper` is a plain
+   `target(*pos, **kw)` — no thread behind it. `web_search` was a sync
+   function doing `time.sleep()` and a blocking HTTP request, so three
+   researchers calling it at once **froze the entire ADK server**, including
+   the model responses every other agent was waiting on. Nothing errored
+   because nothing failed; everything was simply starved.
+
+The fix is the tool being a coroutine: an `asyncio.Lock`, `await
+asyncio.sleep`, and the blocking `ddgs` call pushed to `asyncio.to_thread`.
+With that in, the parallel stage completed in about three minutes, and the
+pipeline went from never finishing to all seven stages.
+
+**The generalisable lesson is the tell.** A hang with a clean error log is
+almost never the provider — a provider failing gives you a status code. Silence
+points at your own concurrency. If a tool blocks, check whether the framework
+calls it on the loop before assuming the far end is slow.
+
+### 4. Two process mistakes worth not repeating
 
 Both are in [DECISIONS.md](DECISIONS.md), and both cost time rather than
 correctness.

@@ -19,23 +19,27 @@ agent alongside other tools without tripping ADK's built-in-tool restriction.
 
 from __future__ import annotations
 
+import asyncio
 import os
 import random
-import threading
 import time
 from typing import Any
 
 MAX_RESULTS_CAP = 8
 SNIPPET_CHARS = 400
 
-# DDG throttles bursts. Three researchers fire at once, so calls are spaced
-# out by reserving a time slot under a lock.
+# This tool is `async` on purpose, and it matters more than it looks.
 #
-# The lock is held only long enough to claim a slot — never across the network
-# call. An earlier version wrapped the whole request, and a single slow search
-# then blocked every other researcher: a live run sat for 1500 seconds with
-# zero API errors and never left the parallel stage.
-_LOCK = threading.Lock()
+# ADK calls a SYNC function tool directly on the asyncio event loop — see
+# `function_tool.py::sync_wrapper`, which is a plain `target(*pos, **kw)` with
+# no thread behind it. An earlier sync version of this tool therefore ran
+# `time.sleep()` and a blocking HTTP request *on the loop*, freezing the whole
+# ADK server: with three researchers doing that at once, runs went silent for
+# 20+ minutes with not one error in the log, because nothing could progress.
+#
+# So: an asyncio lock, `await asyncio.sleep`, and the blocking `ddgs` call
+# pushed to a worker thread. The loop stays free the entire time.
+_LOCK = asyncio.Lock()
 # DDG answers a burst with HTTP 202 and no results rather than an error, so the
 # gap has to be generous. Measured: three researchers at 1.5s produced 4 usable
 # responses against 15 rate-limited ones.
@@ -49,7 +53,7 @@ RETRY_ATTEMPTS = 4
 SEARCH_TIMEOUT = float(os.environ.get("LEAD_RESEARCH_SEARCH_TIMEOUT", "20"))
 
 
-def web_search(query: str, max_results: int = 5) -> dict[str, Any]:
+async def web_search(query: str, max_results: int = 5) -> dict[str, Any]:
     """Search the web and return titles, URLs and snippets.
 
     Use this to find real companies and real evidence. Every URL you report in
@@ -89,16 +93,22 @@ def web_search(query: str, max_results: int = 5) -> dict[str, Any]:
         try:
             # Claim a slot (fast, under the lock), then wait and search
             # outside it so no caller can block the others.
-            with _LOCK:
+            async with _LOCK:
                 now = time.time()
                 slot = max(now, _next_slot[0])
                 _next_slot[0] = slot + _MIN_GAP_SECONDS
             delay = slot - time.time()
             if delay > 0:
-                time.sleep(delay)
+                await asyncio.sleep(delay)
 
-            with DDGS(timeout=SEARCH_TIMEOUT) as ddgs:
-                rows = list(ddgs.text(query, max_results=n))
+            def _blocking_search() -> list[dict]:
+                with DDGS(timeout=SEARCH_TIMEOUT) as ddgs:
+                    return list(ddgs.text(query, max_results=n))
+
+            rows = await asyncio.wait_for(
+                asyncio.to_thread(_blocking_search),
+                timeout=SEARCH_TIMEOUT + 10,
+            )
 
             # An empty result set from DDG usually means throttling (it
             # answers a burst with 202 and an empty body, not an error), so
@@ -132,7 +142,7 @@ def web_search(query: str, max_results: int = 5) -> dict[str, Any]:
             last_error = f"{type(e).__name__}: {e}"
             if attempt < RETRY_ATTEMPTS - 1:
                 # Backoff with jitter; DDG rate-limits bursts rather than quotas.
-                time.sleep((2 ** attempt) * 2 + random.uniform(0, 1.5))
+                await asyncio.sleep((2 ** attempt) * 2 + random.uniform(0, 1.5))
 
     return {
         "ok": False,

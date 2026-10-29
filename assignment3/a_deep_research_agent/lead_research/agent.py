@@ -61,7 +61,42 @@ if not os.environ.get("GOOGLE_API_KEY") and os.environ.get("GEMINI_API_KEY"):
     os.environ["GOOGLE_API_KEY"] = os.environ["GEMINI_API_KEY"]
 os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "FALSE")
 
-MODEL_NAME = os.environ.get("LEAD_RESEARCH_MODEL", "gemini-3.5-flash")
+MODEL_NAME = os.environ.get("LEAD_RESEARCH_MODEL", "gemini-3-flash-preview")
+
+# One model per stage.
+#
+# Free-tier quota is 20 requests/day PER MODEL, so a pipeline this size cannot
+# live on one model. Two separate pressures:
+#
+#   - The three researchers run SIMULTANEOUSLY inside the ParallelAgent, so
+#     they must never share a model: three concurrent calls is an instant 429
+#     on the per-minute limit as well as the daily one.
+#   - The sequential stages do not contend with each other, but they do share
+#     the daily budget, so spreading them widens the ceiling for a whole run.
+#
+# Every stage therefore has its own override. Defaults use the four models that
+# had quota when this was last run; `gemini-flash-latest` and
+# `gemini-3.5-flash` were exhausted. Check with the probe in the README before
+# a demo run, and re-point any stage whose bucket is dry.
+PLANNER_MODEL = os.environ.get(
+    "LEAD_RESEARCH_PLANNER_MODEL", "gemini-3-flash-preview")
+SCORER_MODEL = os.environ.get(
+    "LEAD_RESEARCH_SCORER_MODEL", "gemini-3.5-flash-lite")
+CRITIC_MODEL = os.environ.get(
+    "LEAD_RESEARCH_CRITIC_MODEL", "gemini-3.1-flash-lite")
+CRITIC_SEARCH_MODEL = os.environ.get(
+    "LEAD_RESEARCH_CRITIC_SEARCH_MODEL", "gemini-flash-lite-latest")
+WRITER_MODEL = os.environ.get(
+    "LEAD_RESEARCH_WRITER_MODEL", "gemini-3-flash-preview")
+
+RESEARCHER_MODELS = [
+    m.strip()
+    for m in os.environ.get(
+        "LEAD_RESEARCH_RESEARCHER_MODELS",
+        "gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-flash-lite-latest",
+    ).split(",")
+    if m.strip()
+]
 
 # This pipeline fires 7-11 model calls per run. The AI Studio free tier allows
 # 5 per minute, so without backoff the parallel stage alone would 429. Retry on
@@ -76,25 +111,22 @@ RETRY_OPTIONS = types.HttpRetryOptions(
 )
 
 
+# Milliseconds. Without this a model request can hang indefinitely and take the
+# whole pipeline with it: a live run went silent for 23 minutes after a single
+# request to gemini-flash-lite-latest never returned, with no error anywhere in
+# the log. retry_options cannot help, because nothing ever fails. A timeout
+# converts the hang into a failure the retry can act on.
+REQUEST_TIMEOUT_MS = int(os.environ.get("LEAD_RESEARCH_REQUEST_TIMEOUT_MS", "90000"))
+
+
 def make_model(model_name: str | None = None) -> Gemini:
-    """A fresh model object per agent, each with rate-limit retry."""
-    return Gemini(model=model_name or MODEL_NAME, retry_options=RETRY_OPTIONS)
-
-
-# The three researchers fire simultaneously, and the AI Studio free tier counts
-# requests per minute PER MODEL. Three grounded searches against one model is an
-# instant 429 that the whole pipeline then sits behind: two earlier live runs
-# died exactly there, never getting past the parallel stage. Giving each
-# researcher its own model means they draw on separate buckets and the fan-out
-# costs nothing. Override with LEAD_RESEARCH_RESEARCHER_MODELS (comma separated).
-RESEARCHER_MODELS = [
-    m.strip()
-    for m in os.environ.get(
-        "LEAD_RESEARCH_RESEARCHER_MODELS",
-        "gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-flash-lite-latest",
-    ).split(",")
-    if m.strip()
-]
+    """A fresh model object per agent, with rate-limit retry and a hard
+    per-request timeout."""
+    return Gemini(
+        model=model_name or MODEL_NAME,
+        retry_options=RETRY_OPTIONS,
+        client_kwargs={"http_options": types.HttpOptions(timeout=REQUEST_TIMEOUT_MS)},
+    )
 
 
 # How many times the scorer/critic pair may iterate. Each iteration costs two
@@ -108,7 +140,7 @@ MAX_CRITIC_LOOPS = int(os.environ.get("LEAD_RESEARCH_MAX_LOOPS", "2"))
 
 planner_agent = LlmAgent(
     name="IcpPlanner",
-    model=make_model(),
+    model=make_model(PLANNER_MODEL),
     description="Turns an ideal customer profile into three parallel search briefs.",
     instruction=PLANNER_INSTRUCTION,
     output_key="research_plan",
@@ -166,7 +198,7 @@ parallel_researchers = ParallelAgent(
 
 scorer_agent = LlmAgent(
     name="LeadScorer",
-    model=make_model(),
+    model=make_model(SCORER_MODEL),
     description="Merges research into a lead list and scores each lead 1-5 via the scoring tool.",
     instruction=SCORER_INSTRUCTION,
     tools=[FunctionTool(score_lead_fit)],
@@ -175,13 +207,6 @@ scorer_agent = LlmAgent(
 
 # The critic's search capability is wrapped rather than built in, because the
 # critic also carries exit_loop. See the module docstring.
-# Its own model: it runs inside the critic's turn, and sharing a model with the
-# planner/scorer/writer put it behind their rate limiting at exactly the point
-# the loop needed to close.
-CRITIC_SEARCH_MODEL = os.environ.get(
-    "LEAD_RESEARCH_CRITIC_SEARCH_MODEL", "gemini-3.1-flash-lite"
-)
-
 critic_search_agent = LlmAgent(
     name="CriticSearchAgent",
     model=make_model(CRITIC_SEARCH_MODEL),
@@ -196,7 +221,7 @@ critic_search_agent = LlmAgent(
 
 critic_agent = LlmAgent(
     name="EvidenceCritic",
-    model=make_model(),
+    model=make_model(CRITIC_MODEL),
     description="Rejects leads that are unsourced, implausible, or wrongly scored.",
     instruction=CRITIC_INSTRUCTION,
     tools=[AgentTool(agent=critic_search_agent), exit_loop],
@@ -217,7 +242,7 @@ critic_loop = LoopAgent(
 
 report_writer = LlmAgent(
     name="ReportWriter",
-    model=make_model(),
+    model=make_model(WRITER_MODEL),
     description="Writes the final markdown lead table with fit scores and sources.",
     instruction=WRITER_INSTRUCTION,
     output_key="final_report",

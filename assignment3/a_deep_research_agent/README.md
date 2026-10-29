@@ -1,6 +1,6 @@
 # Agent A — B2B lead research pipeline
 
-**Status: PARTIAL** — see [docs/demo.md](docs/demo.md). Five of seven stages run live with real web evidence: the planner, all three parallel researchers, and the lead scorer (five `score_lead_fit` calls, real companies, real URLs, scores 5/4/4/4/3). The critic loop starts and calls its wrapped search agent; the critic and report writer did not finish before the day's model quota was exhausted, so there is no final lead table.
+**Status: WORKING** — all seven stages complete live, ending in a sourced lead table with 1-5 fit scores. See [docs/demo.md](docs/demo.md).
 
 You give it an ideal customer profile — industry, region, company size — and it
 returns a markdown lead table where every company carries a **1–5 fit score**, a
@@ -151,6 +151,38 @@ Two consequences worth knowing:
 `tests/test_pipeline.py::test_no_agent_uses_the_builtin_google_search_tool`
 walks the whole agent tree, including inside `AgentTool`s, and fails if the
 built-in is ever reintroduced.
+
+## One model per stage
+
+Free-tier quota is **20 requests/day per model**, and one run of this pipeline
+costs 20–35 calls. Running it on a single model cannot work, for two separate
+reasons:
+
+1. The three researchers run **simultaneously** inside the `ParallelAgent`.
+   Sharing a model between them trips the per-minute limit immediately — this
+   is what killed the first three live runs.
+2. The sequential stages do not contend with each other, but they do share the
+   same daily bucket, so spreading them widens the ceiling for a whole run.
+
+Every stage therefore has its own override:
+
+| Stage | Env var | Default |
+|---|---|---|
+| `IcpPlanner` | `LEAD_RESEARCH_PLANNER_MODEL` | `gemini-3-flash-preview` |
+| `MarketResearcher` | `LEAD_RESEARCH_RESEARCHER_MODELS[0]` | `gemini-3.5-flash-lite` |
+| `FirmographicResearcher` | `LEAD_RESEARCH_RESEARCHER_MODELS[1]` | `gemini-3.1-flash-lite` |
+| `SignalResearcher` | `LEAD_RESEARCH_RESEARCHER_MODELS[2]` | `gemini-flash-lite-latest` |
+| `LeadScorer` | `LEAD_RESEARCH_SCORER_MODEL` | `gemini-3.5-flash-lite` |
+| `EvidenceCritic` | `LEAD_RESEARCH_CRITIC_MODEL` | `gemini-3.1-flash-lite` |
+| `CriticSearchAgent` | `LEAD_RESEARCH_CRITIC_SEARCH_MODEL` | `gemini-flash-lite-latest` |
+| `ReportWriter` | `LEAD_RESEARCH_WRITER_MODEL` | `gemini-3-flash-preview` |
+
+The three researcher models are always distinct, because those three are the
+only agents that run at the same time. Sequential stages reuse models freely.
+
+**Before a demo run, check which buckets still have quota** and re-point any
+dry stage. On this key, `gemini-flash-latest` and `gemini-3.5-flash` were
+already exhausted; the four above had capacity.
 
 ## Setup
 
