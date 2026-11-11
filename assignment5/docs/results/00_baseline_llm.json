@@ -1,0 +1,62 @@
+{
+  "method": "00_baseline",
+  "proposer": "llm",
+  "iterations": 8,
+  "seeds": [
+    0
+  ],
+  "aggregate": {
+    "heldout_final": "0.575",
+    "validation_final": "0.575",
+    "repeated_fix_attempts": "0.000",
+    "blind_repeats": "0.000",
+    "oscillations": "0.000",
+    "zero_progress": "0.000",
+    "keep": "6.000"
+  },
+  "runs": [
+    {
+      "seed": 0,
+      "proposer": "llm:gemini-3.5-flash",
+      "run_id": "00_baseline-20261111T154506-969b7d",
+      "validation_final": 0.575,
+      "steering_final": 0.575,
+      "heldout_start": 0.25,
+      "heldout_final": 0.575,
+      "heldout_median_latency_ms": 0.0635,
+      "evaluations": 7,
+      "wall_clock_s": 280.257,
+      "final_solver": "00_baseline_llm.py",
+      "final_components": [
+        "llm_llm_j2_student_department",
+        "llm_j1_department_courses",
+        "llm_j4_student_course_term",
+        "llm_a3_avg_grade",
+        "llm_s4_section_capacity",
+        "s1_admitted",
+        "s2_subject_courses",
+        "s3_hired",
+        "s5_course_title",
+        "s6_student_by_id",
+        "generic_list",
+        "llm_j3_instructor_course_term"
+      ],
+      "final_flags": {
+        "COUNT_DISTINCT": false,
+        "DISPATCH": "list",
+        "LINK_ENTITIES": false
+      },
+      "iterations": 8,
+      "keep": 6,
+      "revert": 0,
+      "rejected": 0,
+      "proposer_error": 2,
+      "repeated_fix_attempts": 0,
+      "blind_repeats": 0,
+      "oscillations": 0,
+      "zero_progress": 0,
+      "guard_rejections": {}
+    }
+  ],
+  "heldout_final_mean": 0.575
+}

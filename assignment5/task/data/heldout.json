@@ -1,0 +1,1986 @@
+[
+ {
+  "qid": "S1-4",
+  "family": "S1",
+  "category": "simple select",
+  "phrasing": "A",
+  "question": "List the names of students admitted in 2022.",
+  "gold_sql": "SELECT name FROM students WHERE admit_year = 2022",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Amara Lindqvist"
+   ],
+   [
+    "Ava Haddad"
+   ],
+   [
+    "Ben Walsh"
+   ],
+   [
+    "Bruno Alvarez"
+   ],
+   [
+    "Bruno Yilmaz"
+   ],
+   [
+    "Carmen Quintero"
+   ],
+   [
+    "Carmen Umarov"
+   ],
+   [
+    "Carmen Varga"
+   ],
+   [
+    "Chloe Lindqvist"
+   ],
+   [
+    "Chloe Nakamura"
+   ],
+   [
+    "Chloe Rossi"
+   ],
+   [
+    "Chloe Yilmaz"
+   ],
+   [
+    "Elena Chen"
+   ],
+   [
+    "Elena Walsh"
+   ],
+   [
+    "Farid Walsh"
+   ],
+   [
+    "Grace Sato"
+   ],
+   [
+    "Hiro Alvarez"
+   ],
+   [
+    "Isla Eriksen"
+   ],
+   [
+    "Jonah Abbott"
+   ],
+   [
+    "Jonah Castillo"
+   ],
+   [
+    "Kira Eriksen"
+   ],
+   [
+    "Leo Fujita"
+   ],
+   [
+    "Leo Varga"
+   ],
+   [
+    "Maya Xu"
+   ],
+   [
+    "Maya Yilmaz"
+   ],
+   [
+    "Olivia Delgado"
+   ],
+   [
+    "Olivia Xu"
+   ],
+   [
+    "Quinn Fujita"
+   ],
+   [
+    "Rafael Brennan"
+   ],
+   [
+    "Uma Quintero"
+   ],
+   [
+    "Victor Delgado"
+   ],
+   [
+    "Victor Petrov"
+   ],
+   [
+    "Wen Xu"
+   ],
+   [
+    "Xavier Eriksen"
+   ],
+   [
+    "Xavier Haddad"
+   ],
+   [
+    "Xavier Walsh"
+   ],
+   [
+    "Xavier Zhang"
+   ],
+   [
+    "Zane Alvarez"
+   ]
+  ]
+ },
+ {
+  "qid": "S1-5",
+  "family": "S1",
+  "category": "simple select",
+  "phrasing": "B",
+  "question": "Which students were admitted in 2023?",
+  "gold_sql": "SELECT name FROM students WHERE admit_year = 2023",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Amara Banerjee"
+   ],
+   [
+    "Amara Kowalski"
+   ],
+   [
+    "Ava Walsh"
+   ],
+   [
+    "Ben Quintero"
+   ],
+   [
+    "Ben Zhang"
+   ],
+   [
+    "Carmen Chen"
+   ],
+   [
+    "Carmen Fujita"
+   ],
+   [
+    "Carmen Jensen"
+   ],
+   [
+    "Chloe Delgado"
+   ],
+   [
+    "Chloe Varga"
+   ],
+   [
+    "Dev Jensen"
+   ],
+   [
+    "Dev Kowalski"
+   ],
+   [
+    "Dmitri Umarov"
+   ],
+   [
+    "Elena Castillo"
+   ],
+   [
+    "Elena Kowalski"
+   ],
+   [
+    "Farid Abbott"
+   ],
+   [
+    "Farid Varga"
+   ],
+   [
+    "Grace Delgado"
+   ],
+   [
+    "Grace Eriksen"
+   ],
+   [
+    "Grace Kowalski"
+   ],
+   [
+    "Grace Xu"
+   ],
+   [
+    "Hiro Banerjee"
+   ],
+   [
+    "Hiro Garcia"
+   ],
+   [
+    "Hiro Quintero"
+   ],
+   [
+    "Hiro Rossi"
+   ],
+   [
+    "Isla Delgado"
+   ],
+   [
+    "Jonah Jensen"
+   ],
+   [
+    "Jonah Yilmaz"
+   ],
+   [
+    "Leo Zhang"
+   ],
+   [
+    "Nikhil Alvarez"
+   ],
+   [
+    "Nikhil Chen"
+   ],
+   [
+    "Nikhil Kowalski"
+   ],
+   [
+    "Nikhil Umarov"
+   ],
+   [
+    "Olivia Castillo"
+   ],
+   [
+    "Priya Abbott"
+   ],
+   [
+    "Priya Rossi"
+   ],
+   [
+    "Priya Tanaka"
+   ],
+   [
+    "Quinn Okafor"
+   ],
+   [
+    "Sofia Delgado"
+   ],
+   [
+    "Theo Delgado"
+   ],
+   [
+    "Uma Chen"
+   ],
+   [
+    "Uma Lindqvist"
+   ],
+   [
+    "Victor Walsh"
+   ],
+   [
+    "Xavier Varga"
+   ],
+   [
+    "Yara Dubois"
+   ],
+   [
+    "Yara Umarov"
+   ],
+   [
+    "Zane Chen"
+   ],
+   [
+    "Zane Kowalski"
+   ],
+   [
+    "Zane Okafor"
+   ],
+   [
+    "Zane Sato"
+   ]
+  ]
+ },
+ {
+  "qid": "S2-4",
+  "family": "S2",
+  "category": "simple select",
+  "phrasing": "A",
+  "question": "List the titles of all BIOL courses.",
+  "gold_sql": "SELECT title FROM courses WHERE subject = 'BIOL'",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Cell Biology"
+   ],
+   [
+    "Ecology"
+   ],
+   [
+    "Evolution"
+   ],
+   [
+    "Genetics"
+   ],
+   [
+    "Immunology"
+   ],
+   [
+    "Marine Biology"
+   ],
+   [
+    "Microbiology"
+   ],
+   [
+    "Neuroscience"
+   ]
+  ]
+ },
+ {
+  "qid": "S2-5",
+  "family": "S2",
+  "category": "simple select",
+  "phrasing": "B",
+  "question": "Which courses have the subject code CHEM?",
+  "gold_sql": "SELECT title FROM courses WHERE subject = 'CHEM'",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Analytical Chemistry"
+   ],
+   [
+    "Biochemistry"
+   ],
+   [
+    "Chemical Kinetics"
+   ],
+   [
+    "General Chemistry"
+   ],
+   [
+    "Inorganic Chemistry"
+   ],
+   [
+    "Organic Chemistry"
+   ],
+   [
+    "Physical Chemistry"
+   ],
+   [
+    "Polymer Science"
+   ]
+  ]
+ },
+ {
+  "qid": "S3-4",
+  "family": "S3",
+  "category": "simple select",
+  "phrasing": "A",
+  "question": "Which instructors were hired in 2016?",
+  "gold_sql": "SELECT name FROM instructors WHERE hire_year = 2016",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Wen Haddad"
+   ],
+   [
+    "Yara Xu"
+   ]
+  ]
+ },
+ {
+  "qid": "S3-5",
+  "family": "S3",
+  "category": "simple select",
+  "phrasing": "B",
+  "question": "List the instructors hired in 2013.",
+  "gold_sql": "SELECT name FROM instructors WHERE hire_year = 2013",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Bruno Jensen"
+   ],
+   [
+    "Leo Alvarez"
+   ],
+   [
+    "Maya Okafor"
+   ],
+   [
+    "Uma Brennan"
+   ]
+  ]
+ },
+ {
+  "qid": "S4-4",
+  "family": "S4",
+  "category": "simple select",
+  "phrasing": "A",
+  "question": "Which sections have a capacity greater than 60?",
+  "gold_sql": "SELECT section_id FROM sections WHERE capacity > 60",
+  "ordered": false,
+  "gold_result": [
+   [
+    100
+   ],
+   [
+    105
+   ],
+   [
+    109
+   ],
+   [
+    110
+   ],
+   [
+    115
+   ],
+   [
+    120
+   ],
+   [
+    127
+   ],
+   [
+    129
+   ],
+   [
+    132
+   ],
+   [
+    136
+   ],
+   [
+    138
+   ],
+   [
+    139
+   ],
+   [
+    141
+   ],
+   [
+    149
+   ],
+   [
+    15
+   ],
+   [
+    150
+   ],
+   [
+    160
+   ],
+   [
+    167
+   ],
+   [
+    171
+   ],
+   [
+    174
+   ],
+   [
+    180
+   ],
+   [
+    182
+   ],
+   [
+    184
+   ],
+   [
+    186
+   ],
+   [
+    188
+   ],
+   [
+    189
+   ],
+   [
+    190
+   ],
+   [
+    191
+   ],
+   [
+    197
+   ],
+   [
+    198
+   ],
+   [
+    203
+   ],
+   [
+    208
+   ],
+   [
+    211
+   ],
+   [
+    213
+   ],
+   [
+    218
+   ],
+   [
+    223
+   ],
+   [
+    225
+   ],
+   [
+    227
+   ],
+   [
+    237
+   ],
+   [
+    26
+   ],
+   [
+    28
+   ],
+   [
+    36
+   ],
+   [
+    44
+   ],
+   [
+    49
+   ],
+   [
+    59
+   ],
+   [
+    61
+   ],
+   [
+    71
+   ],
+   [
+    74
+   ],
+   [
+    76
+   ],
+   [
+    87
+   ],
+   [
+    9
+   ],
+   [
+    93
+   ],
+   [
+    98
+   ]
+  ]
+ },
+ {
+  "qid": "S4-5",
+  "family": "S4",
+  "category": "simple select",
+  "phrasing": "B",
+  "question": "List the sections that can seat more than 45 students.",
+  "gold_sql": "SELECT section_id FROM sections WHERE capacity > 45",
+  "ordered": false,
+  "gold_result": [
+   [
+    1
+   ],
+   [
+    100
+   ],
+   [
+    101
+   ],
+   [
+    102
+   ],
+   [
+    105
+   ],
+   [
+    109
+   ],
+   [
+    110
+   ],
+   [
+    111
+   ],
+   [
+    112
+   ],
+   [
+    115
+   ],
+   [
+    120
+   ],
+   [
+    123
+   ],
+   [
+    124
+   ],
+   [
+    126
+   ],
+   [
+    127
+   ],
+   [
+    129
+   ],
+   [
+    13
+   ],
+   [
+    132
+   ],
+   [
+    136
+   ],
+   [
+    138
+   ],
+   [
+    139
+   ],
+   [
+    141
+   ],
+   [
+    149
+   ],
+   [
+    15
+   ],
+   [
+    150
+   ],
+   [
+    157
+   ],
+   [
+    158
+   ],
+   [
+    160
+   ],
+   [
+    167
+   ],
+   [
+    168
+   ],
+   [
+    171
+   ],
+   [
+    174
+   ],
+   [
+    180
+   ],
+   [
+    182
+   ],
+   [
+    183
+   ],
+   [
+    184
+   ],
+   [
+    185
+   ],
+   [
+    186
+   ],
+   [
+    187
+   ],
+   [
+    188
+   ],
+   [
+    189
+   ],
+   [
+    19
+   ],
+   [
+    190
+   ],
+   [
+    191
+   ],
+   [
+    197
+   ],
+   [
+    198
+   ],
+   [
+    20
+   ],
+   [
+    200
+   ],
+   [
+    203
+   ],
+   [
+    208
+   ],
+   [
+    211
+   ],
+   [
+    213
+   ],
+   [
+    216
+   ],
+   [
+    218
+   ],
+   [
+    223
+   ],
+   [
+    225
+   ],
+   [
+    227
+   ],
+   [
+    228
+   ],
+   [
+    230
+   ],
+   [
+    231
+   ],
+   [
+    234
+   ],
+   [
+    237
+   ],
+   [
+    238
+   ],
+   [
+    239
+   ],
+   [
+    242
+   ],
+   [
+    26
+   ],
+   [
+    28
+   ],
+   [
+    3
+   ],
+   [
+    30
+   ],
+   [
+    32
+   ],
+   [
+    33
+   ],
+   [
+    36
+   ],
+   [
+    4
+   ],
+   [
+    44
+   ],
+   [
+    49
+   ],
+   [
+    5
+   ],
+   [
+    56
+   ],
+   [
+    59
+   ],
+   [
+    60
+   ],
+   [
+    61
+   ],
+   [
+    69
+   ],
+   [
+    71
+   ],
+   [
+    74
+   ],
+   [
+    75
+   ],
+   [
+    76
+   ],
+   [
+    78
+   ],
+   [
+    82
+   ],
+   [
+    87
+   ],
+   [
+    89
+   ],
+   [
+    9
+   ],
+   [
+    90
+   ],
+   [
+    91
+   ],
+   [
+    93
+   ],
+   [
+    98
+   ]
+  ]
+ },
+ {
+  "qid": "S5-4",
+  "family": "S5",
+  "category": "simple select",
+  "phrasing": "A",
+  "question": "What is the title of course MATH 192?",
+  "gold_sql": "SELECT title FROM courses WHERE code = 'MATH 192'",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Calculus I"
+   ]
+  ]
+ },
+ {
+  "qid": "S5-5",
+  "family": "S5",
+  "category": "simple select",
+  "phrasing": "B",
+  "question": "Give the title of ECON 284.",
+  "gold_sql": "SELECT title FROM courses WHERE code = 'ECON 284'",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Game Theory"
+   ]
+  ]
+ },
+ {
+  "qid": "S6-4",
+  "family": "S6",
+  "category": "simple select",
+  "phrasing": "A",
+  "question": "What is the name of the student with ID 220?",
+  "gold_sql": "SELECT name FROM students WHERE student_id = 220",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Isla Fujita"
+   ]
+  ]
+ },
+ {
+  "qid": "S6-5",
+  "family": "S6",
+  "category": "simple select",
+  "phrasing": "B",
+  "question": "Which student has ID 45?",
+  "gold_sql": "SELECT name FROM students WHERE student_id = 45",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Dev Yilmaz"
+   ]
+  ]
+ },
+ {
+  "qid": "J1-4",
+  "family": "J1",
+  "category": "join",
+  "phrasing": "A",
+  "question": "List the titles of courses offered by the English department.",
+  "gold_sql": "SELECT c.title FROM courses c JOIN departments d ON c.dept_id = d.dept_id WHERE d.name = 'English'",
+  "ordered": false,
+  "gold_result": [
+   [
+    "American Literature"
+   ],
+   [
+    "Composition"
+   ],
+   [
+    "Creative Writing"
+   ],
+   [
+    "Literary Theory"
+   ],
+   [
+    "Modern Poetry"
+   ],
+   [
+    "Rhetoric"
+   ],
+   [
+    "Shakespeare"
+   ],
+   [
+    "The Novel"
+   ]
+  ]
+ },
+ {
+  "qid": "J1-5",
+  "family": "J1",
+  "category": "join",
+  "phrasing": "B",
+  "question": "Which courses does the economics department offer?",
+  "gold_sql": "SELECT c.title FROM courses c JOIN departments d ON c.dept_id = d.dept_id WHERE d.name = 'Economics'",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Development Economics"
+   ],
+   [
+    "Econometrics"
+   ],
+   [
+    "Game Theory"
+   ],
+   [
+    "International Trade"
+   ],
+   [
+    "Labor Economics"
+   ],
+   [
+    "Macroeconomics"
+   ],
+   [
+    "Microeconomics"
+   ],
+   [
+    "Public Finance"
+   ]
+  ]
+ },
+ {
+  "qid": "J2-4",
+  "family": "J2",
+  "category": "join",
+  "phrasing": "A",
+  "question": "Which students are majoring in Physics?",
+  "gold_sql": "SELECT s.name FROM students s JOIN departments d ON s.dept_id = d.dept_id WHERE d.name = 'Physics'",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Amara Umarov"
+   ],
+   [
+    "Bruno Alvarez"
+   ],
+   [
+    "Chloe Nakamura"
+   ],
+   [
+    "Dev Brennan"
+   ],
+   [
+    "Elena Okafor"
+   ],
+   [
+    "Isla Zhang"
+   ],
+   [
+    "Jonah Iyer"
+   ],
+   [
+    "Jonah Yilmaz"
+   ],
+   [
+    "Kira Castillo"
+   ],
+   [
+    "Kira Lindqvist"
+   ],
+   [
+    "Leo Fujita"
+   ],
+   [
+    "Maya Banerjee"
+   ],
+   [
+    "Maya Haddad"
+   ],
+   [
+    "Nikhil Lindqvist"
+   ],
+   [
+    "Nikhil Umarov"
+   ],
+   [
+    "Olivia Moreau"
+   ],
+   [
+    "Olivia Yilmaz"
+   ],
+   [
+    "Priya Tanaka"
+   ],
+   [
+    "Quinn Dubois"
+   ],
+   [
+    "Quinn Tanaka"
+   ],
+   [
+    "Sofia Delgado"
+   ],
+   [
+    "Sofia Lindqvist"
+   ],
+   [
+    "Theo Nakamura"
+   ],
+   [
+    "Uma Lindqvist"
+   ],
+   [
+    "Wen Banerjee"
+   ],
+   [
+    "Wen Zhang"
+   ],
+   [
+    "Xavier Haddad"
+   ],
+   [
+    "Xavier Walsh"
+   ],
+   [
+    "Zane Tanaka"
+   ]
+  ]
+ },
+ {
+  "qid": "J2-5",
+  "family": "J2",
+  "category": "join",
+  "phrasing": "B",
+  "question": "List the students in the history department.",
+  "gold_sql": "SELECT s.name FROM students s JOIN departments d ON s.dept_id = d.dept_id WHERE d.name = 'History'",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Ben Haddad"
+   ],
+   [
+    "Bruno Quintero"
+   ],
+   [
+    "Chloe Lindqvist"
+   ],
+   [
+    "Chloe Moreau"
+   ],
+   [
+    "Chloe Walsh"
+   ],
+   [
+    "Dev Dubois"
+   ],
+   [
+    "Dev Okafor"
+   ],
+   [
+    "Elena Eriksen"
+   ],
+   [
+    "Farid Chen"
+   ],
+   [
+    "Farid Delgado"
+   ],
+   [
+    "Grace Kowalski"
+   ],
+   [
+    "Grace Sato"
+   ],
+   [
+    "Hiro Quintero"
+   ],
+   [
+    "Isla Eriksen"
+   ],
+   [
+    "Isla Fujita"
+   ],
+   [
+    "Isla Umarov"
+   ],
+   [
+    "Leo Moreau"
+   ],
+   [
+    "Leo Petrov"
+   ],
+   [
+    "Leo Varga"
+   ],
+   [
+    "Leo Zhang"
+   ],
+   [
+    "Maya Yilmaz"
+   ],
+   [
+    "Olivia Abbott"
+   ],
+   [
+    "Olivia Castillo"
+   ],
+   [
+    "Olivia Jensen"
+   ],
+   [
+    "Olivia Lindqvist"
+   ],
+   [
+    "Olivia Petrov"
+   ],
+   [
+    "Priya Xu"
+   ],
+   [
+    "Sofia Castillo"
+   ],
+   [
+    "Sofia Walsh"
+   ],
+   [
+    "Theo Kowalski"
+   ],
+   [
+    "Uma Alvarez"
+   ],
+   [
+    "Uma Xu"
+   ],
+   [
+    "Victor Petrov"
+   ],
+   [
+    "Xavier Kowalski"
+   ],
+   [
+    "Yara Banerjee"
+   ],
+   [
+    "Yara Sato"
+   ],
+   [
+    "Yara Yilmaz"
+   ],
+   [
+    "Zane Abbott"
+   ]
+  ]
+ },
+ {
+  "qid": "J3-4",
+  "family": "J3",
+  "category": "join",
+  "phrasing": "A",
+  "question": "Who taught PHYS 333 in Fall 2024?",
+  "gold_sql": "SELECT DISTINCT i.name FROM instructors i JOIN sections s ON s.instructor_id = i.instructor_id JOIN courses c ON s.course_id = c.course_id JOIN terms t ON s.term_id = t.term_id WHERE c.code = 'PHYS 333' AND t.name = 'Fall 2024'",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Quinn Eriksen"
+   ]
+  ]
+ },
+ {
+  "qid": "J3-5",
+  "family": "J3",
+  "category": "join",
+  "phrasing": "B",
+  "question": "Which instructors taught HIST-295 during fall 2024?",
+  "gold_sql": "SELECT DISTINCT i.name FROM instructors i JOIN sections s ON s.instructor_id = i.instructor_id JOIN courses c ON s.course_id = c.course_id JOIN terms t ON s.term_id = t.term_id WHERE c.code = 'HIST 295' AND t.name = 'Fall 2024'",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Theo Abbott"
+   ]
+  ]
+ },
+ {
+  "qid": "J4-4",
+  "family": "J4",
+  "category": "join",
+  "phrasing": "A",
+  "question": "List the students enrolled in MATH 454 during Fall 2025.",
+  "gold_sql": "SELECT st.name FROM students st JOIN enrollments e ON e.student_id = st.student_id JOIN sections s ON e.section_id = s.section_id JOIN courses c ON s.course_id = c.course_id JOIN terms t ON s.term_id = t.term_id WHERE c.code = 'MATH 454' AND t.name = 'Fall 2025'",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Amara Dubois"
+   ],
+   [
+    "Amara Fujita"
+   ],
+   [
+    "Ava Chen"
+   ],
+   [
+    "Ben Alvarez"
+   ],
+   [
+    "Bruno Alvarez"
+   ],
+   [
+    "Carmen Chen"
+   ],
+   [
+    "Chloe Rossi"
+   ],
+   [
+    "Dev Chen"
+   ],
+   [
+    "Dmitri Alvarez"
+   ],
+   [
+    "Elena Abbott"
+   ],
+   [
+    "Grace Kowalski"
+   ],
+   [
+    "Hiro Delgado"
+   ],
+   [
+    "Hiro Quintero"
+   ],
+   [
+    "Jonah Jensen"
+   ],
+   [
+    "Jonah Okafor"
+   ],
+   [
+    "Jonah Quintero"
+   ],
+   [
+    "Jonah Yilmaz"
+   ],
+   [
+    "Leo Dubois"
+   ],
+   [
+    "Nikhil Lindqvist"
+   ],
+   [
+    "Nikhil Yilmaz"
+   ],
+   [
+    "Olivia Castillo"
+   ],
+   [
+    "Olivia Jensen"
+   ],
+   [
+    "Priya Jensen"
+   ],
+   [
+    "Quinn Dubois"
+   ],
+   [
+    "Rafael Castillo"
+   ],
+   [
+    "Theo Garcia"
+   ],
+   [
+    "Theo Rossi"
+   ],
+   [
+    "Victor Petrov"
+   ],
+   [
+    "Victor Zhang"
+   ],
+   [
+    "Wen Banerjee"
+   ],
+   [
+    "Wen Xu"
+   ],
+   [
+    "Xavier Eriksen"
+   ],
+   [
+    "Yara Banerjee"
+   ],
+   [
+    "Zane Castillo"
+   ],
+   [
+    "Zane Kowalski"
+   ],
+   [
+    "Zane Walsh"
+   ],
+   [
+    "Zane Xu"
+   ]
+  ]
+ },
+ {
+  "qid": "J4-5",
+  "family": "J4",
+  "category": "join",
+  "phrasing": "B",
+  "question": "Who took hist 209 in spring 2026?",
+  "gold_sql": "SELECT st.name FROM students st JOIN enrollments e ON e.student_id = st.student_id JOIN sections s ON e.section_id = s.section_id JOIN courses c ON s.course_id = c.course_id JOIN terms t ON s.term_id = t.term_id WHERE c.code = 'HIST 209' AND t.name = 'Spring 2026'",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Ava Chen"
+   ],
+   [
+    "Ben Delgado"
+   ],
+   [
+    "Carmen Chen"
+   ],
+   [
+    "Carmen Moreau"
+   ],
+   [
+    "Carmen Walsh"
+   ],
+   [
+    "Dmitri Garcia"
+   ],
+   [
+    "Dmitri Sato"
+   ],
+   [
+    "Farid Delgado"
+   ],
+   [
+    "Hiro Quintero"
+   ],
+   [
+    "Kira Eriksen"
+   ],
+   [
+    "Kira Lindqvist"
+   ],
+   [
+    "Priya Jensen"
+   ],
+   [
+    "Priya Nakamura"
+   ],
+   [
+    "Priya Tanaka"
+   ],
+   [
+    "Sofia Lindqvist"
+   ],
+   [
+    "Sofia Sato"
+   ],
+   [
+    "Theo Rossi"
+   ],
+   [
+    "Theo Varga"
+   ],
+   [
+    "Uma Kowalski"
+   ],
+   [
+    "Victor Delgado"
+   ],
+   [
+    "Xavier Eriksen"
+   ],
+   [
+    "Xavier Xu"
+   ]
+  ]
+ },
+ {
+  "qid": "A1-4",
+  "family": "A1",
+  "category": "aggregate",
+  "phrasing": "A",
+  "question": "How many students are in the Economics department?",
+  "gold_sql": "SELECT COUNT(*) FROM students s JOIN departments d ON s.dept_id = d.dept_id WHERE d.name = 'Economics'",
+  "ordered": false,
+  "gold_result": [
+   [
+    37
+   ]
+  ]
+ },
+ {
+  "qid": "A1-5",
+  "family": "A1",
+  "category": "aggregate",
+  "phrasing": "B",
+  "question": "What is the number of students majoring in computer engineering?",
+  "gold_sql": "SELECT COUNT(*) FROM students s JOIN departments d ON s.dept_id = d.dept_id WHERE d.name = 'Computer Engineering'",
+  "ordered": false,
+  "gold_result": [
+   [
+    40
+   ]
+  ]
+ },
+ {
+  "qid": "A2-4",
+  "family": "A2",
+  "category": "aggregate",
+  "phrasing": "A",
+  "question": "How many different students enrolled in Fall 2024?",
+  "gold_sql": "SELECT COUNT(DISTINCT e.student_id) FROM enrollments e JOIN sections s ON e.section_id = s.section_id JOIN terms t ON s.term_id = t.term_id WHERE t.name = 'Fall 2024'",
+  "ordered": false,
+  "gold_result": [
+   [
+    198
+   ]
+  ]
+ },
+ {
+  "qid": "A2-5",
+  "family": "A2",
+  "category": "aggregate",
+  "phrasing": "B",
+  "question": "How many students took classes in spring 2025?",
+  "gold_sql": "SELECT COUNT(DISTINCT e.student_id) FROM enrollments e JOIN sections s ON e.section_id = s.section_id JOIN terms t ON s.term_id = t.term_id WHERE t.name = 'Spring 2025'",
+  "ordered": false,
+  "gold_result": [
+   [
+    238
+   ]
+  ]
+ },
+ {
+  "qid": "A3-4",
+  "family": "A3",
+  "category": "aggregate",
+  "phrasing": "A",
+  "question": "What is the average grade point in HIST 143?",
+  "gold_sql": "SELECT ROUND(AVG(g.points), 2) FROM grades g JOIN enrollments e ON g.enrollment_id = e.enrollment_id JOIN sections s ON e.section_id = s.section_id JOIN courses c ON s.course_id = c.course_id WHERE c.code = 'HIST 143'",
+  "ordered": false,
+  "gold_result": [
+   [
+    2.67
+   ]
+  ]
+ },
+ {
+  "qid": "A3-5",
+  "family": "A3",
+  "category": "aggregate",
+  "phrasing": "B",
+  "question": "What is the mean grade for chem 473?",
+  "gold_sql": "SELECT ROUND(AVG(g.points), 2) FROM grades g JOIN enrollments e ON g.enrollment_id = e.enrollment_id JOIN sections s ON e.section_id = s.section_id JOIN courses c ON s.course_id = c.course_id WHERE c.code = 'CHEM 473'",
+  "ordered": false,
+  "gold_result": [
+   [
+    2.71
+   ]
+  ]
+ },
+ {
+  "qid": "A4-4",
+  "family": "A4",
+  "category": "aggregate",
+  "phrasing": "A",
+  "question": "How many students have taken BIOL 353?",
+  "gold_sql": "SELECT COUNT(DISTINCT e.student_id) FROM enrollments e JOIN sections s ON e.section_id = s.section_id JOIN courses c ON s.course_id = c.course_id WHERE c.code = 'BIOL 353'",
+  "ordered": false,
+  "gold_result": [
+   [
+    86
+   ]
+  ]
+ },
+ {
+  "qid": "A4-5",
+  "family": "A4",
+  "category": "aggregate",
+  "phrasing": "B",
+  "question": "How many distinct students enrolled in chem 410?",
+  "gold_sql": "SELECT COUNT(DISTINCT e.student_id) FROM enrollments e JOIN sections s ON e.section_id = s.section_id JOIN courses c ON s.course_id = c.course_id WHERE c.code = 'CHEM 410'",
+  "ordered": false,
+  "gold_result": [
+   [
+    67
+   ]
+  ]
+ },
+ {
+  "qid": "G1-4",
+  "family": "G1",
+  "category": "group by",
+  "phrasing": "A",
+  "question": "In the Biology department, how many students were admitted each year?",
+  "gold_sql": "SELECT s.admit_year, COUNT(*) FROM students s JOIN departments d ON s.dept_id = d.dept_id WHERE d.name = 'Biology' GROUP BY s.admit_year",
+  "ordered": false,
+  "gold_result": [
+   [
+    2019,
+    9
+   ],
+   [
+    2021,
+    8
+   ],
+   [
+    2022,
+    4
+   ],
+   [
+    2023,
+    9
+   ],
+   [
+    2024,
+    9
+   ],
+   [
+    2025,
+    7
+   ]
+  ]
+ },
+ {
+  "qid": "G1-5",
+  "family": "G1",
+  "category": "group by",
+  "phrasing": "B",
+  "question": "How many physics students were admitted per year?",
+  "gold_sql": "SELECT s.admit_year, COUNT(*) FROM students s JOIN departments d ON s.dept_id = d.dept_id WHERE d.name = 'Physics' GROUP BY s.admit_year",
+  "ordered": false,
+  "gold_result": [
+   [
+    2019,
+    7
+   ],
+   [
+    2020,
+    4
+   ],
+   [
+    2021,
+    1
+   ],
+   [
+    2022,
+    5
+   ],
+   [
+    2023,
+    5
+   ],
+   [
+    2024,
+    4
+   ],
+   [
+    2025,
+    3
+   ]
+  ]
+ },
+ {
+  "qid": "G2-4",
+  "family": "G2",
+  "category": "group by",
+  "phrasing": "A",
+  "question": "For each PHYS course that has been offered, how many sections were there?",
+  "gold_sql": "SELECT c.code, COUNT(*) FROM courses c JOIN sections s ON s.course_id = c.course_id WHERE c.subject = 'PHYS' GROUP BY c.code",
+  "ordered": false,
+  "gold_result": [
+   [
+    "PHYS 100",
+    3
+   ],
+   [
+    "PHYS 199",
+    4
+   ],
+   [
+    "PHYS 211",
+    3
+   ],
+   [
+    "PHYS 322",
+    4
+   ],
+   [
+    "PHYS 333",
+    4
+   ],
+   [
+    "PHYS 415",
+    3
+   ]
+  ]
+ },
+ {
+  "qid": "G2-5",
+  "family": "G2",
+  "category": "group by",
+  "phrasing": "B",
+  "question": "How many sections has each math course had?",
+  "gold_sql": "SELECT c.code, COUNT(*) FROM courses c JOIN sections s ON s.course_id = c.course_id WHERE c.subject = 'MATH' GROUP BY c.code",
+  "ordered": false,
+  "gold_result": [
+   [
+    "MATH 192",
+    5
+   ],
+   [
+    "MATH 222",
+    2
+   ],
+   [
+    "MATH 252",
+    3
+   ],
+   [
+    "MATH 321",
+    4
+   ],
+   [
+    "MATH 452",
+    4
+   ],
+   [
+    "MATH 454",
+    6
+   ],
+   [
+    "MATH 462",
+    3
+   ]
+  ]
+ },
+ {
+  "qid": "O1-4",
+  "family": "O1",
+  "category": "ordering",
+  "phrasing": "A",
+  "question": "List the courses in the Physics department ordered by course code.",
+  "gold_sql": "SELECT c.title FROM courses c JOIN departments d ON c.dept_id = d.dept_id WHERE d.name = 'Physics' ORDER BY c.code",
+  "ordered": true,
+  "gold_result": [
+   [
+    "Mechanics"
+   ],
+   [
+    "Electromagnetism"
+   ],
+   [
+    "Thermodynamics"
+   ],
+   [
+    "Quantum Physics"
+   ],
+   [
+    "Optics"
+   ],
+   [
+    "Astrophysics"
+   ],
+   [
+    "Solid State Physics"
+   ],
+   [
+    "Modern Physics"
+   ]
+  ]
+ },
+ {
+  "qid": "O1-5",
+  "family": "O1",
+  "category": "ordering",
+  "phrasing": "B",
+  "question": "Give the computer engineering department's course titles sorted by code.",
+  "gold_sql": "SELECT c.title FROM courses c JOIN departments d ON c.dept_id = d.dept_id WHERE d.name = 'Computer Engineering' ORDER BY c.code",
+  "ordered": true,
+  "gold_result": [
+   [
+    "Programming Fundamentals"
+   ],
+   [
+    "Data Structures"
+   ],
+   [
+    "Computer Architecture"
+   ],
+   [
+    "Operating Systems"
+   ],
+   [
+    "Computer Networks"
+   ],
+   [
+    "Machine Learning"
+   ],
+   [
+    "Compiler Design"
+   ],
+   [
+    "Distributed Systems"
+   ]
+  ]
+ },
+ {
+  "qid": "O2-4",
+  "family": "O2",
+  "category": "ordering",
+  "phrasing": "A",
+  "question": "Who are the top 3 students by average grade in the Physics department?",
+  "gold_sql": "SELECT s.name FROM students s JOIN departments d ON s.dept_id = d.dept_id JOIN enrollments e ON e.student_id = s.student_id JOIN grades g ON g.enrollment_id = e.enrollment_id WHERE d.name = 'Physics' GROUP BY s.student_id ORDER BY AVG(g.points) DESC LIMIT 3",
+  "ordered": true,
+  "gold_result": [
+   [
+    "Xavier Haddad"
+   ],
+   [
+    "Leo Fujita"
+   ],
+   [
+    "Sofia Lindqvist"
+   ]
+  ]
+ },
+ {
+  "qid": "O2-5",
+  "family": "O2",
+  "category": "ordering",
+  "phrasing": "B",
+  "question": "Name the 3 best students in chemistry by average grade, highest first.",
+  "gold_sql": "SELECT s.name FROM students s JOIN departments d ON s.dept_id = d.dept_id JOIN enrollments e ON e.student_id = s.student_id JOIN grades g ON g.enrollment_id = e.enrollment_id WHERE d.name = 'Chemistry' GROUP BY s.student_id ORDER BY AVG(g.points) DESC LIMIT 3",
+  "ordered": true,
+  "gold_result": [
+   [
+    "Theo Garcia"
+   ],
+   [
+    "Olivia Xu"
+   ],
+   [
+    "Hiro Zhang"
+   ]
+  ]
+ },
+ {
+  "qid": "Q1-4",
+  "family": "Q1",
+  "category": "subquery",
+  "phrasing": "A",
+  "question": "Which CHEM courses have never been offered?",
+  "gold_sql": "SELECT title FROM courses WHERE subject = 'CHEM' AND course_id NOT IN (SELECT course_id FROM sections)",
+  "ordered": false,
+  "gold_result": [
+   [
+    "General Chemistry"
+   ]
+  ]
+ },
+ {
+  "qid": "Q1-5",
+  "family": "Q1",
+  "category": "subquery",
+  "phrasing": "B",
+  "question": "List the biol courses that have no sections.",
+  "gold_sql": "SELECT title FROM courses WHERE subject = 'BIOL' AND course_id NOT IN (SELECT course_id FROM sections)",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Microbiology"
+   ]
+  ]
+ },
+ {
+  "qid": "Q2-4",
+  "family": "Q2",
+  "category": "subquery",
+  "phrasing": "A",
+  "question": "Which students in the Chemistry department have an average grade above the university average?",
+  "gold_sql": "SELECT s.name FROM students s JOIN departments d ON s.dept_id = d.dept_id JOIN enrollments e ON e.student_id = s.student_id JOIN grades g ON g.enrollment_id = e.enrollment_id WHERE d.name = 'Chemistry' GROUP BY s.student_id HAVING AVG(g.points) > (SELECT AVG(points) FROM grades)",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Amara Kowalski"
+   ],
+   [
+    "Ava Petrov"
+   ],
+   [
+    "Bruno Jensen"
+   ],
+   [
+    "Bruno Tanaka"
+   ],
+   [
+    "Carmen Quintero"
+   ],
+   [
+    "Dev Fujita"
+   ],
+   [
+    "Dev Lindqvist"
+   ],
+   [
+    "Dmitri Umarov"
+   ],
+   [
+    "Elena Abbott"
+   ],
+   [
+    "Grace Varga"
+   ],
+   [
+    "Hiro Brennan"
+   ],
+   [
+    "Hiro Castillo"
+   ],
+   [
+    "Hiro Zhang"
+   ],
+   [
+    "Isla Dubois"
+   ],
+   [
+    "Kira Sato"
+   ],
+   [
+    "Leo Alvarez"
+   ],
+   [
+    "Olivia Xu"
+   ],
+   [
+    "Theo Garcia"
+   ],
+   [
+    "Theo Okafor"
+   ],
+   [
+    "Wen Xu"
+   ],
+   [
+    "Xavier Xu"
+   ],
+   [
+    "Yara Alvarez"
+   ],
+   [
+    "Yara Umarov"
+   ],
+   [
+    "Zane Garcia"
+   ]
+  ]
+ },
+ {
+  "qid": "Q2-5",
+  "family": "Q2",
+  "category": "subquery",
+  "phrasing": "B",
+  "question": "Who in mathematics has an average grade higher than the overall average?",
+  "gold_sql": "SELECT s.name FROM students s JOIN departments d ON s.dept_id = d.dept_id JOIN enrollments e ON e.student_id = s.student_id JOIN grades g ON g.enrollment_id = e.enrollment_id WHERE d.name = 'Mathematics' GROUP BY s.student_id HAVING AVG(g.points) > (SELECT AVG(points) FROM grades)",
+  "ordered": false,
+  "gold_result": [
+   [
+    "Carmen Umarov"
+   ],
+   [
+    "Chloe Rossi"
+   ],
+   [
+    "Dev Chen"
+   ],
+   [
+    "Dev Yilmaz"
+   ],
+   [
+    "Dmitri Okafor"
+   ],
+   [
+    "Elena Castillo"
+   ],
+   [
+    "Elena Walsh"
+   ],
+   [
+    "Farid Varga"
+   ],
+   [
+    "Hiro Garcia"
+   ],
+   [
+    "Kira Kowalski"
+   ],
+   [
+    "Kira Quintero"
+   ],
+   [
+    "Kira Yilmaz"
+   ],
+   [
+    "Olivia Alvarez"
+   ],
+   [
+    "Priya Nakamura"
+   ],
+   [
+    "Rafael Brennan"
+   ],
+   [
+    "Victor Delgado"
+   ],
+   [
+    "Wen Lindqvist"
+   ],
+   [
+    "Wen Sato"
+   ],
+   [
+    "Zane Chen"
+   ]
+  ]
+ }
+]

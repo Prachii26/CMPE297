@@ -1,0 +1,242 @@
+{
+  "method": "00_baseline",
+  "proposer": "scripted",
+  "iterations": 20,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "aggregate": {
+    "heldout_final": "0.520 \u00b1 0.154",
+    "validation_final": "0.520 \u00b1 0.154",
+    "repeated_fix_attempts": "5.400 \u00b1 1.817",
+    "blind_repeats": "2.200 \u00b1 1.643",
+    "oscillations": "1.000 \u00b1 1.000",
+    "zero_progress": "10.400 \u00b1 3.286",
+    "keep": "7.200 \u00b1 3.271"
+  },
+  "runs": [
+    {
+      "seed": 0,
+      "proposer": "scripted",
+      "run_id": "00_baseline-20261111T154441-a1aaec",
+      "validation_final": 0.55,
+      "steering_final": 0.55,
+      "heldout_start": 0.25,
+      "heldout_final": 0.55,
+      "heldout_median_latency_ms": 0.1221,
+      "evaluations": 17,
+      "wall_clock_s": 1.666,
+      "final_solver": "00_baseline_scripted_seed0.py",
+      "final_components": [
+        "j1_courses_by_dept",
+        "j2_students_in_dept",
+        "a1_count_students_dept",
+        "s1_admitted",
+        "s2_subject_courses",
+        "s3_hired",
+        "s5_course_title",
+        "s6_student_by_id",
+        "generic_list",
+        "j4_students_course_term",
+        "a3_avg_grade_course",
+        "a2_students_in_term"
+      ],
+      "final_flags": {
+        "COUNT_DISTINCT": false,
+        "DISPATCH": "priority",
+        "LINK_ENTITIES": true
+      },
+      "iterations": 20,
+      "keep": 8,
+      "revert": 8,
+      "rejected": 4,
+      "proposer_error": 0,
+      "repeated_fix_attempts": 6,
+      "blind_repeats": 1,
+      "oscillations": 0,
+      "zero_progress": 8,
+      "guard_rejections": {
+        "hardcoded": 3,
+        "heldout_access": 1
+      }
+    },
+    {
+      "seed": 1,
+      "proposer": "scripted",
+      "run_id": "00_baseline-20261111T154443-2120b2",
+      "validation_final": 0.75,
+      "steering_final": 0.75,
+      "heldout_start": 0.25,
+      "heldout_final": 0.75,
+      "heldout_median_latency_ms": 0.1269,
+      "evaluations": 21,
+      "wall_clock_s": 1.813,
+      "final_solver": "00_baseline_scripted_seed1.py",
+      "final_components": [
+        "g2_sections_per_course",
+        "s4_capacity",
+        "a3_avg_grade_course",
+        "s1_admitted",
+        "s2_subject_courses",
+        "s3_hired",
+        "s5_course_title",
+        "s6_student_by_id",
+        "generic_list",
+        "g1_admitted_per_year",
+        "q2_above_average",
+        "a1_count_students_dept",
+        "o2_top_students",
+        "j1_courses_by_dept",
+        "q1_never_offered",
+        "j2_students_in_dept"
+      ],
+      "final_flags": {
+        "COUNT_DISTINCT": false,
+        "DISPATCH": "priority",
+        "LINK_ENTITIES": true
+      },
+      "iterations": 20,
+      "keep": 12,
+      "revert": 8,
+      "rejected": 0,
+      "proposer_error": 0,
+      "repeated_fix_attempts": 3,
+      "blind_repeats": 1,
+      "oscillations": 2,
+      "zero_progress": 6,
+      "guard_rejections": {}
+    },
+    {
+      "seed": 2,
+      "proposer": "scripted",
+      "run_id": "00_baseline-20261111T154444-357068",
+      "validation_final": 0.325,
+      "steering_final": 0.325,
+      "heldout_start": 0.25,
+      "heldout_final": 0.325,
+      "heldout_median_latency_ms": 0.054,
+      "evaluations": 20,
+      "wall_clock_s": 1.709,
+      "final_solver": "00_baseline_scripted_seed2.py",
+      "final_components": [
+        "j2_students_in_dept",
+        "j4_students_course_term",
+        "s1_admitted",
+        "s2_subject_courses",
+        "s3_hired",
+        "s5_course_title",
+        "s6_student_by_id",
+        "generic_list",
+        "a3_avg_grade_course"
+      ],
+      "final_flags": {
+        "COUNT_DISTINCT": false,
+        "DISPATCH": "list",
+        "LINK_ENTITIES": false
+      },
+      "iterations": 20,
+      "keep": 3,
+      "revert": 16,
+      "rejected": 1,
+      "proposer_error": 0,
+      "repeated_fix_attempts": 7,
+      "blind_repeats": 5,
+      "oscillations": 2,
+      "zero_progress": 14,
+      "guard_rejections": {
+        "narrowing": 1
+      }
+    },
+    {
+      "seed": 3,
+      "proposer": "scripted",
+      "run_id": "00_baseline-20261111T154446-038068",
+      "validation_final": 0.475,
+      "steering_final": 0.475,
+      "heldout_start": 0.25,
+      "heldout_final": 0.475,
+      "heldout_median_latency_ms": 0.1217,
+      "evaluations": 20,
+      "wall_clock_s": 1.707,
+      "final_solver": "00_baseline_scripted_seed3.py",
+      "final_components": [
+        "o1_courses_by_code",
+        "j2_students_in_dept",
+        "s1_admitted",
+        "s2_subject_courses",
+        "s3_hired",
+        "s5_course_title",
+        "s6_student_by_id",
+        "generic_list",
+        "g1_admitted_per_year",
+        "q2_above_average",
+        "g2_sections_per_course"
+      ],
+      "final_flags": {
+        "COUNT_DISTINCT": false,
+        "DISPATCH": "list",
+        "LINK_ENTITIES": true
+      },
+      "iterations": 20,
+      "keep": 6,
+      "revert": 13,
+      "rejected": 1,
+      "proposer_error": 0,
+      "repeated_fix_attempts": 7,
+      "blind_repeats": 2,
+      "oscillations": 1,
+      "zero_progress": 12,
+      "guard_rejections": {
+        "hardcoded": 1
+      }
+    },
+    {
+      "seed": 4,
+      "proposer": "scripted",
+      "run_id": "00_baseline-20261111T154448-3f6d01",
+      "validation_final": 0.5,
+      "steering_final": 0.5,
+      "heldout_start": 0.25,
+      "heldout_final": 0.5,
+      "heldout_median_latency_ms": 0.1356,
+      "evaluations": 20,
+      "wall_clock_s": 1.64,
+      "final_solver": "00_baseline_scripted_seed4.py",
+      "final_components": [
+        "j3_instructors_course_term",
+        "s1_admitted",
+        "s2_subject_courses",
+        "s3_hired",
+        "s5_course_title",
+        "s6_student_by_id",
+        "generic_list",
+        "a3_avg_grade_course",
+        "j4_students_course_term",
+        "g2_sections_per_course",
+        "g1_admitted_per_year"
+      ],
+      "final_flags": {
+        "COUNT_DISTINCT": false,
+        "DISPATCH": "priority",
+        "LINK_ENTITIES": true
+      },
+      "iterations": 20,
+      "keep": 7,
+      "revert": 12,
+      "rejected": 1,
+      "proposer_error": 0,
+      "repeated_fix_attempts": 4,
+      "blind_repeats": 2,
+      "oscillations": 0,
+      "zero_progress": 12,
+      "guard_rejections": {
+        "hardcoded": 1
+      }
+    }
+  ],
+  "heldout_final_mean": 0.52
+}
