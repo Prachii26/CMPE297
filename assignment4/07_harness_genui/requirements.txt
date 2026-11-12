@@ -1,0 +1,10 @@
+openai==1.59.7
+rich==13.9.4
+prompt_toolkit==3.0.48
+python-dotenv==1.0.1
+pyyaml==6.0.2
+fastapi==0.115.6
+uvicorn==0.34.0
+jsonschema==4.23.0
+pytest==8.3.4
+httpx==0.28.1

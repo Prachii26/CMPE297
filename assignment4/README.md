@@ -12,3 +12,4 @@
 | 04_openui_lang | WORKING |
 | 05_json_render | WORKING |
 | 06_mcp_apps | WORKING |
+| 07_harness_genui | WORKING |

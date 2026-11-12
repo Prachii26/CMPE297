@@ -35,3 +35,9 @@ One line per call made without asking.
 31. The host forwards app-originated `tools/call` only for an allowlist (`book_room`); the server deliberately exposes `cancel_all_bookings` so the refusal is visibly the host's.
 32. For static/declarative/mixed, the same host renders a catalog payload in `structuredContent.render` — our convention, documented as not part of MCP Apps.
 33. Bridge frames are matched by contentWindow at message time, because an app's `ui/initialize` can arrive before the iframe's load event.
+34. Theme 07 copies my stage 15 harness into 07_harness_genui/harness/ (commit 5aafb54) and extends the copy, so assignment2 stays exactly as submitted; docs/harness_diff.md records every change.
+35. `run_loop()` is not modified: render_ui is dispatched like any other tool, and an invalid spec is returned as an error string the model can act on.
+36. The scripted client returns OpenAI-SDK-shaped objects so the unmodified loop can drive it; HARNESS_SCRIPTED=0 restores the original OpenRouter client.
+37. Mixed mode's "HtmlArtifact only when the user asks for something interactive" is enforced inside render_ui against the current user message, not left to the model.
+38. Web clicks become user turns of the same harness loop through run_turn(), serialised with a lock.
+39. Terminal screenshots for theme 07 are recorded from real harness runs by swapping stage 13's ui.console for a recording console (record_terminal.py).
