@@ -1,0 +1,37 @@
+[
+  {
+    "format": "OpenUI Lang",
+    "chars": 1327,
+    "cl100k_base": 460,
+    "o200k_base": 459,
+    "vs_lang_cl100k": 1.0
+  },
+  {
+    "format": "A2UI JSONL (compact)",
+    "chars": 4199,
+    "cl100k_base": 1132,
+    "o200k_base": 1167,
+    "vs_lang_cl100k": 2.46
+  },
+  {
+    "format": "A2UI JSONL (pretty)",
+    "chars": 11045,
+    "cl100k_base": 2311,
+    "o200k_base": 2303,
+    "vs_lang_cl100k": 5.02
+  },
+  {
+    "format": "json-render JSON (compact)",
+    "chars": 1706,
+    "cl100k_base": 499,
+    "o200k_base": 495,
+    "vs_lang_cl100k": 1.08
+  },
+  {
+    "format": "json-render JSON (pretty)",
+    "chars": 3415,
+    "cl100k_base": 908,
+    "o200k_base": 900,
+    "vs_lang_cl100k": 1.97
+  }
+]

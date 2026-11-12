@@ -26,3 +26,7 @@ One line per call made without asking.
 22. The terminal renderer shows HtmlArtifact as a placeholder with the byte count — a terminal cannot run HTML, and the README says that is where one catalog / two renderers breaks down.
 23. In json-render open-ended mode a booking re-sends the whole HTML prop, because there is no structured element to patch.
 24. Terminal screenshots are rich's SVG export from real runs, rasterised to PNG with Playwright (tools/svg_to_png.py).
+25. Theme 04's token counts use tiktoken cl100k_base and o200k_base; the BPE files (5.3 MB) are vendored in 04_openui_lang/tokenizer/ so the measurement runs with no network.
+26. JSON is measured compact and pretty, and A2UI includes its typed data-model entries, because each changes the comparison materially.
+27. OpenUI Lang static mode = a client-owned layout program referencing names the agent defines as values; the server rejects component statements from the agent in that mode.
+28. The server validates OpenUI Lang statement by statement and replaces a rejected one with a `# rejected:` comment, so the streaming client never parses it.

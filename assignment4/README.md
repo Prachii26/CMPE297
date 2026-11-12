@@ -9,4 +9,5 @@
 | 01_foundations | WORKING |
 | 02_ag_ui | WORKING |
 | 03_a2ui | WORKING |
+| 04_openui_lang | WORKING |
 | 05_json_render | WORKING |
