@@ -19,6 +19,12 @@ calls `assert_heldout_allowed()` first. That raises BoundaryViolation if:
 
 The guard (guard/guard.py) adds a static layer on top: an edit that so much
 as names the vault or the held-out split is rejected before it runs.
+
+A second seal serves AIDE2 (03_aide2): while an inner agent runs inside
+`inner_agent()`, the VALIDATION split is sealed too -- it is the hidden
+evaluation the outer loop selects on, so the agent being selected must never
+see it. `assert_validation_allowed()` raises inside that context, and also
+whenever generated code is on the call stack.
 """
 from __future__ import annotations
 
@@ -35,6 +41,7 @@ class BoundaryViolation(RuntimeError):
 
 _phase = "idle"
 _phase_owner = ""
+_inner_depth = 0
 
 
 def current_phase() -> str:
@@ -65,6 +72,27 @@ def final_phase(owner: str):
         yield
     finally:
         _phase, _phase_owner = "idle", ""
+
+
+@contextmanager
+def inner_agent():
+    """Seal the validation split while an AIDE2 inner agent runs."""
+    global _inner_depth
+    _inner_depth += 1
+    try:
+        yield
+    finally:
+        _inner_depth -= 1
+
+
+def assert_validation_allowed() -> None:
+    if _inner_depth:
+        raise BoundaryViolation(
+            "validation split requested from inside an inner agent; it is the hidden "
+            "evaluation the outer loop selects on")
+    offender = _offending_frame()
+    if offender and offender.startswith(GENERATED_PREFIXES):
+        raise BoundaryViolation(f"validation split requested from generated code {offender}")
 
 
 def _offending_frame() -> str | None:

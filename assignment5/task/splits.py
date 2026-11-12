@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
-from task.boundary import BoundaryViolation
+from task.boundary import BoundaryViolation, assert_validation_allowed
 from task.evaluate import EvalReport, evaluate
 
 DATA_DIR = Path(__file__).parent / "data"
@@ -34,6 +34,8 @@ def load_split(name: str) -> list[dict]:
         raise BoundaryViolation(
             f"split '{name}' is not loadable here; the held-out split is only "
             "reachable through task.vault inside final_phase()")
+    if name == "validation":
+        assert_validation_allowed()
     return copy.deepcopy(list(_load(name)))
 
 
@@ -72,6 +74,7 @@ class ImproverView:
         return evaluate(solver, self._steering, "steering")
 
     def validation_score(self, solver) -> ValidationSummary:
+        assert_validation_allowed()
         self.validation_calls += 1
         rep = evaluate(solver, self.__validation, "validation")
         return ValidationSummary(rep.accuracy, rep.n, rep.n_correct,

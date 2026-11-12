@@ -1,0 +1,457 @@
+{
+  "method": "03_aide2",
+  "proposer": "scripted (outer) / scripted, fixed (inner)",
+  "generations": 8,
+  "per_generation": 3,
+  "outer_seeds": [
+    0,
+    1,
+    2
+  ],
+  "aggregate": {
+    "hidden_start": "0.325 \u00b1 0.000",
+    "hidden_final": "0.542 \u00b1 0.038",
+    "heldout_start": "0.325 \u00b1 0.000",
+    "heldout_final": "0.542 \u00b1 0.038",
+    "inner_evals_start": "22.000 \u00b1 0.000",
+    "inner_evals_final": "24.000 \u00b1 0.000",
+    "shortcut_attempts_start": "0.000 \u00b1 0.000",
+    "shortcut_attempts_final": "0.000 \u00b1 0.000"
+  },
+  "runs": [
+    {
+      "outer_seed": 0,
+      "run_id": "03_aide2-20261111T162842-a8b5c4",
+      "proposer": "scripted-outer",
+      "inner_proposer": "scripted",
+      "generations": 8,
+      "per_generation": 3,
+      "benchmarks": 25,
+      "hidden_evaluations": 75,
+      "start_choices": {
+        "select_node": "greedy",
+        "order_strategies": "prior_weight",
+        "should_stop": "budget_or_patience",
+        "BRANCHING": 2,
+        "PATIENCE": 6
+      },
+      "final_choices": {
+        "select_node": "ucb",
+        "order_strategies": "front_first",
+        "should_stop": "budget_or_patience",
+        "BRANCHING": 2,
+        "PATIENCE": 10
+      },
+      "surviving_changes": {
+        "select_node": {
+          "value": "ucb",
+          "from_generation": 4
+        },
+        "order_strategies": {
+          "value": "front_first",
+          "from_generation": 5
+        },
+        "PATIENCE": {
+          "value": 10,
+          "from_generation": 1
+        }
+      },
+      "lineage": [
+        {
+          "generation": 0,
+          "key": "83bee3aae597",
+          "hidden": 0.325,
+          "evals": 22.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        },
+        {
+          "generation": 1,
+          "key": "0b1925c9b46c",
+          "hidden": 0.35,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": {
+            "slot": "PATIENCE",
+            "from": 6,
+            "to": 10
+          }
+        },
+        {
+          "generation": 2,
+          "key": "0b1925c9b46c",
+          "hidden": 0.35,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        },
+        {
+          "generation": 3,
+          "key": "0b1925c9b46c",
+          "hidden": 0.35,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        },
+        {
+          "generation": 4,
+          "key": "958a913263ed",
+          "hidden": 0.375,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": {
+            "slot": "select_node",
+            "from": "greedy",
+            "to": "ucb"
+          }
+        },
+        {
+          "generation": 5,
+          "key": "d62f07495eca",
+          "hidden": 0.55,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": {
+            "slot": "order_strategies",
+            "from": "prior_weight",
+            "to": "front_first"
+          }
+        },
+        {
+          "generation": 6,
+          "key": "d62f07495eca",
+          "hidden": 0.55,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        },
+        {
+          "generation": 7,
+          "key": "d62f07495eca",
+          "hidden": 0.55,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        },
+        {
+          "generation": 8,
+          "key": "d62f07495eca",
+          "hidden": 0.55,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        }
+      ],
+      "hidden_start": 0.325,
+      "hidden_final": 0.55,
+      "inner_evals_start": 22.0,
+      "inner_evals_final": 24.0,
+      "shortcut_attempts_start": 0.0,
+      "shortcut_attempts_final": 0.0,
+      "heldout_start_per_seed": [
+        0.325,
+        0.325,
+        0.325
+      ],
+      "heldout_final_per_seed": [
+        0.55,
+        0.55,
+        0.55
+      ],
+      "heldout_start": 0.325,
+      "heldout_final": 0.55,
+      "wall_clock_s": 69.624
+    },
+    {
+      "outer_seed": 1,
+      "run_id": "03_aide2-20261111T162951-046c77",
+      "proposer": "scripted-outer",
+      "inner_proposer": "scripted",
+      "generations": 8,
+      "per_generation": 3,
+      "benchmarks": 25,
+      "hidden_evaluations": 75,
+      "start_choices": {
+        "select_node": "greedy",
+        "order_strategies": "prior_weight",
+        "should_stop": "budget_or_patience",
+        "BRANCHING": 2,
+        "PATIENCE": 6
+      },
+      "final_choices": {
+        "select_node": "greedy",
+        "order_strategies": "front_first",
+        "should_stop": "budget_only",
+        "BRANCHING": 1,
+        "PATIENCE": 6
+      },
+      "surviving_changes": {
+        "order_strategies": {
+          "value": "front_first",
+          "from_generation": 3
+        },
+        "should_stop": {
+          "value": "budget_only",
+          "from_generation": 1
+        },
+        "BRANCHING": {
+          "value": 1,
+          "from_generation": 5
+        }
+      },
+      "lineage": [
+        {
+          "generation": 0,
+          "key": "83bee3aae597",
+          "hidden": 0.325,
+          "evals": 22.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        },
+        {
+          "generation": 1,
+          "key": "e0d89cbe7081",
+          "hidden": 0.35,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": {
+            "slot": "should_stop",
+            "from": "budget_or_patience",
+            "to": "budget_only"
+          }
+        },
+        {
+          "generation": 2,
+          "key": "5221fd1b061c",
+          "hidden": 0.45,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": {
+            "slot": "order_strategies",
+            "from": "prior_weight",
+            "to": "mechanism_first"
+          }
+        },
+        {
+          "generation": 3,
+          "key": "d84af78ea76b",
+          "hidden": 0.5,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": {
+            "slot": "order_strategies",
+            "from": "mechanism_first",
+            "to": "front_first"
+          }
+        },
+        {
+          "generation": 4,
+          "key": "d84af78ea76b",
+          "hidden": 0.5,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        },
+        {
+          "generation": 5,
+          "key": "7952c8f329bd",
+          "hidden": 0.575,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": {
+            "slot": "BRANCHING",
+            "from": 2,
+            "to": 1
+          }
+        },
+        {
+          "generation": 6,
+          "key": "7952c8f329bd",
+          "hidden": 0.575,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        },
+        {
+          "generation": 7,
+          "key": "7952c8f329bd",
+          "hidden": 0.575,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        },
+        {
+          "generation": 8,
+          "key": "7952c8f329bd",
+          "hidden": 0.575,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        }
+      ],
+      "hidden_start": 0.325,
+      "hidden_final": 0.575,
+      "inner_evals_start": 22.0,
+      "inner_evals_final": 24.0,
+      "shortcut_attempts_start": 0.0,
+      "shortcut_attempts_final": 0.0,
+      "heldout_start_per_seed": [
+        0.325,
+        0.325,
+        0.325
+      ],
+      "heldout_final_per_seed": [
+        0.575,
+        0.575,
+        0.575
+      ],
+      "heldout_start": 0.325,
+      "heldout_final": 0.575,
+      "wall_clock_s": 104.914
+    },
+    {
+      "outer_seed": 2,
+      "run_id": "03_aide2-20261111T163136-4c6249",
+      "proposer": "scripted-outer",
+      "inner_proposer": "scripted",
+      "generations": 8,
+      "per_generation": 3,
+      "benchmarks": 25,
+      "hidden_evaluations": 75,
+      "start_choices": {
+        "select_node": "greedy",
+        "order_strategies": "prior_weight",
+        "should_stop": "budget_or_patience",
+        "BRANCHING": 2,
+        "PATIENCE": 6
+      },
+      "final_choices": {
+        "select_node": "ucb",
+        "order_strategies": "novel_first",
+        "should_stop": "budget_only",
+        "BRANCHING": 2,
+        "PATIENCE": 6
+      },
+      "surviving_changes": {
+        "select_node": {
+          "value": "ucb",
+          "from_generation": 2
+        },
+        "order_strategies": {
+          "value": "novel_first",
+          "from_generation": 5
+        },
+        "should_stop": {
+          "value": "budget_only",
+          "from_generation": 1
+        }
+      },
+      "lineage": [
+        {
+          "generation": 0,
+          "key": "83bee3aae597",
+          "hidden": 0.325,
+          "evals": 22.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        },
+        {
+          "generation": 1,
+          "key": "e0d89cbe7081",
+          "hidden": 0.35,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": {
+            "slot": "should_stop",
+            "from": "budget_or_patience",
+            "to": "budget_only"
+          }
+        },
+        {
+          "generation": 2,
+          "key": "384e3f1dde7e",
+          "hidden": 0.375,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": {
+            "slot": "select_node",
+            "from": "greedy",
+            "to": "ucb"
+          }
+        },
+        {
+          "generation": 3,
+          "key": "384e3f1dde7e",
+          "hidden": 0.375,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        },
+        {
+          "generation": 4,
+          "key": "384e3f1dde7e",
+          "hidden": 0.375,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        },
+        {
+          "generation": 5,
+          "key": "e4df46f1f671",
+          "hidden": 0.5,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": {
+            "slot": "order_strategies",
+            "from": "prior_weight",
+            "to": "novel_first"
+          }
+        },
+        {
+          "generation": 6,
+          "key": "e4df46f1f671",
+          "hidden": 0.5,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        },
+        {
+          "generation": 7,
+          "key": "e4df46f1f671",
+          "hidden": 0.5,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        },
+        {
+          "generation": 8,
+          "key": "e4df46f1f671",
+          "hidden": 0.5,
+          "evals": 24.0,
+          "shortcut_attempts": 0.0,
+          "change": null
+        }
+      ],
+      "hidden_start": 0.325,
+      "hidden_final": 0.5,
+      "inner_evals_start": 22.0,
+      "inner_evals_final": 24.0,
+      "shortcut_attempts_start": 0.0,
+      "shortcut_attempts_final": 0.0,
+      "heldout_start_per_seed": [
+        0.325,
+        0.325,
+        0.325
+      ],
+      "heldout_final_per_seed": [
+        0.5,
+        0.5,
+        0.5
+      ],
+      "heldout_start": 0.325,
+      "heldout_final": 0.5,
+      "wall_clock_s": 96.275
+    }
+  ],
+  "heldout_final_mean": 0.5416666666666666
+}

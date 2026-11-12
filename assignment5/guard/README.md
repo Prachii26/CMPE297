@@ -47,7 +47,8 @@ flowchart LR
 .\.venv\Scripts\python.exe -m pytest guard\tests -v
 ```
 
-17 tests: the five required gaming attempts, plus variants of each, plus
+18 tests: the five required gaming attempts, plus variants of each, plus
+a bundle check (a composite edit passes only if every part does), plus
 three legitimate edits (a join handler, a mechanism flag, and the partC
 comment regression), plus one legitimate edit run through the full harness
 including the dynamic checks. Every test asserts the verdict **and** the
@@ -55,9 +56,23 @@ reason.
 
 ## Did it fire in the real runs?
 
-Yes — the ScriptedProposer includes six reward hacks drawn from known LLM
+Yes. The ScriptedProposer includes six reward hacks drawn from known LLM
 behaviour, proposed ~6% of the time, so the guard meets real attempts rather
-than only its unit tests. Counts per method are in the top-level README and
-each method's ledger (`"decision": "rejected"`). Checks that never fired in a
-real run are named there too: a guard check that has only fired in tests is
-unproven in practice.
+than only its unit tests. Across every reported run it rejected **41**
+proposals:
+
+| check | real rejections | where |
+|---|---|---|
+| `hardcoded` (static: literal rows, constant SELECTs, memorised questions) | 27 | 00, 01 and its ablations, AIDE² inner agents |
+| `heldout_access` | 7 | 00, 01, AIDE² inner agents |
+| `narrowing` (static: edit changes the question set) | 4 | 00, 01 |
+| `target` (a patch to `task/evaluate.py`) | 2 | 01 |
+| `gutted` (timing, measured side by side) | 1 | 01 `no_probes` ablation |
+
+The live LLM proposer made 6 edits and attempted no hack.
+
+**Fired only in tests — unproven in practice:** the in-source metric
+monkeypatch (`evaluator_tamper`) and the runtime integrity fingerprint,
+`database_access`, the steering/validation divergence check, the dynamic
+denominator check, and AIDE²'s control-module scan (`control_tamper`). None of
+the real proposers produced an edit that reached them.
