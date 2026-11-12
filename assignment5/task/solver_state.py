@@ -166,7 +166,11 @@ def load(source: str, tag: str = "candidate") -> types.SimpleNamespace:
     code = compile(source, f"<solver:{tag}>", "exec")
     ns: dict = {"__name__": "rsi_solver"}
     exec(code, ns)
-    return types.SimpleNamespace(solve=ns["solve"], trace=ns["trace"], source=source)
+    return types.SimpleNamespace(
+        solve=ns["solve"], trace=ns["trace"], source=source,
+        # introspection for diagnostic probes; absent on a whole-module rewrite
+        handlers={name: fn for name, _p, fn in ns.get("HANDLERS", [])},
+        flags=ns.get("FLAGS", {}), link=ns.get("link_entities", lambda q: q))
 
 
 def load_state(state: SolverState, tag: str = "candidate") -> types.SimpleNamespace:

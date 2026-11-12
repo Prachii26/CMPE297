@@ -177,3 +177,19 @@ def test_legit_edit_passes_the_full_harness_including_dynamic_checks(tmp_path):
                                                cid="a3_avg_grade_course"))
     assert trial.verdict.ok and trial.stage == "scored"
     assert trial.candidate.val.accuracy > start.val.accuracy
+
+
+def test_a_bundle_is_checked_part_by_part():
+    from core.edits import bundle
+    good = handler_edit(BY_ID["fix_J1"].component.body, cid="j1_courses_by_dept")
+    flag = Proposal(strategy_id="dispatch_priority", kind="set_flag", mechanism="shadowing",
+                    description="t", proposer="test", edit_key="flag:DISPATCH=priority",
+                    flag="DISPATCH", value="priority")
+    ok = bundle([flag, good], strategy_id="systematic:shadowing", mechanism="shadowing",
+                description="t", predicted_fixes=(), rationale="t")
+    assert static(ok).ok
+    sneaky = bundle([flag, ScriptedProposer(0).shortcut(ctx(), "lenient_metric")],
+                    strategy_id="systematic:x", mechanism="x", description="t",
+                    predicted_fixes=(), rationale="t")
+    v = static(sneaky)
+    assert not v.ok and v.check == "target" and "bundle part shortcut:lenient_metric" in v.reason

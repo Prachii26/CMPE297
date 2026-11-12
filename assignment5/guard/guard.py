@@ -134,6 +134,14 @@ def _constant_queries(code: str) -> list[str]:
 
 
 def check_target(proposal) -> Verdict:
+    parts = getattr(proposal, "bundle", ())
+    if parts:                       # a composite edit passes only if every part does
+        for part in parts:
+            verdict = check_target(part)
+            if not verdict.ok:
+                return Verdict(False, verdict.check,
+                               f"bundle part {part.strategy_id}: {verdict.reason}")
+        return PASS
     if getattr(proposal, "restrict", None) or proposal.kind == "restrict_questions":
         return Verdict(False, "narrowing",
                        "edit changes which questions are evaluated instead of improving "

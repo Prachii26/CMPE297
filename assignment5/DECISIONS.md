@@ -23,3 +23,8 @@ One line per call made without asking, in the order they were made.
 19. Live LLM rounds run on the baseline method only (8 calls, `gemini-3.5-flash`): the simplest loop isolates whether the integration works. A failed call is a `proposer_error` entry, never a silent switch to the scripted proposer.
 20. Baseline reported over 5 seeds × 20 iterations (brief asks ≥ 15) because a single seed ranged from 32.5% to 75%.
 21. Source claims for Dream-RSI (2609.14858) and AIDE² (2609.26457) come from their arXiv abstracts: the course's PAPER_SUMMARIES.md covers SO-RSI but not these two.
+22. SO-RSI's systematic edit is a bundle (mechanism + the fixes it blocked) judged as one candidate; the guard checks a bundle part by part, so no part escapes the target rules.
+23. SO-RSI is reported with two ablations (no_probes = tabu list, no_veto = diagnosis without screening) to show which component carries the effect.
+24. "Blind repeat" = this exact edit already failed in this exact solver; a bundle of individually-failed parts is a new edit. Recomputed the baseline under the refined definition: unchanged.
+25. Three development runs of SO-RSI from superseded code had appended to docs/ledgers before the final runs (a shell variable did not persist between commands). They were uncommitted; they were deleted, the committed audit log restored, and the reported runs re-run from scratch with identical results.
+26. so_loop resolves the ledger directory at call time, so tests can no longer write into docs/ledgers.
