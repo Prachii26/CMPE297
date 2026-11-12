@@ -1,0 +1,35 @@
+{
+  "chunk_chars": 40,
+  "results": [
+    {
+      "shape": "nested",
+      "chars": 1779,
+      "chunks": 45,
+      "components": 8,
+      "first_paint": 4,
+      "layout_known": 43,
+      "all_complete": 45,
+      "complete_by_quarter": {
+        "1": 4,
+        "2": 5,
+        "3": 5,
+        "4": 8
+      }
+    },
+    {
+      "shape": "flat",
+      "chars": 2119,
+      "chunks": 53,
+      "components": 8,
+      "first_paint": 13,
+      "layout_known": 11,
+      "all_complete": 53,
+      "complete_by_quarter": {
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 8
+      }
+    }
+  ]
+}
