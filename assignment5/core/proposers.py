@@ -104,6 +104,13 @@ class ScriptedProposer:
         pool += [lib.removal(cid) for cid in ctx.state.cids() if cid not in lib.BASE_CIDS]
         return [s for s in pool if s.sid not in ctx.exclude]
 
+    def all_candidates(self, ctx: ProposalContext) -> list[lib.Strategy]:
+        """Every legitimate edit the agent could make here (no shortcuts).
+        Dream-RSI and AIDE2 let a policy choose among these instead of
+        sampling one the way propose() does."""
+        return (self.coverage_candidates(ctx) + self.mechanism_candidates(ctx)
+                + self.undo_candidates(ctx))
+
     def _pick(self, pool: list[lib.Strategy]) -> lib.Strategy:
         w = np.array([s.weight for s in pool], dtype=float)
         return pool[int(self.rng.choice(len(pool), p=w / w.sum()))]

@@ -28,3 +28,15 @@ One line per call made without asking, in the order they were made.
 24. "Blind repeat" = this exact edit already failed in this exact solver; a bundle of individually-failed parts is a new edit. Recomputed the baseline under the refined definition: unchanged.
 25. Three development runs of SO-RSI from superseded code had appended to docs/ledgers before the final runs (a shell variable did not persist between commands). They were uncommitted; they were deleted, the committed audit log restored, and the reported runs re-run from scratch with identical results.
 26. so_loop resolves the ledger directory at call time, so tests can no longer write into docs/ledgers.
+27. Dream-RSI's discovery cost is one live scoring pass per expansion; the base agent's edit pool is the ScriptedProposer's legitimate candidates (no reward hacks) and is identical in both arms.
+28. The exploration policy is linear over seven expansion features with a softmax; dreaming is a cross-entropy search over its weights, scored on simulated rollouts from every root in the pool, adopted only if it beats the current policy in the same dreams by a margin.
+29. Dream-RSI and Recursive Fixed Exploration share seeds, so round 1 is the same discovery tree in both arms; differences start at the first policy update.
+30. "Calls saved at equal performance" = live calls fixed exploration needed to reach its own final validation level, minus the calls the dream arm needed to reach the same level; reported per seed, including seeds where the dream arm never got there.
+31. Dream-RSI is reported over 10 seeds, not 5, after a change in the CEM random stream alone moved per-seed calls-saved by up to 12: the per-seed number is noise-dominated.
+32. Two post-hoc Dream variants are reported separately from the designed method: dream_context (tests a first diagnosis of the seed-0 failure, later shown wrong) and dream_support (tests the corrected diagnosis). No further variants were added after seeing their results.
+33. CEM draws noise only for searched weights, so adding an inactive feature cannot change a policy's random stream.
+34. AIDE2's inner budget (24 attempts) belongs to the outer loop, not the editable module, so every control variant is benchmarked at equal cost; a guard-rejected attempt still spends budget.
+35. AIDE2's hidden evaluation is the validation split, scored only after the inner agent exits, averaged over 3 inner seeds; ties on hidden accuracy go to the variant using fewer inner scorings.
+36. AIDE2's inner proposer is ScriptedProposer(0) for every variant — fixed, deterministic — so a measured difference is the harness, not the model.
+37. The validation seal (task.boundary.inner_agent) was added to the shared boundary module rather than to 03_aide2, so the enforcement is in the same place as the held-out seal and covered by the same tests.
+38. AIDE2's inner candidate pool includes the six reward hacks so that the AIDE2 abstract's reward-hacking observation has a laptop analogue; generation 0 was NOT altered when its hack rate turned out to be zero.
