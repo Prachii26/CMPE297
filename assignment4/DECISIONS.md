@@ -17,3 +17,7 @@ One line per call made without asking.
 13. Static and open-ended modes travel as frontend tool calls (`show_component`, `render_html`); declarative and mixed travel as shared state built by JSON Patch deltas — so the four modes visibly use different carriers on one transport.
 14. The CSP is injected before HTML is placed in tool-call arguments, because those arguments stream to the page; a server-edge rewrite would be too late.
 15. The page reads the AG-UI stream with fetch + a stream reader, because EventSource cannot POST a RunAgentInput.
+16. Theme 03 writes A2UI v0.8 envelopes by hand; data-model arrays are encoded as index-keyed valueMaps with an isList marker — our reading of the contract, stated as such.
+17. The server validates every A2UI component against the catalog the client advertised in that request, and drops anything else with an error line, so a client never receives a component it cannot render.
+18. A2UI static mode = client-owned surface template + agent-sent dataModelUpdate only; open-ended = a client-advertised HtmlArtifact escape hatch, documented as contrary to A2UI's design.
+19. A2UI responses stream as JSON Lines over a plain POST response — the format is independent of transport, so no AG-UI wrapper was added.
