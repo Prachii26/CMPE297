@@ -11,3 +11,4 @@
 | 03_a2ui | WORKING |
 | 04_openui_lang | WORKING |
 | 05_json_render | WORKING |
+| 06_mcp_apps | WORKING |

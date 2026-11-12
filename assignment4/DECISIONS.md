@@ -30,3 +30,8 @@ One line per call made without asking.
 26. JSON is measured compact and pretty, and A2UI includes its typed data-model entries, because each changes the comparison materially.
 27. OpenUI Lang static mode = a client-owned layout program referencing names the agent defines as values; the server rejects component statements from the agent in that mode.
 28. The server validates OpenUI Lang statement by statement and replaces a rejected one with a `# rejected:` comment, so the streaming client never parses it.
+29. Theme 06 implements MCP JSON-RPC and the MCP Apps bridge by hand (no `mcp` package), keeping the theme's dependencies to FastAPI.
+30. The host builds the iframe CSP from the resource's `_meta.ui.csp`; with no domains requested, connect-src is 'none'.
+31. The host forwards app-originated `tools/call` only for an allowlist (`book_room`); the server deliberately exposes `cancel_all_bookings` so the refusal is visibly the host's.
+32. For static/declarative/mixed, the same host renders a catalog payload in `structuredContent.render` — our convention, documented as not part of MCP Apps.
+33. Bridge frames are matched by contentWindow at message time, because an app's `ui/initialize` can arrive before the iframe's load event.
