@@ -7,3 +7,4 @@
 | theme | status |
 |---|---|
 | 01_foundations | WORKING |
+| 02_ag_ui | WORKING |

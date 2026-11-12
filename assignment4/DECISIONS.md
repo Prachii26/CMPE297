@@ -13,3 +13,7 @@ One line per call made without asking.
 9. The streaming measurement reports both sides — flat fixes layout at 21% of the stream vs 96% for nested, but nested paints its first leaf sooner and is 16% shorter.
 10. The CSP is injected into generated HTML by the server, not trusted to the agent; the sandbox token list (`allow-scripts` only) is sent by the server and applied verbatim by the page.
 11. Open-ended HTML is mounted only once complete; streaming a half-written document into srcdoc is unreliable.
+12. Theme 02 implements the AG-UI events by hand (no SDK), framed as one SSE `data:` line per event with a `type` field, camelCase fields per the spec.
+13. Static and open-ended modes travel as frontend tool calls (`show_component`, `render_html`); declarative and mixed travel as shared state built by JSON Patch deltas — so the four modes visibly use different carriers on one transport.
+14. The CSP is injected before HTML is placed in tool-call arguments, because those arguments stream to the page; a server-edge rewrite would be too late.
+15. The page reads the AG-UI stream with fetch + a stream reader, because EventSource cannot POST a RunAgentInput.

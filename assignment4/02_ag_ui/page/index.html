@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Study rooms - AG-UI</title>
+<style>
+  :root { --bg:#f5f6f8; --card:#fff; --ink:#1d2330; --muted:#6b7385; --line:#e3e6ec;
+          --accent:#2f6fde; --ok:#2e8b57; --bad:#c2453a; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:14px/1.45 system-ui, -apple-system, Segoe UI, sans-serif;
+         background:var(--bg); color:var(--ink); }
+  header { display:flex; align-items:center; gap:18px; padding:12px 20px;
+           background:var(--ink); color:#fff; }
+  header h1 { font-size:16px; margin:0; font-weight:600; }
+  nav a { color:#c9d3ea; text-decoration:none; margin-right:4px; padding:5px 10px;
+          border-radius:6px; font-size:13px; }
+  nav a.on { background:var(--accent); color:#fff; }
+  #status { margin-left:auto; font-size:12px; color:#c9d3ea; }
+  main { display:grid; grid-template-columns: 360px 1fr; gap:16px; padding:16px 20px; }
+  .panel { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px; }
+  .panel h2 { font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted);
+              margin:0 0 8px; }
+  #raw { font:11px/1.4 ui-monospace, Consolas, monospace; white-space:pre-wrap; word-break:break-all;
+         max-height:72vh; overflow:auto; margin:0; color:#38415a; }
+  #surface { min-height:60vh; }
+  .stack { display:flex; gap:12px; }
+  .stack.column { flex-direction:column; } .stack.row { flex-direction:row; flex-wrap:wrap; }
+  .metric { flex:1; min-width:140px; background:#f8faff; border:1px solid var(--line);
+            border-radius:10px; padding:12px; }
+  .metric .v { font-size:24px; font-weight:650; } .metric .l { color:var(--muted); font-size:12px; }
+  h3.heading { margin:0; font-size:20px; }
+  table { width:100%; border-collapse:collapse; } th, td { text-align:left; padding:6px 8px;
+          border-bottom:1px solid var(--line); } th { color:var(--muted); font-weight:600; font-size:12px; }
+  .pill { padding:2px 8px; border-radius:20px; font-size:12px; }
+  .pill.free { background:#e2f3e8; color:var(--ok);} .pill.busy { background:#f8e3e1; color:var(--bad);}
+  .chart { display:flex; align-items:flex-end; gap:8px; height:150px; padding:8px 4px 22px; }
+  .chart .b { flex:1; background:var(--accent); border-radius:4px 4px 0 0; position:relative; opacity:.85; }
+  .chart .b span { position:absolute; bottom:-18px; left:0; right:0; text-align:center; font-size:11px;
+                   color:var(--muted); }
+  form.booking { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  select, button { font:inherit; padding:6px 10px; border-radius:7px; border:1px solid var(--line); }
+  button { background:var(--accent); color:#fff; border:0; cursor:pointer; }
+  .slot { border:1px dashed #b9c1d3; border-radius:10px; padding:10px; color:var(--muted);
+          min-height:44px; display:flex; align-items:center; justify-content:center; font-size:12px; }
+  .reject { border:1px solid var(--bad); color:var(--bad); padding:8px; border-radius:8px; }
+  iframe.sandbox { width:100%; border:2px solid #e0a43b; border-radius:10px; background:#fff; }
+  .sandbox-label { font-size:11px; color:#a26f12; margin:2px 0 4px; }
+  .toast { margin-top:10px; padding:8px 10px; border-radius:8px; background:#e2f3e8; color:var(--ok); }
+  .static-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+  .static-grid .full { grid-column: 1 / -1; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:12px; }
+  .card h4 { margin:0 0 8px; font-size:13px; color:var(--muted); }
+
+  main { grid-template-columns: 380px 1fr; }
+  .chat { max-height:200px; overflow:auto; }
+  .bubble { background:#eef3ff; border-radius:10px; padding:8px 10px; margin-bottom:6px; }
+  .bubble.user { background:#f1f1f1; text-align:right; }
+  #log { font:11px/1.5 ui-monospace, Consolas, monospace; max-height:260px; overflow:auto; margin:0; }
+  #log .t { color:#2f6fde; font-weight:600; }
+  #state { font:11px/1.4 ui-monospace, Consolas, monospace; white-space:pre-wrap; max-height:220px;
+           overflow:auto; margin:0; color:#38415a; }
+  .counts span { display:inline-block; background:#eef1f6; border-radius:5px; padding:1px 6px;
+                 margin:2px; font:11px ui-monospace, monospace; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Study rooms · theme 02 AG-UI</h1>
+  <nav id="modes"></nav>
+  <span id="status">idle</span>
+</header>
+<main>
+  <section>
+    <div class="panel"><h2>Messages</h2><div class="chat" id="chat"></div></div>
+    <div class="panel" style="margin-top:12px"><h2>AG-UI events (same transport, every mode)</h2>
+      <div class="counts" id="counts"></div><pre id="log"></pre></div>
+    <div class="panel" style="margin-top:12px"><h2>Shared state (STATE_SNAPSHOT + STATE_DELTA)</h2>
+      <pre id="state"></pre></div>
+  </section>
+  <section class="panel"><h2 id="surface-title">Rendered surface</h2><div id="surface"></div>
+    <div id="toast"></div></section>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>
