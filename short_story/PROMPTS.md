@@ -172,3 +172,91 @@ Keep the three caveats about my own work in the two-cents section, worded as pla
 
 Then write the article, the deck, the README, and run the humanizer pass. Report when the article draft is done, before the deck.
 ```
+
+## Prompt 4
+
+```text
+Finish the short story assignment end to end. Work through all six stages without stopping unless something is unrecoverable. Report at the end.
+
+## Stage 1 — Article fixes
+
+1. The dual-use paragraph (Fang et al. / CVE-Genie / ARTEMIS) states the economics and stops. Add one or two sentences on what I take from them, connected to the autonomy paragraph below it: the cost of running an offensive agent is now low enough that the binding constraint is no longer expertise or budget, and the survey's own autonomy data shows that is also the side given the least human oversight. Two sentences, no moralising.
+
+2. Verify every "X et al." attribution against the paper. Line 9 credits the harness ablation to Chiang et al. — check it, and check all the others. Where the survey names no author for a result, write "the survey reports" instead of inventing one. List every correction you make.
+
+3. Change the title to "GPT-4o Refuses Every Request, Until You Wrap It in an Agent", move the current title to the subtitle line, and rename the opening section heading so it does not repeat the title.
+
+4. Make sure the transition into "My two cents" signals that my own reading is starting, so §6 and §7.1 do not read as the same argument twice. One sentence is enough.
+
+5. Create article/article-medium.md: the same article with every repo link rewritten as an absolute https://github.com/Prachii26/CMPE297/... URL, plus a short block at the top listing the figure filenames in the order they appear, so I know which image to upload where when pasting into Medium. Keep article.md as the repo version with relative links.
+
+## Stage 2 — The deck
+
+deck/slides.pptx, exported to deck/slides.pdf. 25 slides for a 15 to 17 minute talk. Build it with python-pptx. Reuse the existing figures — do not regenerate them.
+
+Slide plan, adjust only if the article changed:
+1. Title, my name, CMPE 297, the paper with its arXiv link
+2. The paper: Shahriar et al., TMLR 2026, 274 papers, three pillars, Jan 2023 to May 2026 corpus
+3. The hook — fig 7 left panel. 100 / 93.3 / 73.3 / 53.3, same model
+4. Why it drops: system-prompt trust promotion, and multi-step vs plan-first
+5. The obvious fix fails — MCP-SafetyBench, 245 tasks, 13 models, 81.94%, 1.22%
+6. Which version I read — the four v3-to-v4 differences, and the reversed conclusion
+7. The agent loop — fig 2
+8. Entry point vs failure stage, and the black-box threat model
+9. Taxonomy overview — fig 1
+10. Applications: red team, blue team, domain-specific
+11. Dual-use economics — $8.80, $2.77, ARTEMIS vs human pen testers
+12. Autonomy asymmetry — fig 6
+13. Synthesis: autonomy degrades refusals, and offense gets the most autonomy. State on the slide that these are separate results, not a controlled comparison
+14. Threats: the seven classes
+15. Inherited vs amplified vs agent-native — fig 5
+16. Defenses: the four groups, and 53.3% being an LLM watching an LLM
+17. Defense gaps — fig 10
+18. Research attention, not effectiveness — fig 4, with that caveat on the slide itself
+19. The numbers — fig 3 panel A
+20. MCP results: MCPTox, MSB, stronger models more vulnerable
+21. The numbers do not agree — fig 3 panel B, plus the MSB and AgentPoison discrepancies
+22. What I built — fig 9
+23. The MCP trust boundary — fig 8
+24. Where mine is weaker: sandbox none on Windows, name-only tool filtering, scripted proposer behind the 41 rejections
+25. What I'd watch: the reflection gap. Stage 14's handoff note and SO-RSI's inquiry memory
+26. References
+
+Every slide needs speaker notes written as spoken sentences, because I record from them. Large text, one idea per slide, no paragraph dumps. Copy slides.pdf into video/ as well, since the rubric asks for the slides in the GitHub directory alongside the recording.
+
+## Stage 3 — README.md
+
+- What this is, the paper with a link, and a one-paragraph summary
+- A links block with four placeholders: MEDIUM_ARTICLE_LINK, SLIDESHARE_LINK, YOUTUBE_VIDEO_LINK, and the deck PDF path
+- The three-pillar taxonomy as a table
+- A figures gallery embedding all 10 images with their captions
+- A short section on how this connects to the rest of the repo, linking assignment2 stages 12 to 14, assignment3, assignment4 theme 06 and assignment5
+- Sources: the primary paper and the three secondary surveys, each with its arXiv link
+- A line stating the article is original writing, not a reproduction of the survey
+
+## Stage 4 — Humanizer pass
+
+Run the humanizer skill over article.md, article-medium.md, README.md and every slide's speaker notes.
+
+Strip the usual tells: not-X-but-Y constructions, staged openers, forced triads, em-dashes used as a tic, inflated claims, stock AI words, bold inline labels, filler.
+
+Do not let it touch: any number, any citation, any section or page reference, or the three self-critical statements about my own work.
+
+The article already has sentences that land and are not AI tells — "In the place my agent actually ran, my implementation of it did nothing", the library-version pin line, "security by incompetence" as a quoted term. After the pass, diff before and after, and restore anything that lost voice rather than gained clarity. Report what the humanizer changed most often so I know the tells to watch for when I speak.
+
+## Stage 5 — PROMPTS.md
+
+Every prompt I sent for this assignment, verbatim, in order, pulled from session history. Invent nothing.
+
+## Stage 6 — Final check
+
+- Every figure referenced in the article and the deck exists and renders
+- Every arXiv link resolves
+- No number in the article is unsourced
+- slides.pdf opens and the text is readable at a distance
+- Grep for AIza and sk-, confirm no hits
+- .venv is gitignored
+- Commit and push
+
+Report at the end: the attribution corrections you made, what the humanizer changed most, the final word count, the slide count, and anything you could not verify.
+```

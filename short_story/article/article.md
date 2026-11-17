@@ -1,10 +1,10 @@
-# Same Model, More Harness: Reading a 274-Paper Survey on Agentic Security
+# GPT-4o Refuses Every Request, Until You Wrap It in an Agent
 
-*Notes on Shahriar et al., "A Survey on Agentic Security: Applications, Threats and Defenses" (arXiv 2510.06445, v4, TMLR 2026), checked against things I built for CMPE 297.*
+*Same Model, More Harness: Reading a 274-Paper Survey on Agentic Security. Notes on Shahriar et al., "A Survey on Agentic Security: Applications, Threats and Defenses" (arXiv 2510.06445, v4, TMLR 2026), checked against things I built for CMPE 297.*
 
 ---
 
-## GPT-4o refuses every request, until you wrap it in an agent
+## One model, four configurations
 
 One experiment in this survey changed how I think about agent safety. Chiang et al. took GPT-4o and a fixed set of malicious instructions. They then added agent components one at a time and measured the clear-denial rate, meaning the share of requests the model refuses outright. On its own, GPT-4o refused all of them. When the user's goal was moved into the system prompt, clear denial dropped to 93.3%. Adding multi-step action generation took it to 73.3%. Adding an event stream (the running log of actions and observations an agent keeps) took it to 53.3% (§4.3, p. 25).
 
@@ -15,7 +15,7 @@ The survey explains the first drop as a trust problem. Models are trained to def
 ![Figure 7](figures/fig07_ablation_hptsa.png)
 *Figure 7. Left: the harness ablation. The model never changes, and clear denial falls by almost half. Right: the offensive system HPTSA loses a factor of 13 in pass@1 without its coordination layer (§3.4, p. 18); the survey gives only the ratio. The scaffold that weakens refusals also produces the offensive capability.*
 
-The obvious fix is to tell the model to be careful. MCP-SafetyBench tested that. MCP, the Model Context Protocol, is the now-common standard for connecting an agent to external tool servers. Across 245 tasks and 13 models, attacks on the host side of MCP succeeded 81.94% of the time on average. Adding safety prompts lowered that by 1.22%, a change the benchmark's authors found statistically insignificant (§4.2.1, p. 23).
+The obvious fix is to tell the model to be careful. MCP-SafetyBench tested that. MCP, the Model Context Protocol, is the now-common standard for connecting an agent to external tool servers. Across 245 tasks and 13 models, attacks on the host side of MCP succeeded 81.94% of the time on average. Adding safety prompts lowered that by 1.22%, which the survey reports as statistically insignificant (§4.2.1, p. 23).
 
 Taken together, the two results mean safety drops as autonomy goes up, and prompting the model to be safe barely moves the number. The rest of the survey helps explain why.
 
@@ -56,7 +56,7 @@ The Applications pillar has three branches. Red teaming covers autonomous penetr
 
 The lifecycle counts are lopsided. Offensive work piles up at vulnerability discovery (52 papers) and exploitation (50). Persistence and exfiltration have 2 and 3 papers (§3.4.1, Fig. 5, pp. 14–15).
 
-The dual-use numbers are where I slowed down. Of 113 application systems, 60 (53.1%) carry offensive or dual-use capability (§3.4.3, p. 17). Fang et al.'s agent exploits 87% of one-day CVEs at about $8.80 per exploit. CVE-Genie reproduces 428 of 841 CVEs at $2.77 each. ARTEMIS outperformed 9 of 10 human penetration testers in a live enterprise test, at roughly $18 an hour against $60 (p. 18).
+The dual-use numbers are where I slowed down. Of 113 application systems, 60 (53.1%) carry offensive or dual-use capability (§3.4.3, p. 17). Fang et al.'s agent exploits 87% of one-day CVEs at about $8.80 per exploit. CVE-Genie reproduces 428 of 841 CVEs at $2.77 each. ARTEMIS outperformed 9 of 10 human penetration testers in a live enterprise test, at roughly $18 an hour against $60 (p. 18). What I take from these numbers is that running an offensive agent now costs a few dollars a task, so expertise and budget are no longer what holds an attacker back. The survey's autonomy data, below, shows this is also the side given the least human oversight.
 
 ![Figure 6](figures/fig06_lifecycle_autonomy.png)
 *Figure 6. A and B: application papers per lifecycle stage. C: how much autonomy each side's systems are given. 83.0% of offensive systems run end to end at Level 3. 14.3% of defensive systems do (§3.4.2, Fig. 6, p. 16).*
@@ -105,7 +105,7 @@ The survey doesn't have a single leaderboard. It reports results paper by paper.
 ![Figure 3](figures/fig03_asr.png)
 *Figure 3. A: headline attack success rates the survey reports, grouped by threat class, each with its qualifier and page. They come from different papers, benchmarks and models, so compare within a row only. B: the same attack measured two ways (§4.4.5, p. 29).*
 
-A few results stand out because of what they beat. ToolHijacker reaches up to 96.7% ASR against GPT-4o on MetaTool, and it gets past three published injection defenses (StruQ, SecAlign and DataSentinel) to do it. Zhan et al. bypassed all eight defenses they evaluated using adaptive attacks (§4.1.1, p. 19). MINJA poisons an agent's memory to 76.8% average ASR using only ordinary queries, with no write access to the memory at all (§4.1.2, p. 20). BrowserART shows amplification directly: GPT-4o carries out 12% of harmful behaviours as a chatbot and 74% as a browser agent (p. 20).
+A few results stand out because of what they beat. ToolHijacker reaches up to 96.7% ASR against GPT-4o on MetaTool, and it gets past two prevention defenses (StruQ, SecAlign) and two detection defenses (DataSentinel, perplexity filtering) to do it. Zhan et al. bypassed all eight defenses they evaluated using adaptive attacks (§4.1.1, p. 19). MINJA poisons an agent's memory to 76.8% average ASR using only ordinary queries, with no write access to the memory at all (§4.1.2, p. 20). BrowserART shows amplification directly: GPT-4o carries out 12% of harmful behaviours as a chatbot and 74% as a browser agent (p. 20).
 
 MCP results get their own row because they cover the surface I've worked with. Besides MCP-SafetyBench, MCPTox poisoned tool descriptions on 45 real MCP servers and reached up to 72.8% ASR. Even the best-refusing model, Claude 3.7 Sonnet, refused under 3% of the time. In both MCPTox and MSB (the MCP Security Bench), stronger models were more vulnerable, because a model that follows tool instructions well also follows malicious ones well (§4.2.1, p. 23).
 
@@ -118,6 +118,8 @@ The evaluation problem goes deeper than a lack of numbers. The 25 benchmark pape
 The evaluation survey by Yehudai et al. (arXiv 2503.16416) reaches the same conclusion from the capability side. It names safety, robustness and cost-efficiency as the under-measured dimensions of agent benchmarks. It also asks for experiments that vary the harness while holding the model fixed. The §4.3 ablation that opens this article is exactly that kind of experiment.
 
 ## My two cents
+
+Everything above is my summary of what the survey reports. From here on it's my own reading of it, and I'll start with the metric problem from the previous section, because it goes further than the survey's own critique.
 
 ### The numbers do not agree with each other
 

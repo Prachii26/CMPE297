@@ -21,3 +21,5 @@ One line per judgement call made without asking.
 17. Persistent memory appears in Fig. 2 without a paper count: §4.4.1 names it as a channel but gives no count (Fig. 8's memory column counts threat labels, not papers).
 18. "The numbers do not agree with each other" is a subsection of "My two cents", so the discrepancies sit in the two-cents section (prompt 2) and get their own heading (prompt 3).
 19. The v3-to-v4 note is placed right after the opening, so a reader knows which version every later number comes from.
+20. Attribution check (prompt 4): Chiang et al. (harness ablation, §4.3), Fang et al. (2024), Zhan et al. (2025) and the WASP authors' "security by incompetence" (Evtimov et al.) all match v4. Two corrections: the 1.22% significance judgement is now "the survey reports" (v4 states it without crediting the benchmark authors), and ToolHijacker bypasses four named defenses, not three.
+21. The deck follows the user's 26-item slide plan (the prompt says 25 but lists 26 numbered slides); no slide was dropped.
