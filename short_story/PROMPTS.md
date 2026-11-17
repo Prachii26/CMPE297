@@ -156,3 +156,19 @@ Read the three secondary surveys now, but keep them light — one or two paragra
 
 Then continue: figures, article, deck, README, humanizer pass. Report when the figures are done so I can look at them before the article is written around them.
 ```
+
+## Prompt 3
+
+```text
+Figures approved. Three structural changes to the article before you write it.
+
+1. New section: "The numbers do not agree with each other." Build it from fig 3's second panel plus the discrepancies in the notes. WASP 85.7% vs 16.7% and AgentPoison 81.2% vs 62.6% for the same attacks measured differently, MSB's peak at 76.5% in one section and 75.8% in another, AgentPoison's poison rate under 0.1% in §4.1.2 and under 1% in §4.4.1, and the survey's own finding of 124 distinct benchmarks. The point is that attack success rate is not a stable quantity across papers, so cross-paper comparison is weaker than the tables imply. State it as an observation about the literature, not an accusation about the authors — the survey itself identifies benchmark fragmentation as a problem.
+
+2. Connect fig 6 and fig 7 explicitly in the prose. The ablation shows clear-denial dropping from 100% to 53.3% as autonomy is added. Fig 6 shows offensive agents operating at full autonomy 83.0% of the time against 14.3% for defensive ones. Write the synthesis: the capability that most degrades safety behaviour is the one most freely granted to offensive systems, and least to the defensive systems meant to counter them. Keep it to a paragraph and do not overstate — the two results come from different parts of the survey and are not a controlled comparison. Say that.
+
+3. Close on the reflection gap instead of a generic outlook. Fig 2 shows zero papers attacking the reflection stage. Du treats memory and reflection as core agent components. I have built reflection twice in this repo: assignment5's SO-RSI diagnostic inquiry, which detects recurrence, opposing edits and expectation mismatch in its own trace, and assignment2 stage 14's summarizer that writes a handoff note when the context fills. Both read and act on the agent's own history, which is exactly the surface nobody has attacked. Make the closing concrete about what that surface looks like rather than calling for more research.
+
+Keep the three caveats about my own work in the two-cents section, worded as plainly as you listed them: the assignment5 guard's 41 rejections came from a scripted proposer that planted the hacks deliberately and the live LLM never attempted one; stage 13 prints sandbox: none on this Windows machine; assignment3 filters MCP tools by name only. Those make the section credible.
+
+Then write the article, the deck, the README, and run the humanizer pass. Report when the article draft is done, before the deck.
+```

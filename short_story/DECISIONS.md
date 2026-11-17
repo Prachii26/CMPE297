@@ -19,3 +19,5 @@ One line per judgement call made without asking.
 15. The §4.3 ablation figure labels the y-axis "clear-denial rate", the survey's metric, rather than "refusal rate".
 16. The HPTSA panel shows the 13× pass@1 effect as a relative bar (1× vs 13×) because the survey reports only the ratio, not absolute pass@1.
 17. Persistent memory appears in Fig. 2 without a paper count: §4.4.1 names it as a channel but gives no count (Fig. 8's memory column counts threat labels, not papers).
+18. "The numbers do not agree with each other" is a subsection of "My two cents", so the discrepancies sit in the two-cents section (prompt 2) and get their own heading (prompt 3).
+19. The v3-to-v4 note is placed right after the opening, so a reader knows which version every later number comes from.
