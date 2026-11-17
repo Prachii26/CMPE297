@@ -179,7 +179,7 @@ text(s, MARGIN, Inches(5.2), Inches(11.5), Inches(1.2),
 s = new_slide("One survey, 274 papers, three questions", "The paper", source=SRC + "; App. A–B, pp. 67–68", notes="""
 Some context on the paper. It's by five authors from BRAC University and the Qatar Computing Research
 Institute, and the version I read is version four, published in TMLR. It covers 274 papers from
-January 2023 to May 2026. It organises them into three pillars, which are really three questions:
+January 2023 to May 2026. It organises them into three pillars, which are three questions:
 what can agents do for security, how do agents get attacked, and how do you defend them. The counts
 overlap, 113, 86 and 123, because some papers sit in more than one pillar. What I liked is that the
 authors coded every paper on the same fields, so they can count things across the whole field.""")
@@ -196,12 +196,12 @@ text(s, MARGIN, Inches(4.9), Inches(12), Inches(1.5),
 # 3 The hook
 s = new_slide("Same model, more harness: refusals fall by almost half", "The hook",
               source=SRC + "; §4.3, p. 25 (Chiang et al.)", notes="""
-Here's the experiment. Chiang and colleagues took GPT-4o and a fixed set of malicious instructions, and
+Chiang and colleagues took GPT-4o and a fixed set of malicious instructions, and
 measured the clear-denial rate, which is how often the model refuses outright. On its own, GPT-4o
 refused all of them, a hundred percent. Then they added agent parts one at a time. Moving the user's goal
 into the system prompt dropped it to 93.3 percent. Adding multi-step action generation took it to 73.3.
 Adding an event stream, the running log of actions and observations, took it to 53.3. The model never
-changed. Only the scaffolding around it did.""")
+changed, only the scaffolding around it.""")
 picture(s, ASSETS / "fig07_left.png", MARGIN, CONTENT_Y, Inches(8.0), CONTENT_H)
 box(s, Inches(9.0), CONTENT_Y + Inches(0.5), Inches(3.7), Inches(3.9), fill=WARM)
 text(s, Inches(9.25), CONTENT_Y + Inches(0.7), Inches(3.3), Inches(3.6),
@@ -241,8 +241,7 @@ So the obvious fix is to tell the model to be careful. MCP-SafetyBench tested ex
 Model Context Protocol, is the standard way agents now connect to external tool servers. Across 245
 tasks and 13 models, attacks on the host side succeeded 81.94 percent of the time on average. Adding
 safety prompts lowered that by 1.22 percent, which the survey reports as statistically insignificant.
-So putting the two results together: safety drops as autonomy goes up, and asking the model to be safe
-doesn't fix it.""")
+So safety drops as autonomy goes up, and asking the model to be safe doesn't fix it.""")
 cards = [("81.94%", "average host-side attack success", TINT, NAVY),
          ("−1.22%", "change from adding safety prompts, reported as not significant", WARM, RED),
          ("245 · 13", "tasks · models", TINT, NAVY)]
@@ -293,7 +292,7 @@ s = new_slide("Where attacks enter, and where the loop breaks", "Why agents diff
               source=SRC + "; §2.1, §4.4.1–4.4.2, Fig. 8–9a", notes="""
 This is the agent loop the survey uses, eight stages from perception to reflection. The orange boxes are
 the channels attacks come in through, and the shading shows the stage where an attack first does damage.
-The point of this slide is that those are different places. Most attacks still enter through the user
+Those are different places. Most attacks still enter through the user
 prompt or system prompt, but they take effect in reasoning, 54 papers, and in action selection, 41.
 Up in the top left, reflection has zero on both counts. I'll come back to that at the end.""")
 picture(s, FIG / "fig02_agent_loop.png", MARGIN, CONTENT_Y - Inches(0.1), W - 2 * MARGIN, CONTENT_H + Inches(0.1))
@@ -301,7 +300,7 @@ picture(s, FIG / "fig02_agent_loop.png", MARGIN, CONTENT_Y - Inches(0.1), W - 2 
 # 8 Entry vs failure + threat model
 s = new_slide("Attacks need no special access", "Why agents differ",
               source=SRC + "; §4.4.1, §4.4.2, §4.4.4, pp. 25–28", notes="""
-Three numbers from that analysis. 56.8 percent of attacks with a known entry point come in through the
+56.8 percent of attacks with a known entry point come in through the
 user query or system prompt. The authors think part of that is convenience, since you don't need tools
 or memory to study it. Where they land is different: reasoning and action selection. And the attacker
 the field assumes is weak. Of 77 papers that state the attacker's access, 51.9 percent assume black-box
@@ -383,18 +382,17 @@ s = new_slide("Who gets full autonomy: offense, not defense", "Applications",
 This figure shows the autonomy split. Panel C at the bottom is the one to look at. 83 percent of
 offensive systems run end to end at level three, with minimal oversight. Only 14.3 percent of defensive
 systems do. Most defensive systems sit at level one or two, where a human approves the important steps.
-Put another way, only 17 percent of offensive systems keep a human approval gate, against 85.7 percent of
+Only 17 percent of offensive systems keep a human approval gate, against 85.7 percent of
 defensive ones.""")
 picture(s, FIG / "fig06_lifecycle_autonomy.png", MARGIN, CONTENT_Y - Inches(0.1), W - 2 * MARGIN, CONTENT_H + Inches(0.1))
 
 # 13 Synthesis
 s = new_slide("Autonomy erodes refusals, and offense gets most of it", "My reading",
               source=SRC + "; §4.3 p. 25 and §3.4.2 p. 16", notes="""
-Here's the connection I drew between the last few slides. The ablation shows refusals falling as autonomy
+The ablation shows refusals falling as autonomy
 is added. The autonomy data shows that offensive systems get full autonomy 83 percent of the time, and
 defensive systems 14.3 percent. So the capability that most weakens a model's refusals is the one handed
-most freely to attack tools, and least to the defensive tools meant to counter them. I want to be careful
-here. These are two separate results from different parts of the survey, measured on different systems.
+most freely to attack tools, and least to the defensive tools meant to counter them. These are two separate results from different parts of the survey, measured on different systems.
 It's a pattern I noticed, not a controlled comparison.""")
 stat_card(s, MARGIN, CONTENT_Y + Inches(0.1), Inches(5.8), Inches(2.6), "100% → 53.3%",
           "clear denial as autonomy is added (§4.3)", big_size=48, label_size=19)
@@ -446,8 +444,8 @@ s = new_slide("Defenses: mostly an LLM watching an LLM", "Defenses",
 The defenses pillar has four groups. Secure-by-design isolates untrusted data in the architecture.
 Multi-agent security uses consensus and debate between agents. Runtime protection means guardrails
 that intercept behaviour during execution. Security operations covers verification, auditing and incident
-response. The number that stuck with me is 53.3 percent. That's the share of the 92 analysed defense
-papers that use a second LLM to watch the first. A human in the loop is the primary trust boundary in
+response. 53.3 percent of the 92 analysed defense
+papers use a second LLM to watch the first. A human in the loop is the primary trust boundary in
 only 2 papers.""")
 groups = [("Secure-by-design", "isolate untrusted data in the architecture"),
           ("Multi-agent security", "consensus and debate between agents"),
@@ -502,8 +500,8 @@ s = new_slide("MCP: stronger models were more vulnerable", "Numbers", source=SRC
 MCP gets its own slide because it's the surface I worked with. MCPTox poisoned tool descriptions on 45
 real MCP servers and reached up to 72.8 percent attack success. The best-refusing model, Claude 3.7
 Sonnet, refused under 3 percent of the time. MSB, the MCP Security Bench, averaged 40.35 percent, with a
-peak of 76.5 percent. The finding I didn't expect is that in both benchmarks, stronger models were more
-vulnerable. A model that follows tool instructions well also follows malicious ones well.""")
+peak of 76.5 percent. In both benchmarks, stronger models were more
+vulnerable, which I didn't expect. A model that follows tool instructions well also follows malicious ones well.""")
 cards = [("81.94%", "MCP-SafetyBench: average host-side attack success, 13 models"),
          ("72.8%", "MCPTox: peak, 45 real servers; best refusal under 3%"),
          ("40.35%", "MSB: average across 12 attack types; peak 76.5%")]
@@ -557,7 +555,7 @@ This is the piece I'm most confident in. The MCP server offers an admin tool, ca
 host only forwards tools on its allow-list, which contains just book room, and answers anything else with
 error 32001. The host also builds a content security policy with connect-src none, so fetch fails
 inside the sandboxed app. I saw both happen in a real browser run. This control is in code the model
-can't argue with, which is what the 1.22 percent result says you need. The weakness: an allowed tool
+can't argue with, which is what the 1.22 percent result says you need. The weakness is that an allowed tool
 takes any arguments, and nothing asks the user to confirm.""")
 picture(s, FIG / "fig08_mcp_trust_boundary.png", MARGIN, CONTENT_Y - Inches(0.1), W - 2 * MARGIN, CONTENT_H + Inches(0.1))
 

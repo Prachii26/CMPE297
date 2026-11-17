@@ -23,3 +23,7 @@ One line per judgement call made without asking.
 19. The v3-to-v4 note is placed right after the opening, so a reader knows which version every later number comes from.
 20. Attribution check (prompt 4): Chiang et al. (harness ablation, §4.3), Fang et al. (2024), Zhan et al. (2025) and the WASP authors' "security by incompetence" (Evtimov et al.) all match v4. Two corrections: the 1.22% significance judgement is now "the survey reports" (v4 states it without crediting the benchmark authors), and ToolHijacker bypasses four named defenses, not three.
 21. The deck follows the user's 26-item slide plan (the prompt says 25 but lists 26 numbered slides); no slide was dropped.
+22. The humanizer skill named in the brief is not available in this session, so the pass was done by hand against the brief's checklist, with before/after snapshots, a word-level diff, and a script check that every number and section reference is unchanged.
+23. "Still, I find it hard to look at both figures and not connect them." was cut in the humanizer pass: the paragraph now ends on the caveat the user asked for, which it was softening.
+24. article-medium.md is generated from article.md by scripts/make_medium.py, so the humanizer edits reach it by regeneration, not by a second hand edit.
+25. Speaker notes are 2,302 words, about 15 to 16 minutes at a normal speaking pace for 26 slides.

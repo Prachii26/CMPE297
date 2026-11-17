@@ -1,6 +1,6 @@
 # Short story: agentic security
 
-My CMPE 297 short story on **"A Survey on Agentic Security: Applications, Threats and Defenses"** by Shahriar, Rahman, Ahmed, Sadeque and Parvez (TMLR 2026, [arXiv 2510.06445](https://arxiv.org/abs/2510.06445), version 4). It includes a Medium article, a 26-slide deck, ten figures and my reading notes.
+My CMPE 297 short story on "A Survey on Agentic Security: Applications, Threats and Defenses" by Shahriar, Rahman, Ahmed, Sadeque and Parvez (TMLR 2026, [arXiv 2510.06445](https://arxiv.org/abs/2510.06445), version 4). It includes a Medium article, a 26-slide deck, ten figures and my reading notes.
 
 The survey sorts 274 papers from January 2023 to May 2026 into three pillars: what agents can do for security, how they get attacked, and how they get defended. Its most useful result for me was a harness ablation (§4.3). GPT-4o refuses every malicious request in a test set on its own, and refuses only 53.3% once the same model runs inside an agent with a system-prompt goal, multi-step actions and an event stream. Next to that is MCP-SafetyBench, where adding safety prompts moved host-side attack success by a statistically insignificant 1.22%. The article walks through the taxonomy and the reported numbers. It then argues that attack success rates don't compare cleanly across papers, maps five pieces of my own coursework onto the survey's categories, and ends on the one loop stage no paper has attacked, reflection.
 

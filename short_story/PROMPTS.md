@@ -260,3 +260,9 @@ Every prompt I sent for this assignment, verbatim, in order, pulled from session
 
 Report at the end: the attribution corrections you made, what the humanizer changed most, the final word count, the slide count, and anything you could not verify.
 ```
+
+## Prompt 5
+
+```text
+continue
+```
