@@ -132,3 +132,27 @@ Every prompt I send for this assignment, verbatim, in order, from session histor
 2. Report the notes to me before writing the article. I want to check the taxonomy is right before you build on it.
 3. Then figures, then article, then deck, then README, then the humanizer pass.
 ```
+
+## Prompt 2
+
+```text
+Taxonomy approved. Use v4 throughout — 31 Oct 2026, TMLR. Do not build on v3.
+
+Four changes to the article plan before you continue.
+
+1. Restructure the opening around the §4.3 ablation instead of MCP-SafetyBench alone. The sequence is: same GPT-4o, 100% refusals standalone, dropping to 93.3%, 73.3%, 53.3% as the goal moves into the system prompt, multi-step actions are added, and an event stream is added. Then the MCP-SafetyBench counterpoint: safety prompts move host-side attack success by 1.22%, which the authors call statistically insignificant. Safety degrades as autonomy is added, and the obvious fix does not work. That is the hook.
+
+Give the ablation its own figure: refusal rate on the y-axis, the four autonomy configurations on the x-axis. Add the HPTSA 13x pass@1 coordination-layer result alongside it if the axes allow, otherwise as a second panel.
+
+2. Add a short section on the v3-to-v4 differences. 274 papers vs "over 260", 56.8% vs 55% for prompt-entry attacks, 124 vs 108 benchmarks, and the conclusion reversing from perception stage to reasoning stage. Treat it as an observation about reading a living survey: the headline claim moved between revisions, and anyone citing v3 now cites a conclusion the authors have changed. Do not speculate about why unless the paper says.
+
+3. Put the internal contradictions in the two-cents section, not a footnote. Name the exact numbers and the sections they came from. State what it is — a discrepancy in a published survey — without inflating it into a claim about the paper's quality.
+
+4. Keep the Fig. 12 labelling as you planned. Say in the caption and in the body that it counts research attention per attack/defense pair, not how well each defense works. That distinction is worth a sentence of its own.
+
+On tooling: install graphviz with winget, but if it is not working within 10 minutes, draw the taxonomy and the trust-boundary diagrams with matplotlib instead and move on. Do not lose an hour to a PATH problem.
+
+Read the three secondary surveys now, but keep them light — one or two paragraphs each, used for contrast where they sharpen a point. They are enrichment, not bulk.
+
+Then continue: figures, article, deck, README, humanizer pass. Report when the figures are done so I can look at them before the article is written around them.
+```

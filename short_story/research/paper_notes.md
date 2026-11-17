@@ -584,6 +584,9 @@ learning 33 (12.0%).
 - **WebInject**: "over 96%" (p19), "97% ASR across web-agent backbones" (p26),
   "exceeding 0.96" (p22). Same result, rounded differently. I will say "over 96%".
 - **VisualTrap**: "over 90%" (p20) vs "about 94%" (p26). I will say "over 90%".
+- **AgentPoison poison rate**: "under 0.1% of entries poisoned" (§4.1.2, p20) and
+  "a poison rate under 1%" (§4.4.1, p26). Both are true statements about the same
+  result, but the second is ten times looser; quote the §4.1.2 figure.
 - **WASP end-to-end**: "17%" (p24) and "16.7%" (p29). Same number.
 - **Agent-specificity denominators**: the percentages use 111 labels
   including unclassified; the per-class "of 36", "of 25" also include
@@ -613,9 +616,42 @@ The last two rows are why the version matters: v3's stage finding was
 revised in v4, so an article built on v3 would state a conclusion the authors
 have since changed.
 
-## Secondary surveys (to read after the taxonomy check)
+## Secondary surveys (read lightly, for contrast)
 
-Planned, for contrast only: Survey on Evaluation of LLM-based Agents
-(arXiv 2503.16416); From Question Answering to Task Completion: A Survey on
-Agent System and Harness Design (arXiv 2606.20683); Memory for Autonomous LLM
-Agents (arXiv 2603.07670). Not read yet; nothing from them is used above.
+**Yehudai et al., Survey on Evaluation of LLM-based Agents (arXiv 2503.16416v2).**
+Organises agent evaluation into five perspectives (core capabilities, application
+benchmarks, generalist agents, benchmark dimensions, evaluation frameworks). Its
+gap list (§7 and conclusion) names cost-efficiency, safety and robustness as the
+under-measured dimensions, says binary success metrics hide intermediate progress,
+proposes "guardrail" metrics that penalise success reached through non-compliant
+actions (§5, safety and robustness metrics), and asks for evaluations that vary the
+backbone LLM and the harness independently (§7, decoupling LLM and harness).
+Contrast used: the agentic-security survey reaches the same metric complaint from
+the security side (66 of 86 threat papers report ASR; 19 report utility; 14 cost;
+§4.4.5 p29), and its §4.3 ablation is exactly the harness-varied, model-fixed
+experiment Yehudai et al. ask for.
+
+**Guo et al., From Question Answering to Task Completion: A Survey on Agent System
+and Harness Design (arXiv 2606.20683v1).** Treats an agent as a foundation model
+coupled with an execution harness and splits the harness into six runtime
+responsibilities: observation, context, control, action, state, and
+verification/governance (§5). Governance covers approval gates, sandboxing, budget,
+rollback and safe termination; §5.6 argues constraints should be mechanically
+enforced instead of left to the model obeying its prompt, and §5.7 notes that more
+expressive actions raise the burden on permissions and sandboxing. Safety is one of
+its four open challenges and one term in its value-aware objective (§8.1).
+Contrast used: the MCP-SafetyBench 1.22% result is the security-side evidence for
+Guo et al.'s "mechanically enforced" point, and my assignment2 stages 12–13 and
+assignment4 theme 06 are both governance-layer code in their vocabulary.
+
+**Du, Memory for Autonomous LLM Agents (arXiv 2603.07670v1).** Models memory as a
+write–manage–read loop with a three-axis taxonomy (temporal scope,
+representational substrate, control policy) and five mechanism families. Its
+write-path section (§7.1) is about filtering noise for retrieval quality, and its
+privacy section (§7.5) is about encryption, scoping and deletion; reflection is
+framed as a mechanism that can entrench mistakes through confirmation bias (§9.3).
+Contrast used: the memory survey treats a bad write as an accuracy problem, while
+the security survey counts persistent-state poisoning as an agent-native threat;
+and the security survey finds 0 papers attacking reflection as an entry point
+(§4.4.2 p25) and 1 benchmark instrumenting memory (§4.4.5 p29), even though Du
+treats reflection and memory as core to adaptive agents.
