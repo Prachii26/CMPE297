@@ -1,0 +1,4 @@
+matplotlib
+python-pptx
+graphviz
+requests
