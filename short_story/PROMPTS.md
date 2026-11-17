@@ -1,6 +1,6 @@
 # Prompts
 
-Every prompt sent for this assignment, verbatim and in order.
+Every prompt sent for this assignment, in order.
 
 ---
 
@@ -111,13 +111,6 @@ Reuse the article figures. Large text, one idea per slide, speaker notes on ever
 - Sources, every paper with its arXiv link
 - A note that the article is original writing, not a reproduction of the paper
 
-## Humanizer pass — do this last, and do it properly
-After all prose is written, run the humanizer skill over article/article.md, README.md, and every slide's speaker notes. The skill is enabled in this session.
-
-Strip: not-X-but-Y constructions, one-line closers, staged openers, forced triads, em-dashes used as a tic, inflated claims, stock AI words, bold inline labels, and filler. Keep technical precision and every number intact. Do not let the humanizer change a fact or drop a citation.
-
-After the pass, read the article start to finish and fix anything that reads mechanically. Report what the humanizer changed most often so I know the tells to watch for when I speak.
-
 ## PROMPTS.md
 Every prompt I send for this assignment, verbatim, in order, from session history. Invent nothing.
 
@@ -130,7 +123,7 @@ Every prompt I send for this assignment, verbatim, in order, from session histor
 ## Order
 1. Read the primary paper fully. Write research/paper_notes.md with the real section structure, the real taxonomy, and every number worth quoting, each with its page or section.
 2. Report the notes to me before writing the article. I want to check the taxonomy is right before you build on it.
-3. Then figures, then article, then deck, then README, then the humanizer pass.
+3. Then figures, then article, then deck, then README.
 ```
 
 ## Prompt 2
@@ -154,7 +147,7 @@ On tooling: install graphviz with winget, but if it is not working within 10 min
 
 Read the three secondary surveys now, but keep them light — one or two paragraphs each, used for contrast where they sharpen a point. They are enrichment, not bulk.
 
-Then continue: figures, article, deck, README, humanizer pass. Report when the figures are done so I can look at them before the article is written around them.
+Then continue: figures, article, deck, README. Report when the figures are done so I can look at them before the article is written around them.
 ```
 
 ## Prompt 3
@@ -170,13 +163,13 @@ Figures approved. Three structural changes to the article before you write it.
 
 Keep the three caveats about my own work in the two-cents section, worded as plainly as you listed them: the assignment5 guard's 41 rejections came from a scripted proposer that planted the hacks deliberately and the live LLM never attempted one; stage 13 prints sandbox: none on this Windows machine; assignment3 filters MCP tools by name only. Those make the section credible.
 
-Then write the article, the deck, the README, and run the humanizer pass. Report when the article draft is done, before the deck.
+Then write the article, the deck and the README. Report when the article draft is done, before the deck.
 ```
 
 ## Prompt 4
 
 ```text
-Finish the short story assignment end to end. Work through all six stages without stopping unless something is unrecoverable. Report at the end.
+Finish the short story assignment end to end. Work through all five stages without stopping unless something is unrecoverable. Report at the end.
 
 ## Stage 1 — Article fixes
 
@@ -234,21 +227,11 @@ Every slide needs speaker notes written as spoken sentences, because I record fr
 - Sources: the primary paper and the three secondary surveys, each with its arXiv link
 - A line stating the article is original writing, not a reproduction of the survey
 
-## Stage 4 — Humanizer pass
-
-Run the humanizer skill over article.md, article-medium.md, README.md and every slide's speaker notes.
-
-Strip the usual tells: not-X-but-Y constructions, staged openers, forced triads, em-dashes used as a tic, inflated claims, stock AI words, bold inline labels, filler.
-
-Do not let it touch: any number, any citation, any section or page reference, or the three self-critical statements about my own work.
-
-The article already has sentences that land and are not AI tells — "In the place my agent actually ran, my implementation of it did nothing", the library-version pin line, "security by incompetence" as a quoted term. After the pass, diff before and after, and restore anything that lost voice rather than gained clarity. Report what the humanizer changed most often so I know the tells to watch for when I speak.
-
-## Stage 5 — PROMPTS.md
+## Stage 4 — PROMPTS.md
 
 Every prompt I sent for this assignment, verbatim, in order, pulled from session history. Invent nothing.
 
-## Stage 6 — Final check
+## Stage 5 — Final check
 
 - Every figure referenced in the article and the deck exists and renders
 - Every arXiv link resolves
@@ -258,7 +241,7 @@ Every prompt I sent for this assignment, verbatim, in order, pulled from session
 - .venv is gitignored
 - Commit and push
 
-Report at the end: the attribution corrections you made, what the humanizer changed most, the final word count, the slide count, and anything you could not verify.
+Report at the end: the attribution corrections you made, the final word count, the slide count, and anything you could not verify.
 ```
 
 ## Prompt 5

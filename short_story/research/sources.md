@@ -1,6 +1,6 @@
 # Sources
 
-Every paper cited in the article, with links. Filled in as the article is written.
+Every paper cited in the article, with links. The published article is on Medium: <https://medium.com/@prachigupta2610/gpt-4o-refuses-every-request-until-you-wrap-it-in-an-agent-784d7aa24a46>
 
 ## Primary
 

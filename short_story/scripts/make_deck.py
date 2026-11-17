@@ -605,7 +605,7 @@ s = new_slide("References", "Sources", dark=True, notes="""
 These are my sources. The primary paper is the agentic security survey, version four, on arXiv and in
 TMLR. I also used three surveys for contrast: Yehudai and colleagues on agent evaluation, Guo and
 colleagues on harness design, and Du on agent memory. Every number in this talk comes from the survey at
-the section and page shown on the slide. The article, the figures and all the code are in the short
+the section and page shown on the slide. The article is on Medium, and the figures and all the code are in the short
 story folder of my CMPE 297 repository. Thanks for listening.""")
 text(s, MARGIN, CONTENT_Y - Inches(0.1), W - 2 * MARGIN, Inches(4.8),
      [[("Shahriar, Rahman, Ahmed, Sadeque, Parvez. ", {"bold": True}),
@@ -615,6 +615,7 @@ text(s, MARGIN, CONTENT_Y - Inches(0.1), W - 2 * MARGIN, Inches(4.8),
        ("From Question Answering to Task Completion: A Survey on Agent System and Harness Design. arxiv.org/abs/2606.20683", {})],
       [("Du. ", {"bold": True}),
        ("Memory for Autonomous LLM Agents: Mechanisms, Evaluation, and Emerging Frontiers. arxiv.org/abs/2603.07670", {})],
+      [("Article: ", {"bold": True}), ("medium.com/@prachigupta2610 → GPT-4o Refuses Every Request, Until You Wrap It in an Agent", {})],
       [("This repo: ", {"bold": True}), ("github.com/Prachii26/CMPE297 → short_story/", {})]],
      size=19, color=WHITE)
 

@@ -8,7 +8,7 @@ The survey sorts 274 papers from January 2023 to May 2026 into three pillars: wh
 
 | | |
 |---|---|
-| Medium article | MEDIUM_ARTICLE_LINK |
+| Medium article | [GPT-4o Refuses Every Request, Until You Wrap It in an Agent](https://medium.com/@prachigupta2610/gpt-4o-refuses-every-request-until-you-wrap-it-in-an-agent-784d7aa24a46) |
 | Slides on SlideShare | SLIDESHARE_LINK |
 | Video | YOUTUBE_VIDEO_LINK |
 | Deck PDF | [deck/slides.pdf](deck/slides.pdf) (also in [video/slides.pdf](video/slides.pdf)) |
@@ -18,7 +18,7 @@ The survey sorts 274 papers from January 2023 to May 2026 into three pillars: wh
 ```
 article/article.md          the article, with relative links (repo version)
 article/article-medium.md   the same article with absolute GitHub links and an image upload order
-article/figures/            the ten figures (PNG) and their captions
+article/figures/            the ten figures (PNG)
 deck/slides.pptx, .pdf      26 slides with speaker notes
 video/                      the recording goes here; slides.pdf is copied alongside it
 research/paper_notes.md     my notes on the survey, with section and page for every number
