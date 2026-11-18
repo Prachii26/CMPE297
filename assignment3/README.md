@@ -9,7 +9,7 @@ Each agent is written from scratch against a named reference implementation —
 read, not copied — with the domain changed and at least two behaviours changed.
 Those changes are listed in each agent's README under "Our changes".
 
-**Demo video:** YOUTUBE_VIDEO_LINK
+**Demo video:** [https://youtu.be/w6h77EMssDo](https://youtu.be/w6h77EMssDo)
 
 ## Status
 
